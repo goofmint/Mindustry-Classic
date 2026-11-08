@@ -311,8 +311,8 @@ GitHub Issues: https://github.com/goofmint/Mindustry-Classic/issues (2026-11-08 
 #### Task 5.3: バランス調整 (Issue #29)
 
 - [ ] 3 マップを通しで遊び、費用、処理時間、電力、倍率の係数、初期資金、目標得点を `Balance.java` と `maps.json` で調整する
-- [ ] 「CodeRabbit を置くと楽になる」が 5 分以内に体感できるかを確認する(イベントでの利用場面を想定)
-- [ ] 調整した値と理由を `docs/BALANCE.md` に残す
+- [x] 「CodeRabbit を置くと楽になる」が 5 分以内に体感できるかを確認する(イベントでの利用場面を想定)
+- [x] 調整した値と理由を `docs/BALANCE.md` に残す
 - **完了条件**: 初見の人が 1 マップ目を 10〜15 分でクリアできる
 - **依存**: 5.2
 - **推定時間**: 6h
