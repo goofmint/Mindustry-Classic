@@ -51,3 +51,10 @@
 - HTML シェル: タブのタイトル、ロード中のロゴとオレンジのメーター。
 - モバイルのレイアウトは実機が無いので確認していない(コードを読んだだけ)。
 - デスクトップ版の起動(`:desktop:run`)はしていない。
+
+## ブラウザ確認(Playwright、HTML ビルド)
+- タイトル画面は Play / Settings(設定) / About(ゲーム情報)の 3 ボタンだけ。Editor、Donate、右上の Discord バナーは無い。左下は `AI SDLC classic / custom build`(`text.gamename` + `Version.code`)。
+- About のリンクは CodeRabbit の 1 件(オレンジの帯、チェックのアイコン、英: "The AI code review tool for pull requests" / 日: 「プルリクエストを AI でレビューするツール」)。リンクボタンの `openURI` はヘッドレスでは追えないので未確認。
+- クレジット: 当初は About の上に透けて重なり、Back ボタンも 2 つ重なって見えた。クレジットを開く間は About を閉じて戻ると About に戻す(`fba2a4b`)、本文の表に `pane` 背景を付ける(`43d3823`)の 2 点を直し、英日とも 4 節が読める状態になった。
+- HTML シェル: `<title>` は `AI SDLC`、ロゴは白文字にオレンジの影のブロック文字、ロードメーターはオレンジ。
+- 未確認: 外部リンクが実際に `https://coderabbit.ai` を開くこと(ブラウザの別タブ)、モバイルレイアウト、デスクトップ起動。
