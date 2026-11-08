@@ -91,3 +91,12 @@ Settings -> Language -> 日本語 -> restart (reload the page in the browser bui
 - Not changed (remaining issue): in-world `Draw.text` (`Renderer.drawPlayerNames`, `Fx` respawn text, block/enemy debug) still uses absolute scales tuned for square
 - `./gradlew :core:compileJava :desktop:compileJava` -> exit 0; `./gradlew :html:dist` -> BUILD SUCCESSFUL in 22s (output in `html/build/dist`)
 - To check: in-game wave label, item counts, pause label (single player, pause) and respawn label are readable in ja and unchanged in en
+
+
+## オーケストレーターによる再確認(HUD 修正後、2026-11-08 10:25Z ごろ)
+
+- Playwright + Chromium(ヘッドレス)で `html/build/dist`(コミット 233b7e2 のビルド)を開き、設定 → 言語 → 日本語 → 再読み込みののち caldera を開始した。
+- ja: HUD のウェーブ表示(「Wave 1 / Wave in 113」)、配置メニュー上部の資源個数(46)、一時停止表示(「< Paused >」)がいずれも通常文と同じ大きさ(美咲 scale 2)で読める。にじみなし。
+- en: 同じ画面を英語で開き、ウェーブ表示・資源個数が従来どおり square フォント 0.75 倍で描かれることを確認(見た目の変化なし)。
+- 日本語ラベルの折り返し(複数行)とチャット入力の `[` は、本家文言の日本語化(Task 2.4)以降で文言が入ってから確認する。
+- コンソールの `Failed to load resource`(接続リセット)は、確認中に静的サーバーを再起動したことによる音楽ファイルの読み込み中断で、アプリの例外ではない。
