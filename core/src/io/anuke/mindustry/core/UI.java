@@ -152,6 +152,7 @@ public class UI extends SceneModule{
 
 			Core.font = japaneseWorld;
 		}else{
+			japaneseScale = 0f;
 			Mathf.each(font -> {
 				font.setUseIntegerPositions(false);
 				font.getData().setScale(Vars.fontscale);
