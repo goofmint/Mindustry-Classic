@@ -128,3 +128,12 @@ Known English left: tutorial texts (excluded, deleted in Phase 3), multiplayer s
 - `setting.difficulty.insane/purge` 超むずかしい / 地獄
 - Static wall blocks (`sandblock` 砂の塊, `grassblock` 草の塊, ...) and `block.blockpart` ブロックの一部
 - `text.save.export/import` 書き出す / 取り込む (LoadDialog buttons)
+
+
+## オーケストレーターによるブラウザ確認(2026-11-08 10:45Z ごろ)
+
+- Playwright + Chromium(ヘッドレス)で `html/build/dist` を開き、設定 → 言語 → 日本語 → 再読み込み。
+- OK: メインメニュー(プレイ / エディター / 設定 / 寄付)、プレイメニュー、マップ選択(ゲームモード、難易度、マップ名、ハイスコア)、ゲーム中 HUD(「ウェーブ 1」「次のウェーブまで 111」は枠内に収まる)、配置パネル(「砲台」「耐久力: 45」)、ブロック情報ダイアログ(説明文と統計名が日本語)。コンソールエラー 0 件。
+- 修正: 「このゲームについて」(9 字)は 200px のボタンで 2 行に折り返したため、`text.about.button` を「ゲーム情報」に変更した。
+- 英語のまま残るもの(想定どおり): ブロック情報の「弾薬: stone」(旧アイテム名は除外対象。Task 2.5 / 3.11 で扱う)、版表示 `custom build`。
+- 観察: ダイアログのタイトル(「マップ選択」「ブロックの詳細情報」)は英語表示でも同じ小ささでロゴに重なって描かれる本家由来の挙動で、今回の変更による劣化ではない。見直すなら Task 4.2 の UI 調整で扱う。
