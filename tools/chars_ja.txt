@@ -441,6 +441,7 @@ U+5CF6 島
 U+5D29 崩
 U+5DE6 左
 U+5DEE 差
+U+5DF1 己
 U+5DFB 巻
 U+5E2F 帯
 U+5E30 帰

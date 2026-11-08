@@ -220,10 +220,10 @@ GitHub Issues: https://github.com/goofmint/Mindustry-Classic/issues (2026-11-08 
 
 #### Task 3.9: CoreBlock と勝敗 (Issue #20)
 
-- [ ] `CoreBlock.handleItem()` を `Score.deliver()` 呼び出しに変える。`Fx.deliverGood/deliverBad` を `Fx` に足す
-- [ ] `Logic.update()` に目標到達と残高割れの判定を足す
-- [ ] `Control` の `GameOverEvent` ハンドラで `won` のとき爆発演出を出さない
-- [ ] `RestartDialog` を勝敗で出し分け、`bestscore<map>` を保存する。文言 `text.victory`、`text.delivered` を両言語に足す
+- [x] `CoreBlock.handleItem()` を `Score.deliver()` 呼び出しに変える。`Fx.deliverGood/deliverBad` を `Fx` に足す
+- [x] `Logic.update()` に目標到達と残高割れの判定を足す
+- [x] `Control` の `GameOverEvent` ハンドラで `won` のとき爆発演出を出さない
+- [x] `RestartDialog` を勝敗で出し分け、`bestscore<map>` を保存する。文言 `text.victory`、`text.delivered` を両言語に足す
 - **完了条件**: 目標に届くと勝ちダイアログ、納品で残高が 0 を下回ると負けダイアログ、コア破壊は従来どおり負け
 - **依存**: 3.8
 - **推定時間**: 3h
