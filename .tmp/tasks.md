@@ -239,12 +239,12 @@ GitHub Issues: https://github.com/goofmint/Mindustry-Classic/issues (2026-11-08 
 
 #### Task 3.11: 旧ブロックと旧アイテムの削除 (Issue #22)
 
-- [ ] `Tutorial` と `tutorial.png`、`MenuFragment` のチュートリアルボタン、`World.loadMap()` の `tutorial` 分岐を削除する
-- [ ] `DefenseBlocks`、`ProductionBlocks`、`DistributionBlocks` から削除対象 18 ブロックの定義を消す。`Sorter`、`LiquidCrafter`、`Smelter`、`Omnidrill`、`LiquidDrill`、`WeaponFactory` クラスを消す
-- [ ] `Item` の旧 8 種を消し、残った参照(`Conveyor.draw()` の `Item.stone` → `Item.igpu`、`NuclearReactor.generateItem` → `Item.pcie`、`coaldrill`/`uraniumdrill` の `result`)を直す
-- [ ] `BlockLoader.defaultMap` と `Save12〜14`、`getByOldID()` を消し、`SaveIO.versionArray` を `Save15` だけにする。起動時検査 `Block.getAllBlocks().size > 127` を足す
-- [ ] `World.setDefaultBlocks()` を `human-engineer` と `turret` に置き換える
-- [ ] 両言語の `bundle` から削除したブロック・アイテムのキーを消し、`check_bundles.py` を通す
+- [x] `Tutorial` と `tutorial.png`、`MenuFragment` のチュートリアルボタン、`World.loadMap()` の `tutorial` 分岐を削除する
+- [x] `DefenseBlocks`、`ProductionBlocks`、`DistributionBlocks` から削除対象 18 ブロックの定義を消す。`Sorter`、`LiquidCrafter`、`Smelter`、`Omnidrill`、`LiquidDrill`、`WeaponFactory` クラスを消す
+- [x] `Item` の旧 8 種を消し、残った参照(`Conveyor.draw()` の `Item.stone` → `Item.igpu`、`NuclearReactor.generateItem` → `Item.pcie`、`coaldrill`/`uraniumdrill` の `result`)を直す
+- [x] `BlockLoader.defaultMap` と `Save12〜14`、`getByOldID()` を消し、`SaveIO.versionArray` を `Save15` だけにする。起動時検査 `Block.getAllBlocks().size > 127` を足す
+- [x] `World.setDefaultBlocks()` を `human-engineer` と `turret` に置き換える
+- [x] 両言語の `bundle` から削除したブロック・アイテムのキーを消し、`check_bundles.py` を通す
 - **完了条件**: `git grep "Item\.stone"` などがヒットしない。起動時検査が通る(ブロック数 88 前後)。セーブとロードで施設の処理中アイテムと残高が戻る
 - **依存**: 3.10
 - **推定時間**: 4h
