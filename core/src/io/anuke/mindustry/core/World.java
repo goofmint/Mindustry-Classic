@@ -221,7 +221,9 @@ public class World extends Module{
 			set(x+2*d, y-2*flip, ProductionBlocks.humanEngineer, d);
 			set(x+2*d, y-1*flip, DistributionBlocks.conveyor, 1 + fr);
 			set(x+2*d, y, DistributionBlocks.conveyor, 1 + fr);
-			set(x+2*d, y+1*flip, WeaponBlocks.turret, 0 + fr);
+			//初期配置の砲台はアラート(laserturret)。リンター(turret)は射程 52、体力 45 で、コアの手前 47 で止まって撃つ敵に方向によっては届かず、
+			//近い側の 1 台が壊されるとコアを守れなかった。アラートは射程 60 でどの方向にも 1 台は届き、必中のレーザーで blast もぶつかる前に倒せる(Issue #58、docs/BALANCE.md 7 章)
+			set(x+2*d, y+1*flip, WeaponBlocks.laserturret, 0 + fr);
 			//砲台ごとに発電機と家電屋を 1 組。発電機のレーザーが隣の砲台に届く(電力が無いと撃たず、放っておくと wave 2〜3 の少数の敵に約 7 分でコアを壊された。Task 5.3)
 			set(x+3*d, y+1*flip, ProductionBlocks.coalgenerator, 0);
 			set(x+4*d, y+1*flip, ProductionBlocks.coaldrill, 0);
