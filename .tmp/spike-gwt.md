@@ -84,13 +84,24 @@ cd html/build/dist && python3 -m http.server 8765 >/tmp/dist-server.log 2>&1 &
 - 確認: `index.html`、`html/html.nocache.js`、`assets/assets.txt`、`soundmanager2-jsmin.js` がすべて `HTTP/1.0 200 OK`
 - 起動時のサーバー PID: 50625(オーケストレーターの確認用に起動したままにしている)
 
-## 6. 未確認(オーケストレーターがブラウザで確認する)
+## 6. ブラウザでの確認(オーケストレーターが実施、2026-11-08 09:10〜09:18Z)
 
-- ブラウザでの起動(preloader 完了、メニュー表示)
-- 既存マップで 1 ウェーブ遊べること
-- 初回ロード時間、経路計算が終わるまでの秒数
-- GWT のホイールスクロール量(1.4 の引き継ぎ: 符号だけ使うので問題ないはず)
-- 1.13.1 の GWT バックエンドでのキャンバスサイズの扱い(`config` は 2000×2000 固定、`scaleCanvas()` で属性とスタイルを書き換える本家の方式のまま)
+方法: Playwright 1.61(Node)+ 同梱 Chromium 1228(ヘッドレス、SwiftShader による WebGL)。`html/build/dist` を `python3 -m http.server 8765` で配信し、`http://localhost:8765/index.html` を開いて操作とスクリーンショットを自動化した。スクリプトはリポジトリ外(セッションの scratchpad)に置き、コミットしていない。
+
+| 項目 | 結果 |
+| --- | --- |
+| 初回ロード(`load` イベント → preloader 消失・canvas 表示) | 約 0.7〜1.5 秒(localhost、5 回実行) |
+| コンソールエラー / pageerror | 0 件(WebGL の `GPU stall due to ReadPixels` 警告のみ。SwiftShader 由来) |
+| 失敗したリクエスト | `assets/music/*.mp3` が `ERR_ABORTED`(ヘッドレスの自動再生制限。index.html には影響なし) |
+| メニュー表示 | OK(Play / Editor / Settings / About / Donate、ロゴ、バージョン表記) |
+| Play → New Game → レベル選択 | OK(Waves / Normal、マップ一覧とサムネイル、ハイスコア表示) |
+| caldera(256×256、3 レーン)開始 | OK(コア、初期設備、HUD「WAVE 1 / WAVE IN 112」、資源 52 石) |
+| HUD の再生ボタンでウェーブ開始 | OK(「WAVE 2 / 3 ENEMIES」表示) |
+| 敵の出現と移動 | OK。開始 10 秒で敵 3 体、65 秒でコア付近に到達し砲台が迎撃(残り 2 体)。経路計算は機能している |
+| 経路計算の秒数(計測コードによる厳密値) | 未計測。開始から 65 秒以内にコアへ到達した事実のみ記録。厳密な計測は Task 5.2 で行う |
+| GWT でのホイール量、`scaleCanvas()` の表示 | 未確認(ヘッドレスで操作していない)。Task 5.2 へ |
+
+観察メモ: レベル選択ダイアログの背後にメニューのボタン文字がうっすら透けて見える(ダイアログ背景の半透明)。本家由来かどうか未確認。見た目だけで動作に影響なし。
 
 ## 7. 気づいたが直していないリスク
 
