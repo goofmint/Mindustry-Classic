@@ -272,9 +272,9 @@ GitHub Issues: https://github.com/goofmint/Mindustry-Classic/issues (2026-11-08 
 
 #### Task 4.3: ブロックの詳細説明と getStats (Issue #25)
 
-- [ ] 新ブロック 10 種の `getStats()` を本家の流儀(`"[craftinfo]Quality Gain: "` など英語直書き)で書き、対応する `text.blocks.*` を両言語に足す
-- [ ] 全ブロックの `block.<name>.fulldescription` を AI SDLC の文脈で両言語に書く(CodeRabbit の説明はここで価値を伝える)
-- [ ] コードアイテムの表示名: `CodeItem` 側で `localizedName()` を組み立てる(品質 × 重要度 14 通りの `item.code.q<stage>.i<imp>.name` と、通過状態の接尾辞 `text.code.passed.review/test/ci`)
+- [x] 新ブロック 10 種の `getStats()` を本家の流儀(`"[craftinfo]Quality Gain: "` など英語直書き)で書き、対応する `text.blocks.*` を両言語に足す
+- [x] 全ブロックの `block.<name>.fulldescription` を AI SDLC の文脈で両言語に書く(CodeRabbit の説明はここで価値を伝える)
+- [x] コードアイテムの表示名: `CodeItem` 側で `localizedName()` を組み立てる(品質 × 重要度 14 通りの `item.code.q<stage>.i<imp>.name` と、通過状態の接尾辞 `text.code.passed.review/test/ci`)
 - **完了条件**: ブロック情報ダイアログに英語の直書きが残らず、`check_bundles.py` が差分 0
 - **依存**: 4.2
 - **推定時間**: 4h
