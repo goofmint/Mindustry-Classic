@@ -1,6 +1,7 @@
 package io.anuke.mindustry.world.blocks;
 
 import io.anuke.mindustry.graphics.Fx;
+import io.anuke.mindustry.resource.CodeItem;
 import io.anuke.mindustry.resource.Item;
 import io.anuke.mindustry.resource.Liquid;
 import io.anuke.mindustry.world.Block;
@@ -231,6 +232,46 @@ public class ProductionBlocks{
 			stageChoices = new int[]{3};
 			time = 2;
 			powerPerItem = 0.5f;
+		}
+	},
+	seniorEngineer = new QualityGate("senior-engineer"){
+		{
+			passedBit = CodeItem.REVIEW;
+			stages = 1;
+			processTime = 5;
+			powerPerItem = 0;
+		}
+	},
+	unitTest = new QualityGate("unit-test"){
+		{
+			passedBit = CodeItem.TEST;
+			stages = 1;
+			processTime = 2;
+			powerPerItem = 0.3f;
+		}
+	},
+	e2eTest = new QualityGate("e2e-test"){
+		{
+			passedBit = CodeItem.TEST;
+			stages = 1;
+			processTime = 4;
+			powerPerItem = 0.5f;
+		}
+	},
+	jenkins = new QualityGate("jenkins"){
+		{
+			passedBit = CodeItem.CI;
+			stages = 1;
+			processTime = 3;
+			powerPerItem = 0.4f;
+		}
+	},
+	githubActions = new QualityGate("github-actions"){
+		{
+			passedBit = CodeItem.CI;
+			stages = 1;
+			processTime = 2;
+			powerPerItem = 0.4f;
 		}
 	};
 }
