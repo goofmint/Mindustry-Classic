@@ -17,23 +17,23 @@ import io.anuke.ucore.util.Mathf;
 public class WeaponBlocks{
 	public static Block
 	
-	turret = new Turret("turret"){
+	turret = new PowerTurret("turret"){
 		{
 			range = 52;
 			reload = 15f;
 			bullet = BulletType.stone;
 			health = 45;
-			ammo = Item.stone;
+			powerUsed = 0.1f;
 		}
 	},
 	
-	doubleturret = new Turret("doubleturret"){
+	doubleturret = new PowerTurret("doubleturret"){
 		{
 			range = 44;
 			reload = 13f;
 			bullet = BulletType.stone;
-			ammo = Item.stone;
 			health = 45;
+			powerUsed = 0.1f;
 		}
 		
 		@Override
@@ -47,53 +47,53 @@ public class WeaponBlocks{
 		}
 	},
 	
-	machineturret = new Turret("machineturret"){
+	machineturret = new PowerTurret("machineturret"){
 		{
 			range = 65;
 			reload = 7f;
 			bullet = BulletType.iron;
-			ammo = Item.iron;
 			health = 65;
+			powerUsed = 0.1f;
 		}
 	},
 	
-	shotgunturret = new Turret("shotgunturret"){
+	shotgunturret = new PowerTurret("shotgunturret"){
 		{
 			range = 50;
 			reload = 30f;
 			bullet = BulletType.iron;
-			ammo = Item.iron;
 			health = 70;
 			shots = 5;
 			inaccuracy = 15f;
 			shotDelayScale = 0.7f;
+			powerUsed = 0.3f;
 		}
 	},
 	
-	flameturret = new Turret("flameturret"){
+	flameturret = new PowerTurret("flameturret"){
 		{
 			range = 45f;
 			reload = 5f;
 			bullet = BulletType.flame;
-			ammo = Item.coal;
 			health = 90;
 			inaccuracy = 4f;
+			powerUsed = 0.08f;
 		}
 	},
 	
-	sniperturret = new Turret("sniperturret"){
+	sniperturret = new PowerTurret("sniperturret"){
 		{
 			shootsound = "railgun";
 			range = 120;
 			reload = 50f;
 			bullet = BulletType.sniper;
-			ammo = Item.steel;
 			health = 70;
 			shootEffect = Fx.railshot;
+			powerUsed = 0.6f;
 		}
 	},
 	
-	mortarturret = new Turret("mortarturret"){
+	mortarturret = new PowerTurret("mortarturret"){
 		{
 			shootsound = "bigshot";
 			rotatespeed = 0.2f;
@@ -102,11 +102,10 @@ public class WeaponBlocks{
 			bullet = BulletType.flak;
 			shots = 3;
 			inaccuracy = 9f;
-			ammo = Item.coal;
-			ammoMultiplier = 5;
 			health = 110;
 			shootEffect = Fx.mortarshot;
 			shootShake = 2f;
+			powerUsed = 0.8f;
 		}
 	},
 	
@@ -129,6 +128,7 @@ public class WeaponBlocks{
 			reload = 15f;
 			bullet = BulletType.shell;
 			health = 140;
+			powerUsed = 0.5f;
 		}
 		
 		@Override
@@ -141,33 +141,31 @@ public class WeaponBlocks{
 		}
 	},
 		
-	plasmaturret = new Turret("plasmaturret"){
+	plasmaturret = new PowerTurret("plasmaturret"){
 		{
 			shootsound = "flame2";
 			inaccuracy = 7f;
 			range = 60f;
 			reload = 3f;
 			bullet = BulletType.plasmaflame;
-			ammo = Item.coal;
 			health = 180;
-			ammoMultiplier = 40;
+			powerUsed = 0.1f;
 		}
 	},
 	
-	chainturret = new Turret("chainturret"){
+	chainturret = new PowerTurret("chainturret"){
 		{
 			shootsound = "bigshot";
 			inaccuracy = 8f;
 			range = 80f;
 			reload = 5f;
 			bullet = BulletType.chain;
-			ammo = Item.uranium;
 			health = 430;
 			width = height = 2;
 			shootCone = 9f;
-			ammoMultiplier = 8;
 			shots = 2;
 			shootEffect = Fx.chainshot;
+			powerUsed = 0.25f;
 		}
 
 		@Override
@@ -188,20 +186,19 @@ public class WeaponBlocks{
 		}
 	},
 	
-	titanturret = new Turret("titancannon"){
+	titanturret = new PowerTurret("titancannon"){
 		{
 			shootsound = "blast";
 			range = 120f;
 			reload = 23f;
 			bullet = BulletType.titanshell;
-			ammo = Item.uranium;
 			health = 800;
-			ammoMultiplier = 4;
 			width = height = 3;
 			rotatespeed = 0.07f;
 			shootCone = 9f;
 			shootEffect = Fx.titanshot;
 			shootShake = 3f;
+			powerUsed = 1.5f;
 		}
 	};
 }
