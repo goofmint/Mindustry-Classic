@@ -110,6 +110,10 @@ public class Control extends Module{
 
 		KeyBinds.load();
 
+		//ブラウザ版では保存済みのグレーブキーが発火しないため、コンソールだけメモリ上で既定キーに置き換える(保存はしない)
+		KeyBinds.getSection("default").binds.get(DeviceType.keyboard).put("console",
+				DefaultKeybinds.migrateConsole(gwt, KeyBinds.get("default", DeviceType.keyboard, "console")));
+
 		for(Map map : world.maps().list()){
 			Settings.defaults("hiscore" + map.name, 0);
 			Settings.defaults("bestscore" + map.name, 0);

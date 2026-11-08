@@ -182,18 +182,19 @@ public enum Input {
     NUMPAD_9(153),
 
     COLON(243),
-    F1(244),
-    F2(245),
-    F3(246),
-    F4(247),
-    F5(248),
-    F6(249),
-    F7(250),
-    F8(251),
-    F9(252),
-    F10(253),
-    F11(254),
-    F12(255),
+    //libGDX 1.13.1 key codes (Keys.F1..F12); the old values 244-255 never matched any key
+    F1(131),
+    F2(132),
+    F3(133),
+    F4(134),
+    F5(135),
+    F6(136),
+    F7(137),
+    F8(138),
+    F9(139),
+    F10(140),
+    F11(141),
+    F12(142),
     UNSET(Type.key, 0, "Unset");
 
     public final int code;
