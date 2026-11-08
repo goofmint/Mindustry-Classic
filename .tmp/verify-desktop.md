@@ -170,3 +170,5 @@ Playwright をデーモンとして常駐させ、1 つのページを HTTP 経�
 ## テストとビルド
 - `./gradlew :core:test`: 成功
 - `./gradlew :html:dist`: 成功(`RestartDialog` の修正を含む)
+
+Issue #53(B2)と #54(B3)の調査結果は `.tmp/verify-issue-53.md` と `.tmp/verify-issue-54.md` に記録した
