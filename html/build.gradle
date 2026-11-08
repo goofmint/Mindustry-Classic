@@ -37,8 +37,8 @@ task dist(dependsOn: [clean, compileGwt]) {
 
 task distZip(type: Zip, dependsOn: dist){
 	from "build/dist"
-    archiveName appName + "-html5.zip"
-    destinationDir(file("build/dist-zipped"))
+    archiveFileName.set(appName + "-html5.zip")
+    destinationDirectory.set(file("build/dist-zipped"))
 }
 
 draftWar {
