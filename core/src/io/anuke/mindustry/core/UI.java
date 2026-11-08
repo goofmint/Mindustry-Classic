@@ -127,16 +127,6 @@ public class UI extends SceneModule{
 		if(Graphics.drawing()) Graphics.end();
 		
 		act();
-
-		if(control.showCursor()) {
-			Draw.color();
-
-			float scl = Unit.dp.scl(3f);
-
-			Graphics.begin();
-			Draw.rect("controller-cursor", Graphics.mouse().x, Graphics.mouse().y, 16*scl, 16*scl);
-			Graphics.end();
-		}
 	}
 
 	@Override

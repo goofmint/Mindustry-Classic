@@ -3,10 +3,6 @@ package io.anuke.ucore.scene.ui;
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.controllers.Controller;
-import com.badlogic.gdx.controllers.ControllerAdapter;
-import com.badlogic.gdx.controllers.Controllers;
-import com.badlogic.gdx.controllers.PovDirection;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
@@ -14,8 +10,6 @@ import com.badlogic.gdx.utils.ObjectIntMap;
 import io.anuke.ucore.core.Core;
 import io.anuke.ucore.core.Inputs;
 import io.anuke.ucore.core.Inputs.Axis;
-import io.anuke.ucore.core.Inputs.ControllerType;
-import io.anuke.ucore.core.Inputs.DeviceType;
 import io.anuke.ucore.core.Inputs.InputDevice;
 import io.anuke.ucore.core.KeyBinds;
 import io.anuke.ucore.core.KeyBinds.Keybind;
@@ -47,42 +41,6 @@ public class KeybindDialog extends Dialog{
 
 		Iterable<KeyBinds.Section> sections = KeyBinds.getSections();
 		section = sections.iterator().next();
-
-		Controllers.addListener(new ControllerAdapter(){
-			public void connected(Controller controller){
-				setup();
-			}
-
-			public void disconnected(Controller controller){
-				setup();
-			}
-
-			public boolean buttonDown (Controller controller, int buttonIndex) {
-				if(canRebindController()){
-					rebind(Input.findByType(Type.controller, buttonIndex, false));
-					return false;
-				}
-				return false;
-			}
-
-			public boolean axisMoved (Controller controller, int axisIndex, float value) {
-				if(canRebindController() && rebindAxis && Math.abs(value) > 0.5f){
-					rebind(Input.findByType(Type.controller, axisIndex, true));
-					return false;
-				}
-				return false;
-			}
-
-			@Override
-			public boolean povMoved(Controller controller, int povIndex, PovDirection value) {
-				if(canRebindController() && value != PovDirection.center){
-					rebind(Input.findPOV(value));
-					return false;
-				}
-				return super.povMoved(controller, povIndex, value);
-			}
-		});
-
 	}
 
 	public void setStyle(KeybindDialogStyle style){
@@ -125,7 +83,6 @@ public class KeybindDialog extends Dialog{
 			Table table = new Table();
 
 			Label device = new Label("Keyboard");
-			//device.setColor(style.controllerColor);
 			device.setAlignment(Align.center);
 
 			Array<InputDevice> devices = Inputs.getDevices();
@@ -162,15 +119,6 @@ public class KeybindDialog extends Dialog{
 			table.row();
 			table.add().height(10);
 			table.row();
-			if(section.device.controller != null){
-				table.table(info -> {
-					if(section.device.controllerType == ControllerType.unknown){
-						info.add("Controller Type: [RED]unsupported").left();
-					}else {
-						info.add("Controller Type: [#" + style.controllerColor.toString().toUpperCase() + "]" + Strings.capitalize(section.device.controllerType.name())).left();
-					}
-				});
-			}
 			table.row();
 
 			for(Keybind keybind : section.keybinds.get(section.device.type)){
@@ -222,11 +170,6 @@ public class KeybindDialog extends Dialog{
 	}
 
 	/** Internal use only! */
-	private boolean canRebindController(){
-		return rebindKey != null && section.device.type == DeviceType.controller;
-	}
-
-	/** Internal use only! */
 	private void rebind(Input input){
 		rebindDialog.hide();
 
@@ -257,8 +200,6 @@ public class KeybindDialog extends Dialog{
 	}
 
 	private void openDialog(KeyBinds.Section section, String name){
-		//boolean rebindTwo = section.device.type != DeviceType.controller;
-
 		rebindDialog = new Dialog(rebindAxis ? "Press an axis or key..." : "Press a key...", "dialog");
 
 		rebindKey = name;
@@ -266,34 +207,32 @@ public class KeybindDialog extends Dialog{
 		rebindDialog.getTitleTable().getCells().first().pad(4);
 		//rebindDialog.addButton("Cancel", rebindDialog::hide).pad(4);
 
-		if(section.device.type == DeviceType.keyboard) {
-			rebindDialog.keyDown(i -> {
-				setup();
-			});
+		rebindDialog.keyDown(i -> {
+			setup();
+		});
 
-			rebindDialog.addListener(new InputListener(){
-				public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-					if(Gdx.app.getType() == ApplicationType.Android) return false;
-					rebind(Input.findByType(Type.mouse, button, false));
-					return false;
-				}
+		rebindDialog.addListener(new InputListener(){
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				if(Gdx.app.getType() == ApplicationType.Android) return false;
+				rebind(Input.findByType(Type.mouse, button, false));
+				return false;
+			}
 
-				public boolean keyDown (InputEvent event, int keycode) {
-					rebindDialog.hide();
-					if(keycode == Keys.ESCAPE) return false;
-					rebind(Input.findByType(Type.key, keycode, false));
-					return false;
-				}
+			public boolean keyDown (InputEvent event, int keycode) {
+				rebindDialog.hide();
+				if(keycode == Keys.ESCAPE) return false;
+				rebind(Input.findByType(Type.key, keycode, false));
+				return false;
+			}
 
-                @Override
-                public boolean scrolled(InputEvent event, float x, float y, int amount) {
-				    if(!rebindAxis) return false;
-					rebindDialog.hide();
-                    rebind(Input.SCROLL);
-				    return false;
-                }
-            });
-		}
+            @Override
+            public boolean scrolled(InputEvent event, float x, float y, int amount) {
+			    if(!rebindAxis) return false;
+				rebindDialog.hide();
+                rebind(Input.SCROLL);
+			    return false;
+            }
+        });
 
 		rebindDialog.show();
         Timers.runTask(1f, () -> {
