@@ -116,10 +116,11 @@ GitHub Issues: https://github.com/goofmint/Mindustry-Classic/issues (2026-11-08 
 
 #### Task 2.4: 本家文言の日本語化(bundle_ja.properties) (Issue #10)
 
-- [ ] `bundle.properties` の 552 行のうち、残す予定のキー(削除予定のブロック・アイテム・チュートリアル・マルチプレイの文言を除く)を洗い出す
-- [ ] `bundle_ja.properties` を作り、残すキーをすべて日本語にする。キーはフラット構造のまま、`bundle.properties` と同じ順序で並べる
-- [ ] `text.blocks.*`(ブロック情報の項目名、44 キー)を日本語にする
+- [x] `bundle.properties` の 552 行のうち、残す予定のキー(削除予定のブロック・アイテム・チュートリアル・マルチプレイの文言を除く)を洗い出す
+- [x] `bundle_ja.properties` を作り、残すキーをすべて日本語にする。キーはフラット構造のまま、`bundle.properties` と同じ順序で並べる
+- [x] `text.blocks.*`(ブロック情報の項目名、44 キー)を日本語にする
 - [ ] `tools/check_bundles.py` を書く。en と ja のキー集合の差分を出し、差分があれば終了コード 1 にする。CI に組み込む
+  - (2.4 時点) スクリプトは作成済み(除外リストは `tools/bundle_exclude_keys.txt`)。CI は別ブランチの GitHub Actions に移るため、`.github/workflows/build.yml` への組み込みは後で行う。それまで未完了のまま残す。詳細は `.tmp/verify-2.4.md`
 - **完了条件**: `check_bundles.py` が差分 0。デスクトップで日本語に切り替えて、メニューから設定まで英語が残っていない
 - **依存**: 2.3
 - **推定時間**: 4h
