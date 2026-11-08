@@ -52,9 +52,8 @@ public class CodeRabbitBlock extends PowerTurret{
 	@Override
 	public void getStats(Array<String> list){
 		super.getStats(list);
-		list.add("[craftinfo]Seconds/item: " + Strings.toFixed(processTime, 1));
+		GateLogic.addStats(list, passedBit, stages, processTime);
 		list.add("[powerinfo]Power/item: " + Strings.toFixed(powerPerItem, 1));
-		list.add("[craftinfo]Quality Gain: " + stages);
 	}
 
 	@Override

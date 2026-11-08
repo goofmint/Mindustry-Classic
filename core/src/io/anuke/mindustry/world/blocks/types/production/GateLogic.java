@@ -1,7 +1,10 @@
 package io.anuke.mindustry.world.blocks.types.production;
 
+import com.badlogic.gdx.utils.Array;
 import io.anuke.mindustry.resource.CodeItem;
 import io.anuke.mindustry.resource.Item;
+import io.anuke.ucore.util.Bundles;
+import io.anuke.ucore.util.Strings;
 
 /**
  * コードの品質を上げる施設の変換部分。{@link QualityGate} と、Task 3.8 の CodeRabbitBlock(PowerTurret の
@@ -52,6 +55,16 @@ public final class GateLogic{
 		state.setCurrent(null);
 		state.setProgress(0f);
 		return CodeItem.advance(current, passedBit, stages);
+	}
+
+	/**
+	 * ブロック情報ダイアログの統計行(カテゴリ、品質の上昇、処理秒数)を足す。{@link QualityGate} と CodeRabbitBlock が使う。
+	 * 見出しは英語で書き、BlocksFragment.showBlockInfo() が text.blocks.* で訳す。カテゴリ名は値なので、ここで訳す。
+	 */
+	public static void addStats(Array<String> list, int passedBit, int stages, float processTime){
+		list.add("[craftinfo]Category: " + Bundles.get("text.code.category." + CodeItem.bitKey(passedBit)));
+		list.add("[craftinfo]Quality Gain: " + stages);
+		list.add("[craftinfo]Seconds/item: " + Strings.toFixed(processTime, 1));
 	}
 
 	/**

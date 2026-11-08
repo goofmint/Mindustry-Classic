@@ -10,7 +10,6 @@ import io.anuke.mindustry.world.Block;
 import io.anuke.mindustry.world.blocks.types.PowerBlock.PowerEntity;
 import io.anuke.ucore.core.Timers;
 import io.anuke.ucore.graphics.Draw;
-import io.anuke.ucore.util.Strings;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -59,8 +58,7 @@ public class QualityGate extends Block{
 	@Override
 	public void getStats(Array<String> list){
 		super.getStats(list);
-		list.add("[craftinfo]Seconds/item: " + Strings.toFixed(processTime, 1));
-		list.add("[craftinfo]Quality Gain: " + stages);
+		GateLogic.addStats(list, passedBit, stages, processTime);
 	}
 
 	@Override

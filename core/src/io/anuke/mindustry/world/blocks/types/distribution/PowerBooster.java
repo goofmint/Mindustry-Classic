@@ -9,6 +9,7 @@ import io.anuke.mindustry.world.blocks.types.production.Generator;
 import io.anuke.ucore.core.Timers;
 import io.anuke.ucore.graphics.Draw;
 import io.anuke.ucore.graphics.Lines;
+import io.anuke.ucore.util.Bundles;
 import io.anuke.ucore.util.Mathf;
 
 import static io.anuke.mindustry.Vars.tilesize;
@@ -46,7 +47,7 @@ public class PowerBooster extends Generator{
 	@Override
 	public void getStats(Array<String> list){
 		super.getStats(list);
-		list.add("[powerinfo]Power Range: " + powerRange + " tiles");
+		list.add("[powerinfo]Power Range: " + powerRange + " " + Bundles.get("text.blocks.unit.tiles"));
 	}
 
 	@Override

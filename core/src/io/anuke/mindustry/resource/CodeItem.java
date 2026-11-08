@@ -121,6 +121,16 @@ public final class CodeItem{
 		return QUALITY[attr.stage] * IMPORTANCE[attr.importance - 1];
 	}
 
+	/** 通過ビットの bundle キーの末尾(REVIEW は review、TEST は test、CI は ci)。それ以外は IllegalArgumentException */
+	public static String bitKey(int passedBit){
+		switch(passedBit){
+			case REVIEW: return "review";
+			case TEST: return "test";
+			case CI: return "ci";
+			default: throw new IllegalArgumentException("passedBit must be exactly one of REVIEW, TEST, CI: " + passedBit);
+		}
+	}
+
 	/** 施設を通したあとの Item。passedBit が既に立っていれば同じ Item を返す(品質は変えない) */
 	public static Item advance(Item item, int passedBit, int stages){
 		CodeAttr attr = attrOf(item);

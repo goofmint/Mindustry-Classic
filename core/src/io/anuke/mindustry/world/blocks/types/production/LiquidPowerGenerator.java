@@ -10,6 +10,7 @@ import io.anuke.ucore.core.Effects;
 import io.anuke.ucore.core.Effects.Effect;
 import io.anuke.ucore.core.Timers;
 import io.anuke.ucore.graphics.Draw;
+import io.anuke.ucore.util.Bundles;
 import io.anuke.ucore.util.Mathf;
 import io.anuke.ucore.util.Strings;
 
@@ -35,8 +36,8 @@ public class LiquidPowerGenerator extends Generator implements LiquidAcceptor{
 	public void getStats(Array<String> list){
 		super.getStats(list);
 		list.add("[liquidinfo]Liquid Capacity: " + (int)liquidCapacity);
-		list.add("[liquidinfo]Power/Liquid: " + Strings.toFixed(powerPerLiquid, 2) + " power/liquid");
-		list.add("[liquidinfo]Max liquid/second: " + Strings.toFixed(maxLiquidGenerate*60f, 2) + " liquid/s");
+		list.add("[liquidinfo]Power/Liquid: " + Strings.toFixed(powerPerLiquid, 2) + " " + Bundles.get("text.blocks.unit.powerliquid"));
+		list.add("[liquidinfo]Max liquid/second: " + Strings.toFixed(maxLiquidGenerate*60f, 2) + " " + Bundles.get("text.blocks.unit.liquidsecond"));
 		list.add("[liquidinfo]Input: " + generateLiquid);
 	}
 	
