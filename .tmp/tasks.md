@@ -82,9 +82,9 @@ GitHub Issues: https://github.com/goofmint/Mindustry-Classic/issues (2026-11-08 
 
 #### Task 2.1: 言語の構成を en と ja に絞る (Issue #7)
 
-- [ ] `core/assets/bundles/` から `bundle_de`、`es`、`fr`、`in_ID`、`ita`、`ko`、`pl`、`pt_BR`、`ru`、`tk`、`uk_UA` を削除する
-- [ ] `Vars.locales` を `{new Locale("en"), new Locale("ja")}` にする
-- [ ] `bundle.properties` に `text.locale.en=English`、`text.locale.ja=日本語` を足し、`LanguageDialog` のボタン表示を `Platform.getLocaleName()` から `Bundles.get("text.locale." + loc)` に変える
+- [x] `core/assets/bundles/` から `bundle_de`、`es`、`fr`、`in_ID`、`ita`、`ko`、`pl`、`pt_BR`、`ru`、`tk`、`uk_UA` を削除する
+- [x] `Vars.locales` を `{new Locale("en"), new Locale("ja")}` にする
+- [x] `bundle.properties` に `text.locale.en=English`、`text.locale.ja=日本語` を足し、`LanguageDialog` のボタン表示を `Platform.getLocaleName()` から `Bundles.get("text.locale." + loc)` に変える
 - [ ] `BundleLoader.getLocale()` の既定値(`"default"` = OS のロケール)が `ja` のとき `bundle_ja` を読むことをデスクトップで確認する
 - **完了条件**: 言語ダイアログに「English / 日本語」の2つだけが出る
 - **依存**: 1.4
