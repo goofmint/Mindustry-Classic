@@ -179,10 +179,10 @@ GitHub Issues: https://github.com/goofmint/Mindustry-Classic/issues (2026-11-08 
 
 #### Task 3.5: Recipes の差し替え (Issue #16)
 
-- [ ] `Recipes` を要件定義の費用表で書き直す。すべて `stack(Item.credit, n)`
-- [ ] 削るレシピ(`steelwall`、`diriumwall`、`diriumwalllarge`、`sorter`、`smelter`、`crucible`、`coalpurifier`、`titaniumpurifier`、`oilrefinery`、`stoneformer`、`lavasmelter`、`weaponFactory`、`stonedrill`、`irondrill`、`titaniumdrill`、`omnidrill`)を外す
-- [ ] `UpgradeRecipes` を空にする
-- [ ] 砲台 12 種を `PowerTurret` ベースに変える(`ammo` を外し、`powerUsed` を設定。本家の `Turret` 定義を `PowerTurret` に置き換える。`LaserTurret` と `waveturret` は元から電力)
+- [x] `Recipes` を要件定義の費用表で書き直す。すべて `stack(Item.credit, n)`
+- [x] 削るレシピ(`steelwall`、`diriumwall`、`diriumwalllarge`、`sorter`、`smelter`、`crucible`、`coalpurifier`、`titaniumpurifier`、`oilrefinery`、`stoneformer`、`lavasmelter`、`weaponFactory`、`stonedrill`、`irondrill`、`titaniumdrill`、`omnidrill`)を外す
+- [x] `UpgradeRecipes` を空にする
+- [x] 砲台 12 種を `PowerTurret` ベースに変える(`ammo` を外し、`powerUsed` を設定。本家の `Turret` 定義を `PowerTurret` に置き換える。`LaserTurret` と `waveturret` は元から電力)
 - **完了条件**: デスクトップで、残高を使ってブロックが置け、置くと残高が減る。弾薬なしで砲台が電力で撃つ
 - **依存**: 3.4
 - **推定時間**: 4h
