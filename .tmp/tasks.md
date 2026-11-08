@@ -71,9 +71,9 @@ GitHub Issues: https://github.com/goofmint/Mindustry-Classic/issues (2026-11-08 
 
 #### Task 1.6: CI とビルド手順の固定 (Issue #6)
 
-- [ ] `.github/workflows/build.yml` を作り、JDK 17 で `./gradlew :html:dist` を回して成果物をアップロードする
-- [ ] `README.md` に JDK 17 の導入、`./gradlew :desktop:run`、`./gradlew :html:dist`、`./gradlew pack` の手順を書く
-- [ ] 1.3〜1.5 の `.tmp/spike-*.md` の内容を README か `docs/UPGRADE.md` にまとめる
+- [ ] `.github/workflows/build.yml` を作り、JDK 17 で `./gradlew :html:dist` を回して成果物をアップロードする(ファイルは作成済み。GitHub 上での実行は PR を開いた後に確認する。`.tmp/verify-1.6.md`)
+- [x] `README.md` に JDK 17 の導入、`./gradlew :desktop:run`、`./gradlew :html:dist`、`./gradlew pack` の手順を書く
+- [x] 1.3〜1.5 の `.tmp/spike-*.md` の内容を README か `docs/UPGRADE.md` にまとめる
 - **完了条件**: CI が緑。README の手順どおりに新しい環境でビルドできる
 - **依存**: 1.5
 - **推定時間**: 2h

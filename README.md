@@ -41,6 +41,6 @@ Run all commands in the repository root. On Windows use `gradlew.bat` instead of
 - `./gradlew :html:dist`: builds the browser version into `html/build/dist`. It does not work over `file://`; serve the directory and open `index.html`, for example:
   `cd html/build/dist && python3 -m http.server 8765`, then open http://localhost:8765/index.html.
   The browser build has no multiplayer (Join).
-- `./gradlew pack`: packs the sprites in `core/assets-raw/sprites` into `core/assets/sprites/sprites.atlas` and `sprites.png`. These two files are tracked in git, so run it after changing the raw sprites and commit the result. It is not needed for a normal build.
+- `./gradlew pack`: packs the sprites in `core/assets-raw/sprites` into `core/assets/sprites/sprites.atlas` and `sprites.png`. These two files are tracked in git, so run it after changing the raw sprites and commit the result. It is not needed for a normal build. Running it on the current tree already rewrites both files (the atlas header spacing and the PNG bytes change; the sprite layout does not), so commit them only together with a real sprite change.
 
 CI (`.github/workflows/build.yml`) runs `./gradlew :core:compileJava :desktop:compileJava :html:dist` on JDK 17 and uploads `html/build/dist` as the `html-dist` artifact.
