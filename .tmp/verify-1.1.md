@@ -5,7 +5,7 @@
 - Base commit: `d487a23`
 - **No build was run.** `./gradlew` was not executed (wrapper 4.10.2 is incompatible with modern JDKs; Task 1.3).
 
-## Toolchain (install method: SDKMAN, user-level, no sudo)
+## Toolchain (install method: SDKMAN for Gradle, Homebrew for JDK 17; user-level, no sudo)
 
 ### Before install
 ```
@@ -48,7 +48,26 @@ Ant:           Apache Ant(TM) version 1.10.15 compiled on August 25 2024
 Launcher JVM:  27.0.1.0.3 (Homebrew 27.0.1.0.3)
 OS:            Mac OS X 27.2 aarch64
 ```
-Result: Gradle 8.14 is available; it currently launches on JVM 27, NOT 17. The completion criterion "`java -version` returns 17" is NOT met.
+Result at this point: Gradle 8.14 is available but launches on JVM 27.
+
+### Resolution (orchestrator follow-up, same day)
+- `sdk install java 17.0.21.0+9-zulu`: FAILED with the same SDKMAN repackaging error (`zip error: Nothing to do!` / "archive was corrupt"). SDKMAN's macOS post-install hook is broken in this environment for every JDK distribution tried, so SDKMAN is not used for the JDK.
+- `brew install openjdk@17`: Homebrew reported `openjdk@17 17.0.21.0.3 is already installed` (keg-only, hence invisible to `java_home -V` and not on PATH).
+- JDK 17 home: `/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home`
+```
+$ $JAVA_HOME/bin/java -version
+openjdk version "17.0.21.0.3" 2026-10-24
+OpenJDK Runtime Environment Homebrew (build 17.0.21.0.3+0)
+OpenJDK 64-Bit Server VM Homebrew (build 17.0.21.0.3+0, mixed mode, sharing)
+$ $JAVA_HOME/bin/javac -version
+javac 17.0.21.0.3
+$ JAVA_HOME=... gradle --version   (SDKMAN gradle 8.14)
+Gradle 8.14
+Launcher JVM:  17.0.21.0.3 (Homebrew 17.0.21.0.3+0)
+```
+- How to activate for build work (not committed to the repo; Task 1.3 decides whether to pin it in `gradle.properties`):
+  `export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home; export PATH="$JAVA_HOME/bin:$PATH"`
+- Completion criterion "`java -version` returns 17" is met with `JAVA_HOME` set as above. The system default `java` remains JDK 27 (Homebrew), on purpose.
 
 ## Pre-migration baseline (read from repo files, nothing executed)
 
