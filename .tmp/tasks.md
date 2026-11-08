@@ -169,10 +169,10 @@ GitHub Issues: https://github.com/goofmint/Mindustry-Classic/issues (2026-11-08 
 
 #### Task 3.4: Score と残高 (Issue #15)
 
-- [ ] `Score` を設計書 §2.2 のインターフェースで実装し、`GameState` に `score` と `won` を足す
-- [ ] `Inventory.clearItems()` の `addItem(Item.stone, 40)` を `addItem(Item.credit, Balance.INITIAL_CREDIT)` に変える。`Balance.java` を作る
-- [ ] `Map` に `targetScore` を足し、`maps.json` の読み込みで入ることを確認する
-- [ ] テスト: 端数の繰り越し、納品での 0 割れで `bankrupt()`、建設では立たない、倍率の境界値
+- [x] `Score` を設計書 §2.2 のインターフェースで実装し、`GameState` に `score` と `won` を足す
+- [x] `Inventory.clearItems()` の `addItem(Item.stone, 40)` を `addItem(Item.credit, Balance.INITIAL_CREDIT)` に変える。`Balance.java` を作る
+- [x] `Map` に `targetScore` を足し、`maps.json` の読み込みで入ることを確認する
+- [x] テスト: 端数の繰り越し、納品での 0 割れで `bankrupt()`、建設では立たない、倍率の境界値
 - **完了条件**: テストが緑。HUD の既存アイテム欄に credit が 150 と出る
 - **依存**: 3.2
 - **推定時間**: 3h
