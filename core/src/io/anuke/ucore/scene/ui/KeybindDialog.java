@@ -82,7 +82,7 @@ public class KeybindDialog extends Dialog{
 
 			Table table = new Table();
 
-			Label device = new Label("Keyboard");
+			Label device = new Label(Bundles.get("text.keybind.device." + section.device.type.name()));
 			device.setAlignment(Align.center);
 
 			Array<InputDevice> devices = Inputs.getDevices();
@@ -101,7 +101,7 @@ public class KeybindDialog extends Dialog{
 
 			stable.add(device).minWidth(device.getMinWidth() + 60);
 
-			device.setText(Inputs.getDevices().get(sectionControls.get(section, 0)).name);
+			device.setText(Bundles.get("text.keybind.device." + Inputs.getDevices().get(sectionControls.get(section, 0)).type.name()));
 
 			stable.addButton(">", () -> {
 				int i = sectionControls.get(section, 0);
@@ -137,23 +137,23 @@ public class KeybindDialog extends Dialog{
 						table.add(axt).left().minWidth(90).padRight(20);
 					}
 
-					table.addButton("Rebind", () ->{
+					table.addButton(Bundles.get("text.keybind.rebind"), () ->{
 						rebindAxis = true;
 						rebindMin = true;
 						openDialog(section, key);
 					});
 					table.row();
 				}else{
-					table.add(Strings.capitalize(key), style.keyNameColor).left().padRight(40).padLeft(8);
+					table.add(Strings.capitalize(Bundles.get("keybind."+key+".name", key)), style.keyNameColor).left().padRight(40).padLeft(8);
 					table.add(section.binds.get(section.device.type).get(key, keybind.input).toString(), style.keyColor).left().minWidth(90).padRight(20);
-					table.addButton("Rebind", () -> openDialog(section, key));
+					table.addButton(Bundles.get("text.keybind.rebind"), () -> openDialog(section, key));
 					table.row();
 				}
 			}
 
 			table.setVisible(() -> this.section.equals(section));
 
-			table.addButton("Reset to Defaults", () -> {
+			table.addButton(Bundles.get("text.settings.reset"), () -> {
 				KeyBinds.resetToDefaults();
 				setup();
 				KeyBinds.save();
@@ -200,7 +200,7 @@ public class KeybindDialog extends Dialog{
 	}
 
 	private void openDialog(KeyBinds.Section section, String name){
-		rebindDialog = new Dialog(rebindAxis ? "Press an axis or key..." : "Press a key...", "dialog");
+		rebindDialog = new Dialog(rebindAxis ? Bundles.get("text.keybind.press.axis") : Bundles.get("text.keybind.press.key"), "dialog");
 
 		rebindKey = name;
 
