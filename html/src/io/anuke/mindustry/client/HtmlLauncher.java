@@ -61,7 +61,7 @@ public class HtmlLauncher extends GwtApplication {
 
     @Override
     public GwtApplicationConfiguration getConfig() {
-        GwtApplicationConfiguration config = new GwtApplicationConfiguration(WIDTH, HEIGHT);
+        GwtApplicationConfiguration config = new GwtApplicationConfiguration(2000, 2000);
 
         Element element = Document.get().getElementById("embed-html");
         VerticalPanel panel = new VerticalPanel();
@@ -71,8 +71,6 @@ public class HtmlLauncher extends GwtApplication {
         panel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
         element.appendChild(panel.getElement());
         config.rootPanel = panel;
-        config.width = 2000;
-        config.height = 2000;
 
         return config;
     }

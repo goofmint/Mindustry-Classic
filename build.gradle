@@ -92,6 +92,7 @@ project(":html") {
         implementation "com.badlogicgames.gdx:gdx:$gdxVersion:sources"
         implementation "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion:sources"
         implementation "com.badlogicgames.gdx:gdx-ai:$aiVersion:sources"
+        implementation "com.google.jsinterop:jsinterop-annotations:2.0.2:sources"
     }
 }
 

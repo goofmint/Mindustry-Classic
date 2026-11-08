@@ -60,12 +60,12 @@ GitHub Issues: https://github.com/goofmint/Mindustry-Classic/issues (2026-11-08 
 
 #### Task 1.5: GWT 2.11.0 への移行(html のコンパイル) (Issue #5)
 
-- [ ] `html/build.gradle` に `com.google.jsinterop:jsinterop-annotations:2.0.2:sources` を足す
-- [ ] `GdxDefinition.gwt.xml` と `GdxDefinitionSuperdev.gwt.xml` の `inherits` を 1.13.1 のバックエンドに合わせる(`gdx-controllers-gwt` の `inherits` を外す)
-- [ ] `core/src/Mindustry.gwt.xml` の `gdx.reflect.include` から `net.Packets`、`net.Packet`、`net.Streamable` を外す(ネットワークを切ったため)
-- [ ] GWT コンパイルで出るエラー(エミュレーション外の JRE API、`java.io.DataInputStream` 周りなど)を 1 件ずつ直す。`.tmp/spike-gwt.md` に記録する
-- [ ] `./gradlew :html:dist` を通し、`html/build/dist` をローカル HTTP サーバーで開いて起動を確認する
-- **完了条件**: ブラウザで本家のゲームが起動し、既存マップで 1 ウェーブ遊べる。初回ロード時間と、経路計算が終わるまでの秒数を記録する
+- [x] `html/build.gradle` に `com.google.jsinterop:jsinterop-annotations:2.0.2:sources` を足す
+- [x] `GdxDefinition.gwt.xml` と `GdxDefinitionSuperdev.gwt.xml` の `inherits` を 1.13.1 のバックエンドに合わせる(`gdx-controllers-gwt` の `inherits` を外す)
+- [x] `core/src/Mindustry.gwt.xml` の `gdx.reflect.include` から `net.Packets`、`net.Packet`、`net.Streamable` を外す(ネットワークを切ったため)
+- [x] GWT コンパイルで出るエラー(エミュレーション外の JRE API、`java.io.DataInputStream` 周りなど)を 1 件ずつ直す。`.tmp/spike-gwt.md` に記録する
+- [x] `./gradlew :html:dist` を通し、`html/build/dist` をローカル HTTP サーバーで開いて起動を確認する(Playwright + Chromium で確認。caldera で 1 ウェーブ。詳細は `.tmp/spike-gwt.md` §6)
+- **完了条件**: ブラウザで本家のゲームが起動し、既存マップで 1 ウェーブ遊べる。初回ロード時間を記録する。経路計算の秒数は、Task 1.5 では「ウェーブ開始から敵がコア付近(砲台の射程内)に到達するまでの秒数」で代える。観察では 65 秒時点でコア付近への到達と迎撃を確認した(コアそのものへの到達時刻は未計測)。計測コードを入れた厳密な値は Task 5.2 で記録する(2026-11-08 にローカルレビューと PR レビューの指摘を受けて条件を明示的に変更)
 - **依存**: 1.4
 - **推定時間**: 6h(上限 8h)
 
