@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.utils.Array;
 import io.anuke.mindustry.core.GameState.State;
+import io.anuke.mindustry.core.UI;
 import io.anuke.mindustry.input.InputHandler;
 import io.anuke.mindustry.resource.*;
 import io.anuke.mindustry.ui.dialogs.FloatingDialog;
@@ -361,7 +362,7 @@ public class BlocksFragment implements Fragment{
 			Image image = new Image(Draw.hasRegion("icon-" + Item.getByID(i).name) ?
 					Draw.region("icon-" + Item.getByID(i).name) : Draw.region("blank"));
 			Label label = new Label(formatted);
-			label.setFontScale(fontscale*1.5f);
+			label.setFontScale(UI.labelScale(fontscale*1.5f));
 			itemtable.add(image).size(8*3);
 			itemtable.add(label).expandX().left();
 			if(i % 2 == 1 && i > 0) itemtable.row();

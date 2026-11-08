@@ -45,7 +45,7 @@ When the language is `ja`:
 ## Caveats
 - Disposal: after the swap, the two square fonts are no longer referenced by the skin, so `Skin.dispose()` does not dispose them in `ja`. The `Core.font` misaki instance is not in the skin either; its texture belongs to `japanese`. Disposal is left as it was
 - In-world text drawn through `Draw.text` (player names `Draw.tscl(0.125)`, the respawn Fx `0.25`, block debug) uses absolute scales tuned for square. With misaki these come out about 1/3 of the square size and are probably unreadable. Fixing this needs changes in `Renderer` / `Fx`, which are outside this task
-- Labels with an absolute font scale render misaki at a non-integer scale (blurry dots): `BlocksFragment` item table `setFontScale(fontscale*1.5f)` = 0.75, `HudFragment` wave label `.scale(fontscale*1.5f)`, paused/respawn labels `.scale(0.75f)`. Not changed (outside this task)
+- Labels with an absolute font scale: fixed in the follow-up below (`UI.labelScale()`)
 - `FileChooser.updateFiles()` measures the path with `Core.font`. Once in game, `Draw.tscl(fontscale)` changes that font's scale, so the measurement can differ from the UI font. Minor
 - `setUseIntegerPositions(false)` is kept for misaki. Check whether the dots look crisp or show half-pixel blur
 - In English mode, the Language dialog's 「日本語」 label still goes through `Label.checkFallback()`. With the new key it may now pick `japanese-chat` instead of `japanese`. The text has no markup, so the display should be the same
@@ -73,3 +73,21 @@ Settings -> Language -> 日本語 -> restart (reload the page in the browser bui
 - [ ] Dot crispness (`setUseIntegerPositions(false)`)
 - [ ] In-world text size (player names, respawn text): expected to be small, note it
 - [ ] English mode: no visual change compared with before this branch
+
+## Orchestrator check 1 (browser, Playwright + Chromium, locale=ja)
+- OK: menu, settings, language dialog, level select, place panel (name 160 px / health 240 px), Japanese switching itself
+- NG (before the fix below): in-game HUD. The wave label (`HudFragment`, `.scale(fontscale*1.5f)`) and the item counts above the place menu (`BlocksFragment.updateItems()`, `setFontScale(fontscale*1.5f)`) are tiny and unreadable. The cause is the absolute scale 0.75 applied to the 8 px misaki font
+
+## Follow-up fix: absolute label scales
+- Added `UI.labelScale(float squareScale)` (static), backed by `private static float japaneseScale`. `loadSkin()` sets `japaneseScale = jscale` in the ja branch, and the field stays 0 otherwise
+  - other locales: returns `squareScale` unchanged, so the square look is exactly as before. The argument is the absolute scale the caller used to pass, which also keeps the 0.75 of the paused/respawn labels independent of `fontscale` as before
+  - ja: ignores `squareScale` and returns `jscale` (an integer, the same as normal text, 2 at fontscale 0.5). The wave/item labels are therefore the same size as normal text in ja, not 1.5x. A non-integer or smaller scale makes the dot font unreadable
+  - Deviation from the suggested `labelScale(mult)` returning `fontscale * mult`: the paused/respawn labels use a fixed 0.75, which is not `fontscale * 1.5` on 2x-density devices (fontscale 1). Passing the absolute square scale keeps every non-ja value identical
+- Replaced exactly 4 call sites:
+  - `HudFragment` wave label: `.scale(fontscale*1.5f)` -> `.scale(UI.labelScale(fontscale*1.5f))`
+  - `HudFragment` paused label: `.scale(0.75f)` -> `.scale(UI.labelScale(0.75f))`
+  - `HudFragment` respawn label: `.scale(0.75f)` -> `.scale(UI.labelScale(0.75f))`
+  - `BlocksFragment.updateItems()` item count: `setFontScale(fontscale*1.5f)` -> `setFontScale(UI.labelScale(fontscale*1.5f))`
+- Not changed (remaining issue): in-world `Draw.text` (`Renderer.drawPlayerNames`, `Fx` respawn text, block/enemy debug) still uses absolute scales tuned for square
+- `./gradlew :core:compileJava :desktop:compileJava` -> exit 0; `./gradlew :html:dist` -> BUILD SUCCESSFUL in 22s (output in `html/build/dist`)
+- To check: in-game wave label, item counts, pause label (single player, pause) and respawn label are readable in ja and unchanged in en

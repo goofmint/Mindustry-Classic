@@ -70,6 +70,8 @@ public class UI extends SceneModule{
     public final DebugFragment debugfrag = new DebugFragment();
 
     private Locale lastLocale;
+    /**Integer scale of the misaki fonts; 0 when the square font is used (set in loadSkin()).*/
+    private static float japaneseScale = 0f;
 	
 	public UI() {
 		Dialog.setShowAction(()-> sequence(
@@ -146,6 +148,7 @@ public class UI extends SceneModule{
 				font.setUseIntegerPositions(false);
 				font.getData().setScale(jscale);
 			}, japanese, japaneseChat, japaneseWorld);
+			japaneseScale = jscale;
 
 			Core.font = japaneseWorld;
 		}else{
@@ -156,6 +159,14 @@ public class UI extends SceneModule{
 				font.getData().lineHeight -= Unit.dp.scl(2f);
 			}, skin.font(), skin.getFont("default-font-chat"));
 		}
+	}
+
+	/**Font scale for labels that set an absolute scale (Label.setFontScale() / label.scale()).
+	 * squareScale is the scale used with the square font and is returned as is for other locales.
+	 * With the misaki fonts it is ignored and the integer misaki scale is returned: misaki is an 8px
+	 * dot font, so a non-integer or smaller scale (0.75 for fontscale*1.5) makes it unreadable.*/
+	public static float labelScale(float squareScale){
+		return japaneseScale > 0f ? japaneseScale : squareScale;
 	}
 
 	/**Replaces style font references that are the same object as the replaced square fonts.*/

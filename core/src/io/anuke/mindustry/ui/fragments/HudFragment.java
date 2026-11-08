@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Interpolation;
 import io.anuke.mindustry.core.GameState.State;
+import io.anuke.mindustry.core.UI;
 import io.anuke.mindustry.net.Net;
 import io.anuke.ucore.core.Core;
 import io.anuke.ucore.core.Inputs;
@@ -124,7 +125,7 @@ public class HudFragment implements Fragment{
 			atop();
 
 			new table("pane"){{
-				new label("[orange]< "+ Bundles.get("text.paused") + " >").scale(0.75f).pad(6);
+				new label("[orange]< "+ Bundles.get("text.paused") + " >").scale(UI.labelScale(0.75f)).pad(6);
 			}}.end();
 		}}.end();
 
@@ -143,7 +144,7 @@ public class HudFragment implements Fragment{
 		new table(){{
 			new table("pane"){{
 
-				new label(()->"[orange]"+Bundles.get("text.respawn")+" " + (int)(control.getRespawnTime()/60)).scale(0.75f).pad(10);
+				new label(()->"[orange]"+Bundles.get("text.respawn")+" " + (int)(control.getRespawnTime()/60)).scale(UI.labelScale(0.75f)).pad(10);
 
 				visible(()->control.getRespawnTime() > 0 && !state.is(State.menu));
 
@@ -195,7 +196,7 @@ public class HudFragment implements Fragment{
 			new table(){{
 				aleft();
 
-				new label(() -> Bundles.format("text.wave", state.wave)).scale(fontscale*1.5f).left().padLeft(-6);
+				new label(() -> Bundles.format("text.wave", state.wave)).scale(UI.labelScale(fontscale*1.5f)).left().padLeft(-6);
 
 				row();
 
