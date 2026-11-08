@@ -236,7 +236,7 @@ public enum PlaceMode{
 		}
 		
 		public void draw(int tilex, int tiley, int endx, int endy){
-			if(mobile && !Gdx.input.isTouched(0) && !control.showCursor()){
+			if(mobile && !Gdx.input.isTouched(0)){
 				return;
 			}
 
