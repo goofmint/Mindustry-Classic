@@ -58,8 +58,19 @@
 - 出口が詰まると施設の中に 1 個溜まり、それ以上受けない。詰まりが解けると出る
 - 処理中に保存して読み込むと、処理中のコードと進捗が戻る
 
+## 追記: QualityGate と PoweredQualityGate への分割
+
+最初の実装は `QualityGate extends PowerBlock` の 1 クラスで、シニアエンジニアも `PowerAcceptor` になっていた。`Generator.laserTarget()` は最初に当たった `PowerAcceptor` でレーザーを止めるので、シニアを発電機のレーザーの途中に置くと、その先へ電力が届かない(シニアの `acceptsPower()` は false なので、電力はシニアにも入らない)。Task 3.6 の `CodeSource` / `PoweredCodeSource` と同じ方針で、次のように分けた(設計書 §2.2 の「`PowerBlock` を継承」とは異なる)。
+
+- `QualityGate extends Block`(シニアエンジニア用): `PowerAcceptor` を実装しない。`powerPerItem()` は常に 0 を返す。電力バーは無く、`getStats()` に電力の行を出さない。`update = true`、`solid = true`
+- `PoweredQualityGate extends QualityGate implements PowerAcceptor`(テストと CI の 4 種): `powerPerItem`、`powerCapacity = 10f`、黄色の電力バー。`acceptsPower()` / `addPower()` / `setPower()` は `PoweredCodeSource` と同じ形。`getStats()` に `Power Capacity` と `Power/item` を出す
+- `GateEntity` は両方とも `PowerEntity` を継承したまま。`QualityGate` では `power` は 0 のままで、保存形式(電力 float、ID byte、進捗 float)は共通
+- `GateLogic` は変えていない。ブロック ID と登録順も変わらない
+- テスト: `QualityGateTest` を「シニアは `PowerAcceptor` でなく、他 4 種は `PoweredQualityGate`(`PowerAcceptor`)」に直し、`addPower()` が容量 10 まで受けて受け入れ量を返すテストを足した。`./gradlew :core:test` 72 件すべて成功
+- `./gradlew :html:dist` を作り直し、出力を `html/build/dist` に残した
+- `./gradlew :desktop:run` は 2 回とも、ゲームのコードに入る前のウィンドウ作成(`GLFW.glfwGetMonitorPos`、`Lwjgl3ApplicationConfiguration.toLwjgl3Monitor`)で NullPointerException になった。主モニターが取れていない環境側の問題とみられ、分割の前(同じセッション)の起動は成功している
+- ブラウザで追加で確かめること: シニアを発電機のレーザーの途中に置いても、後ろの施設へ電力が届く
+
 ## 既知の制限と懸念
 
-- シニアエンジニアも `PowerBlock` なので `PowerAcceptor` になる。`Generator.laserTarget()` は最初に当たった `PowerAcceptor` でレーザーを止めるため、シニアを発電機のレーザーの途中に置くと、その先へ電力が届かない(`acceptsPower()` が false なので電力は入らず、消える)。Task 3.6 で人間のエンジニアを `PowerAcceptor` にしなかったのと同じ問題。設計書と計画どおり 1 クラスにしたが、直すなら電力を使わない `QualityGate extends Block` と電力を使うサブクラスに分ける必要がある
-- シニアの `getStats()` にも PowerBlock の `Power Capacity: 10.0` が出る
 - 撤去しても処理中のコードと出し待ちは返らない。マルチプレイヤーの同期は考えていない

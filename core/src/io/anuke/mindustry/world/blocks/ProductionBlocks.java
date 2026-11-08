@@ -239,10 +239,9 @@ public class ProductionBlocks{
 			passedBit = CodeItem.REVIEW;
 			stages = 1;
 			processTime = 5;
-			powerPerItem = 0;
 		}
 	},
-	unitTest = new QualityGate("unit-test"){
+	unitTest = new PoweredQualityGate("unit-test"){
 		{
 			passedBit = CodeItem.TEST;
 			stages = 1;
@@ -250,7 +249,7 @@ public class ProductionBlocks{
 			powerPerItem = 0.3f;
 		}
 	},
-	e2eTest = new QualityGate("e2e-test"){
+	e2eTest = new PoweredQualityGate("e2e-test"){
 		{
 			passedBit = CodeItem.TEST;
 			stages = 1;
@@ -258,7 +257,7 @@ public class ProductionBlocks{
 			powerPerItem = 0.5f;
 		}
 	},
-	jenkins = new QualityGate("jenkins"){
+	jenkins = new PoweredQualityGate("jenkins"){
 		{
 			passedBit = CodeItem.CI;
 			stages = 1;
@@ -266,7 +265,7 @@ public class ProductionBlocks{
 			powerPerItem = 0.4f;
 		}
 	},
-	githubActions = new QualityGate("github-actions"){
+	githubActions = new PoweredQualityGate("github-actions"){
 		{
 			passedBit = CodeItem.CI;
 			stages = 1;

@@ -6,7 +6,8 @@ import io.anuke.mindustry.entities.TileEntity;
 import io.anuke.mindustry.resource.Item;
 import io.anuke.mindustry.world.BlockBar;
 import io.anuke.mindustry.world.Tile;
-import io.anuke.mindustry.world.blocks.types.PowerBlock;
+import io.anuke.mindustry.world.Block;
+import io.anuke.mindustry.world.blocks.types.PowerBlock.PowerEntity;
 import io.anuke.ucore.core.Timers;
 import io.anuke.ucore.graphics.Draw;
 import io.anuke.ucore.util.Strings;
@@ -20,8 +21,13 @@ import java.io.IOException;
  * 変換は {@link GateLogic} が行う。処理中のコードは {@link GateEntity#current} に持ち、entity.items は使わない。
  * ただし隣が受け取れなかった出力は、{@link #offloadNear} の仕様どおり entity.items に入るので、{@link #tryDump} で吐き出す。
  * 出し切るまで次のコードは受けない。
+ * <p>
+ * このクラスは電力を使わない(シニアエンジニア用)。{@link io.anuke.mindustry.world.blocks.types.PowerAcceptor}
+ * を実装しないので、発電機やパワーレーザーのレーザーを受け止めない。{@code Generator.laserTarget()} は
+ * 最初に当たった PowerAcceptor でレーザーを止めるため、電力を使わないブロックが PowerAcceptor だと、
+ * その先へ電力が届かなくなる。電力(トークン)を使う施設は {@link PoweredQualityGate} を使う。
  */
-public class QualityGate extends PowerBlock{
+public class QualityGate extends Block{
 	protected final int timerDump = timers++;
 
 	/** 通過ビット({@code CodeItem.REVIEW}、{@code TEST}、{@code CI} のどれか 1 つ) */
@@ -30,19 +36,20 @@ public class QualityGate extends PowerBlock{
 	protected int stages = 1;
 	/** 1 個の処理時間(秒) */
 	protected float processTime;
-	/** 1 個あたりの消費電力。0 なら電力を使わない */
-	protected float powerPerItem;
 
 	public QualityGate(String name){
 		super(name);
+		update = true;
+		solid = true;
+	}
+
+	/** 1 個あたりの消費電力。このクラスは電力を使わないので 0。{@link PoweredQualityGate} が上書きする */
+	protected float powerPerItem(){
+		return 0f;
 	}
 
 	@Override
 	public void init(){
-		//電力を使わない施設では、PowerBlock のコンストラクタが最後に足した電力バーを外す
-		if(powerPerItem <= 0f){
-			bars.pop();
-		}
 		bars.add(new BlockBar(Color.GREEN, true, tile -> {
 			GateEntity entity = tile.entity();
 			return entity.current == null ? -1f : entity.progress;
@@ -53,7 +60,6 @@ public class QualityGate extends PowerBlock{
 	public void getStats(Array<String> list){
 		super.getStats(list);
 		list.add("[craftinfo]Seconds/item: " + Strings.toFixed(processTime, 1));
-		list.add("[powerinfo]Power/item: " + Strings.toFixed(powerPerItem, 1));
 		list.add("[craftinfo]Quality Gain: " + stages);
 	}
 
@@ -61,7 +67,7 @@ public class QualityGate extends PowerBlock{
 	public void update(Tile tile){
 		GateEntity entity = tile.entity();
 
-		Item result = GateLogic.update(entity, passedBit, stages, processTime, powerPerItem, Timers.delta());
+		Item result = GateLogic.update(entity, passedBit, stages, processTime, powerPerItem(), Timers.delta());
 		if(result != null){
 			offloadNear(tile, result);
 		}
@@ -91,11 +97,6 @@ public class QualityGate extends PowerBlock{
 	}
 
 	@Override
-	public boolean acceptsPower(Tile tile){
-		return powerPerItem > 0f && super.acceptsPower(tile);
-	}
-
-	@Override
 	public void draw(Tile tile){
 		super.draw(tile);
 
@@ -110,6 +111,7 @@ public class QualityGate extends PowerBlock{
 		return new GateEntity();
 	}
 
+	/** 電力は {@link PoweredQualityGate} だけが使う。このクラスでは power は 0 のまま(保存形式は共通) */
 	public static class GateEntity extends PowerEntity implements GateLogic.GateState{
 		/** 処理中のコード。空なら null */
 		public Item current;

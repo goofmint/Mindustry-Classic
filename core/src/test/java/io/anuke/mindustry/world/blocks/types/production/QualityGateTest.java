@@ -10,6 +10,7 @@ import io.anuke.mindustry.resource.Section;
 import io.anuke.mindustry.world.Block;
 import io.anuke.mindustry.world.Tile;
 import io.anuke.mindustry.world.blocks.ProductionBlocks;
+import io.anuke.mindustry.world.blocks.types.PowerAcceptor;
 import io.anuke.mindustry.world.blocks.types.production.QualityGate.GateEntity;
 import io.anuke.ucore.core.Core;
 import org.junit.BeforeClass;
@@ -66,7 +67,7 @@ public class QualityGateTest {
 			assertEquals(gate.name, BITS[i], gate.passedBit);
 			assertEquals(gate.name, 1, gate.stages);
 			assertEquals(gate.name, TIMES[i], gate.processTime, 0f);
-			assertEquals(gate.name, POWERS[i], gate.powerPerItem, 0f);
+			assertEquals(gate.name, POWERS[i], gate.powerPerItem(), 0f);
 			assertEquals(gate.name, 1, gate.width);
 			assertEquals(gate.name, 1, gate.height);
 		}
@@ -125,13 +126,27 @@ public class QualityGateTest {
 		assertFalse(gate.acceptItem(CodeItem.get(1, 0, 1), tile, conveyor));
 	}
 
+	/** シニアは PowerAcceptor でない(Generator.laserTarget() は最初の PowerAcceptor でレーザーを止めるため) */
 	@Test
-	public void onlyPoweredGatesAcceptPower(){
-		QualityGate senior = (QualityGate)ProductionBlocks.seniorEngineer;
-		QualityGate unit = (QualityGate)ProductionBlocks.unitTest;
+	public void onlyPoweredGatesArePowerAcceptors(){
+		assertFalse(ProductionBlocks.seniorEngineer instanceof PowerAcceptor);
+		for(int i = 1; i < GATES.length; i++){
+			assertTrue(GATES[i].name, GATES[i] instanceof PowerAcceptor);
+			assertTrue(GATES[i].name, GATES[i] instanceof PoweredQualityGate);
+		}
+	}
 
-		assertFalse(senior.acceptsPower(gateTile(senior)));
-		assertTrue(unit.acceptsPower(gateTile(unit)));
+	@Test
+	public void poweredGateTakesPowerUpToCapacity(){
+		PoweredQualityGate unit = (PoweredQualityGate)ProductionBlocks.unitTest;
+		Tile tile = gateTile(unit);
+		GateEntity entity = tile.entity();
+
+		assertTrue(unit.acceptsPower(tile));
+		assertEquals(4f, unit.addPower(tile, 4f), 0f);
+		assertEquals(6f, unit.addPower(tile, 100f), 0f);
+		assertEquals(10f, entity.power, 0f);
+		assertFalse(unit.acceptsPower(tile));
 	}
 
 	@Test
