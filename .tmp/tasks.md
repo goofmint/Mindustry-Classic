@@ -230,9 +230,9 @@ GitHub Issues: https://github.com/goofmint/Mindustry-Classic/issues (2026-11-08 
 
 #### Task 3.10: 敵の出現倍率 (Issue #21)
 
-- [ ] `EnemySpawn.evaluate()` の戻り値に `state.score.qualityMultiplier` を掛け、端数を `Mathf.chance()` で切り上げる
-- [ ] `WaveCreator` に `target` 型が無いことを確認する(確認済み、変更なし)
-- [ ] デバッグ用に HUD へ倍率を出す(`Settings` の `fps` 表示と同じ条件で出す)
+- [x] `EnemySpawn.evaluate()` の戻り値に `state.score.qualityMultiplier` を掛け、端数を `Mathf.chance()` で切り上げる
+- [x] `WaveCreator` に `target` 型が無いことを確認する(確認済み、変更なし)
+- [x] デバッグ用に HUD へ倍率を出す(`Settings` の `fps` 表示と同じ条件で出す)
 - **完了条件**: 品質 -5 を流し続けると次のウェーブの敵が目に見えて増え、品質 1 を流すと減る
 - **依存**: 3.9
 - **推定時間**: 2h
