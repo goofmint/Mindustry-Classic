@@ -29,9 +29,35 @@ jobs:
         run: |
           test -f html/build/dist/index.html
           test -f html/build/dist/html/html.nocache.js
+          test -f html/build/dist/.nojekyll
 
       - uses: actions/upload-artifact@v7
         with:
           name: html-dist
           path: html/build/dist
           if-no-files-found: error
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: html/build/dist
+
+  deploy:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    steps:
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -32,6 +32,8 @@ task dist(dependsOn: [clean, compileGwt]) {
             from "war"
             into "build/dist"
         }
+        // GitHub Pages: skip Jekyll processing of the GWT output
+        file("build/dist/.nojekyll").text = ""
     }
 }
 
