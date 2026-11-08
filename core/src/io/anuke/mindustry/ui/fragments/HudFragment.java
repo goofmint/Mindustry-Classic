@@ -29,6 +29,7 @@ public class HudFragment implements Fragment{
 	private Table respawntable;
 	private Table wavetable;
 	private Label infolabel;
+	private Label scorelabel;
 	private boolean shown = true;
 	private float dsize = 58;
 	private float isize = 40;
@@ -97,6 +98,13 @@ public class HudFragment implements Fragment{
 					visible(() -> shown);
 					addWaveTable();
 				}}.fillX().end();
+
+				row();
+
+				//目標と残高。波表と違って折り畳みでも隠さない
+				scorelabel = new label(() -> Bundles.format("text.score.status",
+						scoreValue(state.score.target), scoreValue(state.score.balance())))
+						.scale(UI.labelScale(fontscale*1.5f)).left().get();
 
 				row();
 
@@ -169,12 +177,19 @@ public class HudFragment implements Fragment{
 			blockfrag.toggle(false, dur, in);
 			wavetable.actions(Actions.translateBy(0, wavetable.getHeight() + dsize, dur, in), Actions.call(() -> shown = false));
 			infolabel.actions(Actions.translateBy(0, wavetable.getHeight(), dur, in), Actions.call(() -> shown = false));
+			scorelabel.actions(Actions.translateBy(0, wavetable.getHeight(), dur, in));
 		} else {
 			shown = true;
 			blockfrag.toggle(true, dur, in);
 			wavetable.actions(Actions.translateBy(0, -wavetable.getTranslation().y, dur, in));
 			infolabel.actions(Actions.translateBy(0, -infolabel.getTranslation().y, dur, in));
+			scorelabel.actions(Actions.translateBy(0, -scorelabel.getTranslation().y, dur, in));
 		}
+	}
+
+	/** 数量の書式は資源欄と同じ。k や mil の [gray] がラベルの後ろの文字に残らないよう色を戻す */
+	private String scoreValue(int amount){
+		return BlocksFragment.formatAmount(amount) + "[]";
 	}
 
 	private String getEnemiesRemaining() {
