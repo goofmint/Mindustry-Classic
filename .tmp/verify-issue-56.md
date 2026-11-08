@@ -76,17 +76,22 @@
       const row = {
         type: e.type, key: e.key, code: e.code, keyCode: e.keyCode, charCode: e.charCode,
         isComposing: e.isComposing, data: e.data ?? null,
-        target: e.target && e.target.nodeName, defaultPrevented: e.defaultPrevented,
+        target: e.target && e.target.nodeName, defaultPrevented: null,
       };
       window.__imeLog.push(row);
-      console.log(JSON.stringify(row));
+      // capture 段階では GWT(bubbling)の preventDefault がまだ走っていないので、
+      // 配送が終わった後(setTimeout 0)に最終値を記録する
+      setTimeout(() => {
+        row.defaultPrevented = e.defaultPrevented;
+        console.log(JSON.stringify(row));
+      }, 0);
     }, true);
   }
   console.log('IME logger installed. document.activeElement =', document.activeElement.nodeName);
 })();
 ```
 
-5. 保存値の確認方法: セーブ名を確定した後、開発者ツールの Application(Firefox は Storage)→ Local Storage で、`save-<番号>-name` を含むキーの値を見る。画面の表示とは別に、実際に入った文字列が分かる
+5. 保存値の確認方法: IME の確定(Enter)だけではセーブ名は保存されない。各シナリオでは、入力欄を空にしてから入力し、ダイアログの保存ボタンで保存してから、開発者ツールの Application(Firefox は Storage)→ Local Storage で、そのスロットの `save-<番号>-name` キーの値を見る。前のシナリオの値(例: `abc`)が残ったままにならないよう、シナリオごとに別のスロットを使うか、確認後にそのキーを消す
 
 ### 手順
 各ブラウザで、英語と日本語の両方のロケールで行う。
@@ -98,7 +103,7 @@
    - `keydown` が `keyCode=229`(`key="Process"`)で届くか
    - `keypress` が出るか、出る場合の `charCode`
    - 入力欄にローマ字や記号がそのまま入らないか
-   - 確定後の入力欄の表示と Local Storage の値
+   - 確定後の入力欄の表示。続けて保存ボタンで保存し、そのスロットの Local Storage の値
 3. IME の取り消し: 未確定のまま Esc を押す。ゲームのメニューやダイアログが閉じないか、入力欄に何か入らないかを記録する
 4. ひらがなのまま確定: 変換せずに Enter で確定する
 5. 可能ならかな入力モードで 2 を繰り返す
