@@ -8,6 +8,13 @@ import io.anuke.ucore.util.Bundles;
 public class Item{
 	private static final Array<Item> items = new Array<>();
 
+	/** ID順は固定(credit=0、igpu=1、pcie=2、続いて旧アイテム、最後にコード 70 種)。セーブに ID が入るため変えない */
+	public static final Item
+		credit = new Item("credit"),
+		igpu = new Item("igpu"),
+		pcie = new Item("pcie");
+
+	/** 旧アイテム。Task 3.11 で削除する */
 	public static final Item
 		stone = new Item("stone"),
 		iron = new Item("iron"),
@@ -19,6 +26,13 @@ public class Item{
 		sand = new Item("sand");
 		/*glass = new Item("glass"),
 		silicon = new Item("silicon");*/
+
+	/** アイテムIDの上限。Conveyor.ItemPos.toInt/toLong と Save15 がアイテムIDを符号付き byte で保存するため、127 まで */
+	public static final int MAX_ITEMS = 127;
+
+	static{
+		CodeItem.registerAll();
+	}
 
 	public final int id;
 	public final String name;
@@ -52,5 +66,18 @@ public class Item{
 
 	public static Item getByID(int id){
 		return items.get(id);
+	}
+
+	/** 登録数が上限を超えていれば RuntimeException。起動時に Mindustry.init() の最初で呼ぶ */
+	public static void checkRegistrationLimit(){
+		checkRegistrationLimit(getAllItems().size);
+	}
+
+	/** count が MAX_ITEMS を超えていれば RuntimeException */
+	static void checkRegistrationLimit(int count){
+		if(count > MAX_ITEMS){
+			throw new RuntimeException("Too many items: " + count + " registered, limit is " + MAX_ITEMS
+					+ " (item IDs are stored as signed bytes in Conveyor.ItemPos and Save15)");
+		}
 	}
 }

@@ -147,11 +147,11 @@ GitHub Issues: https://github.com/goofmint/Mindustry-Classic/issues (2026-11-08 
 
 #### Task 3.2: Item と CodeItem (Issue #13)
 
-- [ ] `Item` の静的フィールドを `credit`、`igpu`、`pcie` に置き換える(旧 8 種は残したままにして、この時点ではまだ消さない)
-- [ ] `CodeItem` を設計書 §2.2 のインターフェースで実装する。`registerAll()` は出発点 4 段階からの到達探索
-- [ ] `Item` の静的初期化の末尾で `CodeItem.registerAll()` を呼ぶ
-- [ ] テスト: 登録数が 70、`advance()` の上限クリップと再通過の恒等、`attrOf(get(a)) == a`、`score()` の値
-- [ ] 起動時検査: `Item.getAllItems().size > 127` で `RuntimeException`
+- [x] `Item` の静的フィールドを `credit`、`igpu`、`pcie` に置き換える(旧 8 種は残したままにして、この時点ではまだ消さない)
+- [x] `CodeItem` を設計書 §2.2 のインターフェースで実装する。`registerAll()` は出発点 4 段階からの到達探索
+- [x] `Item` の静的初期化の末尾で `CodeItem.registerAll()` を呼ぶ
+- [x] テスト: 登録数が 70、`advance()` の上限クリップと再通過の恒等、`attrOf(get(a)) == a`、`score()` の値
+- [x] 起動時検査: `Item.getAllItems().size > 127` で `RuntimeException`
 - **完了条件**: テストが緑。`./gradlew :desktop:run` が起動する(アイコン未作成のため警告は許容)
 - **依存**: 3.1
 - **推定時間**: 3h
