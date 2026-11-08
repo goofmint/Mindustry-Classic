@@ -83,13 +83,6 @@
       "visible": true,
       "flipBase": false,
       "backgroundColor": "f7feff"
-    },
-    {
-      "id": 12,
-      "name": "tutorial",
-      "visible": false,
-      "flipBase": false,
-      "backgroundColor": "646464"
     }
   ]
 }

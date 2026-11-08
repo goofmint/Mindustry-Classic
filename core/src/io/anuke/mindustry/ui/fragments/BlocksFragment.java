@@ -156,10 +156,8 @@ public class BlocksFragment implements Fragment{
 							image.getImageCell().size(size);
 
 							image.update(() -> {
-								boolean canPlace = !control.tutorial().active() || control.tutorial().canPlace();
-								boolean has = (state.inventory.hasItems(r.requirements)) && canPlace;
+								boolean has = state.inventory.hasItems(r.requirements);
 								image.setChecked(input.recipe == r);
-								image.setTouchable(canPlace ? Touchable.enabled : Touchable.disabled);
 								image.getImage().setColor(has ? Color.WHITE : Hue.lightness(0.33f));
 							});
 

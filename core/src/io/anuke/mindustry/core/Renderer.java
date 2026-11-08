@@ -372,24 +372,6 @@ public class Renderer extends RendererModule{
 
 	void drawOverlay(){
 
-		//draw tutorial placement point
-		if(world.getMap().name.equals("tutorial") && control.tutorial().showBlock()){
-			int x = world.getCore().x + control.tutorial().getPlacePoint().x;
-			int y = world.getCore().y + control.tutorial().getPlacePoint().y;
-			int rot = control.tutorial().getPlaceRotation();
-
-			Lines.stroke(1f);
-			Draw.color(Color.YELLOW);
-			Lines.square(x * tilesize, y * tilesize, tilesize / 2f + Mathf.sin(Timers.time(), 4f, 1f));
-
-			Draw.color(Color.ORANGE);
-			Lines.stroke(2f);
-			if(rot != -1){
-				Lines.lineAngle(x * tilesize, y * tilesize, rot * 90, 6);
-			}
-			Draw.reset();
-		}
-
 		//draw config selected block
 		if(ui.configfrag.isShown()){
 			Tile tile = ui.configfrag.getSelectedTile();

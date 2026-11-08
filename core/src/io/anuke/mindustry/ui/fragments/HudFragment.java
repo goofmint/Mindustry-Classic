@@ -114,13 +114,6 @@ public class HudFragment implements Fragment{
 
 		}}.end();
 
-		//tutorial ui table
-		new table(){{
-			control.tutorial().buildUI(this);
-
-			visible(() -> control.tutorial().active());
-		}}.end();
-
 		//paused table
 		new table(){{
 			visible(() -> state.is(State.paused) && !Net.active());
@@ -204,7 +197,7 @@ public class HudFragment implements Fragment{
 
 				new label(()-> state.enemies > 0 ?
 					getEnemiesRemaining() :
-						(control.tutorial().active() || state.mode.disableWaveTimer) ? "$text.waiting"
+						state.mode.disableWaveTimer ? "$text.waiting"
 								: Bundles.format("text.wave.waiting", (int) (state.wavetime / 60f)))
 				.minWidth(126).padLeft(-6).left();
 

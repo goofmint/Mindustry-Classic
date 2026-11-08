@@ -188,11 +188,7 @@ public class World extends Module{
 
 		Placement.placeBlock(core.x, core.y, ProductionBlocks.core, 0, false, false);
 		
-		if(!map.name.equals("tutorial")){
-			setDefaultBlocks();
-		}else{
-			control.tutorial().setDefaultBlocks(core.x, core.y);
-		}
+		setDefaultBlocks();
 		
 		pathfind.resetPaths();
 	}
