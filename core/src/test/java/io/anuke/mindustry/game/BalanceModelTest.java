@@ -14,6 +14,7 @@ import io.anuke.mindustry.resource.Recipes;
 import io.anuke.mindustry.world.Block;
 import io.anuke.mindustry.world.blocks.ProductionBlocks;
 import io.anuke.mindustry.world.blocks.WeaponBlocks;
+import io.anuke.mindustry.world.blocks.types.production.ItemPowerGenerator;
 import io.anuke.ucore.core.Core;
 import java.lang.reflect.Field;
 import java.util.Locale;
@@ -33,6 +34,8 @@ public class BalanceModelTest{
 	/** World.setDefaultBlocks() の人間のエンジニアの数(左右それぞれ。左右の 4 台ずつが、それぞれの合流点に流れ込む) */
 	private static final int ENGINEERS_PER_SIDE = 4;
 	private static final int SIDES = 2;
+	/** World.setDefaultBlocks() で、中央の家電屋 1 台が燃料を配る発電機の数(ユニットテスト用と、合流点の CodeRabbit 用。砲台用の 2 組は別) */
+	private static final int GENERATORS_PER_DRILL = 2;
 
 	/** 合格基準 1: 何もしなくても残高が 0 を下回らない時間(分) */
 	private static final double IDLE_MINUTES = 3.0;
@@ -100,12 +103,18 @@ public class BalanceModelTest{
 		final int rabbitGain = intField(rabbit, "stages");
 		final double rabbitRate = BalanceModel.perMinute(floatField(rabbit, "processTime"));
 
-		/** 初期配置のコアの手前にある品質施設の上がる段数。現在の初期配置には無い */
-		final int inletGain = 0;
-		/** その施設の 1 分あたりの処理個数(電力の制限を含む)。無いので制限なし */
-		final double inletRate = Double.POSITIVE_INFINITY;
-		/** CodeRabbit に届く電力で処理できる 1 分あたりの個数。現在の初期配置には発電機が無いので、プレイヤーが十分な電力を用意したとみなす */
-		final double rabbitPowerRate = Double.POSITIVE_INFINITY;
+		/** 発電機 1 台が 1 分あたりに作る電力。家電屋 1 台の燃料を GENERATORS_PER_DRILL 台で分け、燃料 1 個で powerOutput × itemDuration 作る */
+		final ItemPowerGenerator generator = (ItemPowerGenerator)ProductionBlocks.coalgenerator;
+		final double generatorPower = BalanceModel.perMinute(floatField(ProductionBlocks.coaldrill, "time")) / GENERATORS_PER_DRILL
+				* generator.powerOutput * generator.itemDuration;
+
+		/** 初期配置のコアの手前にあるユニットテスト。上がる段数と、1 分あたりの処理個数(処理時間と電力の小さいほう) */
+		final Block inlet = ProductionBlocks.unitTest;
+		final int inletGain = intField(inlet, "stages");
+		final double inletRate = Math.min(BalanceModel.perMinute(floatField(inlet, "processTime")),
+				BalanceModel.powerLimited(generatorPower, floatField(inlet, "powerPerItem")));
+		/** 中央の合流点に置いた CodeRabbit が、もう 1 台の発電機の電力で処理できる 1 分あたりの個数(迎撃に使う電力は含めない) */
+		final double rabbitPowerRate = BalanceModel.powerLimited(generatorPower, floatField(rabbit, "powerPerItem"));
 
 		final double initial = Balance.INITIAL_CREDIT;
 		final double target = prototypeTarget();
@@ -116,12 +125,15 @@ public class BalanceModelTest{
 			return BalanceModel.simulate(initial, 0.0, 0, pipeline, 0.0, rawScore(), target, HORIZON_MINUTES);
 		}
 
-		/** B: シニアエンジニアを左右の合流点に 1 台ずつ。置いた側はシニアの速さで、置いていない側は残りの処理枠で流れる */
+		/**
+		 * B: シニアエンジニアを左右の合流点に 1 台ずつ。置いていない側の未レビューのコードは途切れずに中央の合流点を埋めるので、
+		 * 下流の処理枠はそちらが先に使い、レビュー済みのコードは残りの枠だけ流れる(ブラウザで 1 台だけ置いたとき、残高が減り続けた)
+		 */
 		BalanceModel.Run seniors(){
 			double perSide = Math.min(seniorRate, sideSupply);
 			BalanceModel.Pipeline pipeline = reviewers -> {
-				double reviewed = Math.min(reviewers * perSide, inletRate);
-				double raw = Math.min((SIDES - reviewers) * sideSupply, inletRate - reviewed);
+				double raw = Math.min((SIDES - reviewers) * sideSupply, inletRate);
+				double reviewed = Math.min(reviewers * perSide, inletRate - raw);
 				return new BalanceModel.Flow(reviewed, raw);
 			};
 			return BalanceModel.simulate(initial, cost(senior), SIDES, pipeline,

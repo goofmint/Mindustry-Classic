@@ -6,8 +6,11 @@ package io.anuke.mindustry.game;
  * 後続のタスクで値を調整するときはここだけを書き換える。
  */
 public final class Balance{
-	/** 新しいゲームを始めたときの残高(credit)の初期値 */
-	public static final int INITIAL_CREDIT = 150;
+	/**
+	 * 新しいゲームを始めたときの残高(credit)の初期値。シニアエンジニア 2 台(80 × 2)を最初にまとめて置ける額にする。
+	 * 1 台ずつだと、未レビューの側のコードが合流点を埋めて赤字が続き、2 台目の費用が貯まらない(Task 5.3、docs/BALANCE.md)
+	 */
+	public static final int INITIAL_CREDIT = 200;
 
 	/** 敵の倍率の計算に使う、直近のコード納品の個数 */
 	public static final int QUALITY_HISTORY = 20;
