@@ -1,6 +1,7 @@
 package io.anuke.mindustry.resource;
 
 import com.badlogic.gdx.utils.ObjectMap;
+import io.anuke.ucore.util.Bundles;
 
 /**
  * コードのアイテム。品質の段階(stage)× 通過状態(passed のビット)× 重要度(importance)のうち、
@@ -14,6 +15,8 @@ public final class CodeItem{
 
 	/** 通過状態のビット */
 	public static final int REVIEW = 1, TEST = 2, CI = 4;
+	/** 表示名の接尾辞を並べる順 */
+	private static final int[] PASSED_BITS = {REVIEW, TEST, CI};
 
 	/** 重要度。値がそのまま倍率 */
 	public static final int[] IMPORTANCE = {1, 2};
@@ -78,7 +81,7 @@ public final class CodeItem{
 				for(int stage = 0; stage <= MAX_STAGE; stage++){
 					if(!reachable[stage][passed]) continue;
 
-					Item item = new Item("code-q" + stage + "-p" + passed + "-i" + importance);
+					Item item = new CodeItemType("code-q" + stage + "-p" + passed + "-i" + importance, stage, passed, importance);
 					forward[stage][passed][importance - 1] = item;
 					reverse.put(item, new CodeAttr(stage, passed, importance));
 				}
@@ -131,6 +134,35 @@ public final class CodeItem{
 		}
 	}
 
+	/**
+	 * 表示名に使う bundle キー。先頭が基本名 item.code.q&lt;stage&gt;.i&lt;importance&gt;.name、続いて立っている通過ビットの
+	 * text.code.passed.* を review → test → ci の順に並べる(通った順によらず同じ名前になる)。passed が 0 なら基本名だけ
+	 */
+	static String[] nameKeys(int stage, int passed, int importance){
+		int count = 1;
+		for(int bit : PASSED_BITS){
+			if((passed & bit) != 0) count++;
+		}
+
+		String[] keys = new String[count];
+		keys[0] = "item.code.q" + stage + ".i" + importance + ".name";
+		int i = 1;
+		for(int bit : PASSED_BITS){
+			if((passed & bit) != 0) keys[i++] = "text.code.passed." + bitKey(bit);
+		}
+		return keys;
+	}
+
+	/** 表示名。{@link #nameKeys} の各キーを訳し、半角空白 1 個でつなぐ(properties の値の先頭の空白は消えるので、区切りはここで入れる) */
+	static String displayName(int stage, int passed, int importance){
+		StringBuilder name = new StringBuilder();
+		for(String key : nameKeys(stage, passed, importance)){
+			if(name.length() > 0) name.append(' ');
+			name.append(Bundles.get(key));
+		}
+		return name.toString();
+	}
+
 	/** 施設を通したあとの Item。passedBit が既に立っていれば同じ Item を返す(品質は変えない) */
 	public static Item advance(Item item, int passedBit, int stages){
 		CodeAttr attr = attrOf(item);
@@ -147,6 +179,23 @@ public final class CodeItem{
 		if((attr.passed & passedBit) != 0) return item;
 
 		return get(Math.min(attr.stage + stages, MAX_STAGE), attr.passed | passedBit, attr.importance);
+	}
+
+	/** コードの Item。名前(code-q*-p*-i*)、ID、アイコンは Item のまま。表示名だけを品質、重要度、通過状態から組み立てる */
+	private static final class CodeItemType extends Item{
+		private final int stage, passed, importance;
+
+		private CodeItemType(String name, int stage, int passed, int importance){
+			super(name);
+			this.stage = stage;
+			this.passed = passed;
+			this.importance = importance;
+		}
+
+		@Override
+		public String localizedName(){
+			return displayName(stage, passed, importance);
+		}
 	}
 
 	/** コードの属性。Item ごとに 1 個だけ作るので、== で比べられる */
