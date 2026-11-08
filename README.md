@@ -33,6 +33,8 @@ Ways to install JDK 17:
 
 Check with `java -version` (it must print version 17) and `javac -version`.
 
+The Gradle wrapper prefers `JAVA_HOME` over `PATH`, so a stale or invalid `JAVA_HOME` makes `./gradlew` fail even when `java` is 17. Point it at the JDK 17 installation (for example `export JAVA_HOME=$(/usr/libexec/java_home -v 17)` on macOS, or the Homebrew path above) and confirm the JVM the wrapper actually uses with `./gradlew --version` (the `JVM:` line must show 17).
+
 #### Commands
 
 Run all commands in the repository root. On Windows use `gradlew.bat` instead of `./gradlew`.
