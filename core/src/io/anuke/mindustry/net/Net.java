@@ -63,6 +63,7 @@ public class Net{
 	
 	/**Connect to an address.*/
 	public static void connect(String ip, int port) throws IOException{
+		if(clientProvider == null) throw new IOException("Networking is not supported in this build.");
 		if(!active) {
 			clientProvider.connect(ip, port);
 			active = true;
@@ -74,6 +75,7 @@ public class Net{
 
 	/**Host a server at an address*/
 	public static void host(int port) throws IOException{
+		if(serverProvider == null) throw new IOException("Networking is not supported in this build.");
 		serverProvider.host(port);
 		active = true;
 		server = true;
@@ -97,16 +99,22 @@ public class Net{
 	/**Starts discovering servers on a different thread. Does not work with GWT.
 	 * Callback is run on the main libGDX thread.*/
 	public static void discoverServers(Consumer<Array<Host>> cons){
+		if(clientProvider == null){
+			cons.accept(new Array<>());
+			return;
+		}
 		clientProvider.discover(cons);
 	}
 
 	/**Returns a list of all connections IDs.*/
 	public static Array<NetConnection> getConnections(){
+		if(serverProvider == null) return new Array<>();
 		return (Array<NetConnection>)serverProvider.getConnections();
 	}
 
 	/**Returns a connection by ID*/
 	public static NetConnection getConnection(int id){
+		if(serverProvider == null) return null;
 		return serverProvider.getByID(id);
 	}
 	
@@ -205,6 +213,10 @@ public class Net{
 
 	/**Pings a host in an new thread. If an error occured, failed() should be called with the exception. */
 	public static void pingHost(String address, int port, Consumer<Host> valid, Consumer<Exception> failed){
+		if(clientProvider == null){
+			failed.accept(new IOException("Networking is not supported in this build."));
+			return;
+		}
 		clientProvider.pingHost(address, port, valid, failed);
 	}
 
