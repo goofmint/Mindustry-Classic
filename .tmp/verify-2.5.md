@@ -127,3 +127,12 @@ New kanji in the names and descriptions were not in `misaki.fnt`, so the font wa
 ## Pending (orchestrator)
 
 - In-game check in the browser (ja and en): every block in the placement menu shows the AI SDLC name; long names such as AIセキュリティエージェント and 回帰テストスイート wrap inside the 160 px name label; the liquid name in the block inspect shows vGPU/dGPU
+
+
+## オーケストレーターによるブラウザ確認(2026-11-08 10:55Z ごろ)
+
+- Playwright + Chromium(ヘッドレス)で `html/build/dist` を開き、日本語と英語の両方で配置パネルを確認した。
+- 日本語: 「リンター」「AIセキュリティエージェント」(160px の名前欄で 2 行に折り返すが枠内に収まる)、費用と「耐久力: 800」が表示される。英語: 「AI SECURITY AGENT」も同様に 2 行。崩れなし。
+- 加工(crafting)タブの `smelter` などは英語のまま表示される。これらは Phase 3 で削除するブロックで、Task 2.4 の除外リストに含めた想定どおりの挙動。
+- `.description` は現状の UI では表示されない(Task 4.3 で `getStats`/情報ダイアログと合わせて扱う)。
+- コンソールエラー 0 件。
