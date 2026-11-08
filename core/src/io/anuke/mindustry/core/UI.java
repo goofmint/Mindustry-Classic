@@ -117,7 +117,7 @@ public class UI extends SceneModule{
 			font.getData().setScale(Vars.fontscale);
 			font.getData().down += Unit.dp.scl(4f);
 			font.getData().lineHeight -= Unit.dp.scl(2f);
-		}, skin.font(), skin.getFont("default-font-chat"), skin.getFont("korean"));
+		}, skin.font(), skin.getFont("default-font-chat"));
 	}
 
 	@Override

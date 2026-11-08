@@ -10,11 +10,6 @@ com.badlogic.gdx.graphics.g2d.BitmapFont: {
 		markupEnabled: false,
 		scale: 0.5
 	},
-	korean: {
-		file: korean.fnt,
-		markupEnabled: true,
-		scale: 0.5
-	},
 	title: {
 		file: title.fnt,
 		markupEnabled: true,
@@ -23,6 +18,11 @@ com.badlogic.gdx.graphics.g2d.BitmapFont: {
 	japanese: {
 		file: misaki.fnt,
 		markupEnabled: true,
+		scale: 2
+	},
+	japanese-chat: {
+		file: misaki.fnt,
+		markupEnabled: false,
 		scale: 2
 	}
 },
