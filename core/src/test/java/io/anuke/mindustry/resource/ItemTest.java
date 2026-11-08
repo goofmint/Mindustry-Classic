@@ -17,8 +17,8 @@ public class ItemTest{
 
     @Test
     public void totalItemCount(){
-        //credit, igpu, pcie + 旧 8 種 + コード 70 種
-        assertEquals(81, Item.getAllItems().size);
+        //credit, igpu, pcie + コード 70 種
+        assertEquals(73, Item.getAllItems().size);
     }
 
     @Test

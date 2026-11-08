@@ -24,7 +24,7 @@ public class ProductionBlocks{
 	coaldrill = new Drill("coaldrill"){
 		{
 			resource = Blocks.coal;
-			result = Item.coal;
+			result = Item.igpu;
 			time = 6;
 		}
 	},
@@ -32,14 +32,14 @@ public class ProductionBlocks{
 	uraniumdrill = new Drill("uraniumdrill"){
 		{
 			resource = Blocks.uranium;
-			result = Item.uranium;
+			result = Item.pcie;
 			time = 7;
 		}
 	},
 	
 	coalgenerator = new ItemPowerGenerator("coalgenerator"){
 		{
-			generateItem = Item.coal;
+			generateItem = Item.igpu;
 			powerOutput = 0.04f;
 			powerCapacity = 40f;
 		}
@@ -63,7 +63,7 @@ public class ProductionBlocks{
 	},
 	rtgenerator = new ItemPowerGenerator("rtgenerator"){
 		{
-			generateItem = Item.uranium;
+			generateItem = Item.pcie;
 			powerCapacity = 40f;
 			powerOutput = 0.03f;
 			itemDuration = 240f;

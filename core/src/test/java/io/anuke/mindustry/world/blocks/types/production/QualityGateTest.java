@@ -101,7 +101,7 @@ public class QualityGateTest {
 		Tile conveyor = new Tile(1, 0);
 		Item code = CodeItem.get(1, 0, 1);
 
-		assertFalse(gate.acceptItem(Item.coal, tile, conveyor));
+		assertFalse(gate.acceptItem(Item.igpu, tile, conveyor));
 		assertTrue(gate.acceptItem(code, tile, conveyor));
 
 		gate.handleItem(code, tile, conveyor);

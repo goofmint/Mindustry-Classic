@@ -57,7 +57,7 @@ public class Conveyor extends Block{
 		byte rotation = tile.getRotation();
 
 		Draw.rect(name() +
-						(Timers.time() % ((20 / 100f) / speed) < (10 / 100f) / speed && acceptItem(Item.stone, tile, null) ? "" : "move"),
+						(Timers.time() % ((20 / 100f) / speed) < (10 / 100f) / speed && acceptItem(Item.igpu, tile, null) ? "" : "move"),
 				tile.worldx(), tile.worldy(), rotation * 90);
 	}
 
