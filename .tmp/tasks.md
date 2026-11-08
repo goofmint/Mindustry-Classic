@@ -16,10 +16,10 @@ GitHub Issues: https://github.com/goofmint/Mindustry-Classic/issues (2026-11-08 
 
 #### Task 1.1: 現状の記録と作業ブランチ (Issue #1)
 
-- [ ] `git checkout -b modernize` で作業ブランチを切る
-- [ ] JDK 17 と Gradle 8.14 の有無を確認し、無ければ導入する(`sdkman` か Homebrew)
-- [ ] 本家 README の「保守終了」の記載を確認し、改造版の README 草稿に「本家からのフォーク、GPL-3.0 継承」の1段落を書く
-- [ ] README 草稿に「公開物はブラウザ版のみ。`desktop` モジュールは開発時の動作確認とツール実行用で、配布しない」と明記する(2026-11-08 決定)
+- [x] 作業ブランチを切る(運用変更: Issue ごとに `issue-<番号>-<短い名前>` ブランチを切り PR で `master` に戻す。単一の `modernize` ブランチは使わない。Issue #1 は `issue-1-baseline`)
+- [x] JDK 17 と Gradle 8.14 の有無を確認し、無ければ導入する(`sdkman` か Homebrew)。結果: Gradle 8.14 は SDKMAN、JDK 17 は Homebrew `openjdk@17`(keg-only、`JAVA_HOME` 指定で使う)。詳細は `.tmp/verify-1.1.md`
+- [x] 本家 README の「保守終了」の記載を確認し、改造版の README 草稿に「本家からのフォーク、GPL-3.0 継承」の1段落を書く
+- [x] README 草稿に「公開物はブラウザ版のみ。`desktop` モジュールは開発時の動作確認とツール実行用で、配布しない」と明記する(2026-11-08 決定)
 - **完了条件**: ブランチがあり、`java -version` が 17 を返す
 - **依存**: なし
 - **推定時間**: 1h
