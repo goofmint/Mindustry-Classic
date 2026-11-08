@@ -24,6 +24,11 @@ public class Map{
 	public String localized(){
 		return Bundles.get("map."+name+".name", name);
 	}
+
+	/** map.<name>.description。キーが無いときは Bundles の欠けたキーの表示(???キー???)のまま返す */
+	public String localizedDescription(){
+		return Bundles.get("map."+name+".description");
+	}
 	
 	public int getWidth(){
 		return pixmap.getWidth();

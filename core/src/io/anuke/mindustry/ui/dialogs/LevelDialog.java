@@ -3,6 +3,7 @@ package io.anuke.mindustry.ui.dialogs;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Array;
 import io.anuke.mindustry.game.Difficulty;
 import io.anuke.mindustry.game.GameMode;
 import io.anuke.mindustry.world.Map;
@@ -89,8 +90,14 @@ public class LevelDialog extends FloatingDialog{
 		content().add(sdif);
 		content().row();
 
-		int i = 0;
+		Array<Map> sorted = new Array<>();
 		for(Map map : world.maps().list()){
+			sorted.add(map);
+		}
+		sorted.sort((a, b) -> Integer.compare(a.id, b.id));
+
+		int i = 0;
+		for(Map map : sorted){
 			
 			if(!map.visible && !debug) continue;
 			
@@ -103,6 +110,12 @@ public class LevelDialog extends FloatingDialog{
 			inset.row();
 			inset.label((() -> Bundles.format("text.level.highscore", Settings.getInt("hiscore" + map.name, 0)))).pad(3f).padLeft(-2).padRight(-2)
 					.wrap().growX().get().setAlignment(Align.center, Align.left);
+			//custom maps have no description key in the bundle
+			if(!map.custom){
+				inset.row();
+				inset.labelWrap("[lightgray]" + map.localizedDescription()).pad(3f).padLeft(-2).padRight(-2)
+						.growX().get().setAlignment(Align.topLeft, Align.left);
+			}
 			inset.pack();
 			
 			float images = 154f;
