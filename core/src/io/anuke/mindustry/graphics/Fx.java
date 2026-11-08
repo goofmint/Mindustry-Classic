@@ -136,6 +136,20 @@ public class Fx{
 		Draw.reset();
 	}),
 	
+	deliverGood = new Effect(12f, e -> {
+		Draw.color(Color.WHITE, Color.GREEN, e.fin());
+		Lines.stroke(e.fout()*1.5f + 0.1f);
+		Lines.circle(e.x, e.y, 4f + e.fin()*10f);
+		Draw.reset();
+	}),
+	
+	deliverBad = new Effect(12f, e -> {
+		Draw.color(Color.WHITE, Color.SCARLET, e.fin());
+		Lines.stroke(e.fout()*1.5f + 0.1f);
+		Lines.circle(e.x, e.y, 4f + e.fin()*10f);
+		Draw.reset();
+	}),
+	
 	empshockwave = new Effect(7f, e -> {
 		Draw.color(Color.WHITE, Color.SKY, e.fin());
 		Lines.stroke(e.fout()*2f);

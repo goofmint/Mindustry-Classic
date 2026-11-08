@@ -1,9 +1,12 @@
 package io.anuke.mindustry.world.blocks.types.defense;
 
+import io.anuke.mindustry.graphics.Fx;
 import io.anuke.mindustry.net.Net;
+import io.anuke.mindustry.resource.CodeItem;
 import io.anuke.mindustry.resource.Item;
 import io.anuke.mindustry.world.Block;
 import io.anuke.mindustry.world.Tile;
+import io.anuke.ucore.core.Effects;
 
 import static io.anuke.mindustry.Vars.debug;
 import static io.anuke.mindustry.Vars.state;
@@ -27,7 +30,12 @@ public class CoreBlock extends Block {
 
     @Override
     public void handleItem(Item item, Tile tile, Tile source){
-        if(Net.server() || !Net.active()) state.inventory.addItem(item, 1);
+        //燃料や credit は得点 0 で、受け取って消える
+        if(Net.server() || !Net.active()){
+            float score = CodeItem.score(item);
+            state.score.deliver(item, score);
+            Effects.effect(score >= 0 ? Fx.deliverGood : Fx.deliverBad, tile.drawx(), tile.drawy());
+        }
     }
 
     @Override
