@@ -20,6 +20,7 @@ import io.anuke.ucore.util.Mathf;
 import io.anuke.ucore.util.Tmp;
 
 import static io.anuke.mindustry.Vars.control;
+import static io.anuke.mindustry.Vars.state;
 import static io.anuke.mindustry.Vars.tilesize;
 
 public class World extends Module{
@@ -161,6 +162,7 @@ public class World extends Module{
 	
 	public void loadMap(Map map, int seed){
 		currentMap = map;
+		state.score.target = map.targetScore;
 		
 		if(tiles != null){
 			clearTileEntities();

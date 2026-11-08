@@ -12,6 +12,8 @@ public class Map{
 	public boolean flipBase = false;
 	public boolean custom = false;
 	public boolean oreGen = true;
+	/** 目標得点。0 は未設定 */
+	public int targetScore;
 	public Color backgroundColor = Color.valueOf("646464");
 	
 	public transient Pixmap pixmap;
