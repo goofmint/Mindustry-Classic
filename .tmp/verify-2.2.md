@@ -113,3 +113,11 @@ Metrics only, not a visual comparison:
 - In-game rendering: 「設計書」「レビュー済」 drawn at original dots without blur (Task 2.2 completion condition). Needs a display/browser; the font is not used by any UI yet (switching is Task 2.3), so the check needs a temporary label or the Task 2.3 change
 - Final `scale` value
 - Regenerate after Task 2.4/2.5 add Japanese text (procedure in `tools/README.md`)
+
+
+## オーケストレーターによるブラウザ描画確認(2026-11-08 10:00Z ごろ)
+
+- 方法: このワークツリーで一時的に(コミットせず)`uiskin.json` の `default-font` を `misaki.fnt`(scale 2)に差し替え、`UI.loadSkin()` の `Vars.fontscale` 上書き対象から `default-font` を外して `./gradlew :html:dist` を作り、Playwright + Chromium(ヘッドレス)でメニューと Settings → Language を表示した。確認後に 2 ファイルは `git checkout --` で元に戻した。
+- 結果: 「日本語 (Japanese)」「English」「Game」「Graphics」「Controls」などがすべて美咲フォントの原寸ドットで描かれ、にじみや欠けは無い。英字(半角 3×7 ドット幅)も読める。
+- 大きさ: scale 2 で大文字の高さは約 14px(キャンバス座標)。元の `square.fnt`(`Vars.fontscale` = 0.5 で約 10px)よりやや大きいが、ボタンやダイアログの中に収まり、レイアウトの崩れは見られない。scale 1 は 7px で小さすぎる。非整数はにじむため不可。したがって候補値 2 を採用する。画面倍率(`Vars.fontscale`)との連動は Task 2.3 で `japanese` を切り替え対象に加えるときに扱う。
+- 未確認: ゲーム内 HUD での日本語(Task 2.4 以降で文言が入ってから)。
