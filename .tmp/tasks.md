@@ -127,10 +127,10 @@ GitHub Issues: https://github.com/goofmint/Mindustry-Classic/issues (2026-11-08 
 
 #### Task 2.5: 名称の割り当て(本家ブロックの AI SDLC 名) (Issue #11)
 
-- [ ] 要件定義の対応表(砲台 12、修復 2、シールド、壁 5、ドア 2、シールド壁、搬送 5、発電 5、配線 4、液体の名称)を `bundle_ja.properties` の `block.<name>.name` に書く
-- [ ] 同じ対応表の英語名を決めて `bundle.properties` に書く(要件定義の「英語名は日本語が決まってから」に対応。ここで決める)
-- [ ] `item.igpu.name`、`item.pcie.name`、`liquid.oil.name=vGPU`、`liquid.lava.name=dGPU` を両言語に書く(Item の実体は Phase 3 で足すが、キーは先に用意する)
-- [ ] 各ブロックの `block.<name>.description`(短い説明)を AI SDLC の文脈で書き直す。`fulldescription` は Phase 4 で書く
+- [x] 要件定義の対応表(砲台 12、修復 2、シールド、壁 5、ドア 2、シールド壁、搬送 5、発電 5、配線 4、液体の名称)を `bundle_ja.properties` の `block.<name>.name` に書く
+- [x] 同じ対応表の英語名を決めて `bundle.properties` に書く(要件定義の「英語名は日本語が決まってから」に対応。ここで決める)
+- [x] `item.igpu.name`、`item.pcie.name`、`liquid.oil.name=vGPU`、`liquid.lava.name=dGPU` を両言語に書く(Item の実体は Phase 3 で足すが、キーは先に用意する)
+- [x] 各ブロックの `block.<name>.description`(短い説明)を AI SDLC の文脈で書き直す。`fulldescription` は Phase 4 で書く
 - **完了条件**: 配置メニューのすべてのブロックが、両言語で AI SDLC の名前になっている
 - **依存**: 2.4
 - **推定時間**: 4h
