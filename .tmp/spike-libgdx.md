@@ -1,7 +1,7 @@
 # Task 1.4 スパイク記録: libGDX 1.13.1 への移行(core のコンパイル)
 
 ブランチ: `issue-4-libgdx13`(`issue-3-gradle8` から分岐)
-結論: JDK 17 で `./gradlew :core:compileJava` と `./gradlew :desktop:compileJava` が `BUILD SUCCESSFUL`。`./gradlew :desktop:run` は、arm64 の Mac では libGDX と無関係の理由(java-discord-rpc の JNA 4.4.0 に arm64 ネイティブが無い)で起動直後に落ちる。Discord RPC を一時的に無効にして(コミットしていない)起動すると、45 秒間例外なしで動き続けた。画面での確認はユーザーの手動確認待ち(第 6 節)。
+結論: JDK 17 で `./gradlew :core:compileJava` と `./gradlew :desktop:compileJava` が `BUILD SUCCESSFUL`。`./gradlew :desktop:run` は当初、arm64 の Mac で libGDX と無関係の理由(java-discord-rpc の JNA 4.4.0 に arm64 ネイティブが無い)で起動直後に落ちた。オーケストレーターの判断で Discord RPC を desktop から削除し(第 3 節)、その後の起動では 45 秒間例外なしで動き続けた。画面での確認はユーザーの手動確認待ち(第 6 節)。
 
 ## 1. 前提
 
@@ -14,7 +14,7 @@
 | gdx-ai | 1.8.1 → **1.8.2**(`aiVersion`) |
 | gdx-tools(buildscript、`pack` 用) | 1.9.8 → **1.13.1**。`./gradlew help` で `core/build.gradle` の `import com.badlogic.gdx.tools.texturepacker.TexturePacker` が解決されることを確認(`pack` は実行していない) |
 | LWJGL(lwjgl3 バックエンド経由) | 3.3.3(`natives-macos-arm64` を含む) |
-| `sourceCompatibility` | 1.8 のまま(第 3 節の判断事項を参照) |
+| `sourceCompatibility` | 1.8 のまま(Task 1.5 へ持ち越し。第 3 節) |
 
 依存解決(`./gradlew :core:dependencies --configuration compileClasspath | grep gdx`):
 
@@ -88,12 +88,15 @@ gdx-controllers の依存はすべて外した(ルート `build.gradle` から�
 
 ## 3. 判断事項
 
-- **`sourceCompatibility` は 1.8 のまま**: Task 1.3 のスパイクで「1.4 で 17 へ」と書かれていたが、今回の Task 1.4 のチェックリストと指示に含まれず、コンパイルにも不要だったため変えなかった。JDK 17 の javac で `-source 8 -target 8` のまま JDK 17 のクラスライブラリに対してコンパイルされる(`--release` 未指定)。このため `java.lang.Module` が見え、`Control.java` の曖昧エラーが出た。17 に上げるかどうか、上げる時期(GWT 2.11 のソースレベルとの兼ね合い)はオーケストレーターの判断事項として残す
-- **スクロール量の扱い**: 1.13.1 の lwjgl3 バックエンドは `scrolled(amountX, amountY)` に float(トラックパッドでは小数)を渡す。既存の利用側(ズーム、回転、チャット、マップエディタ、ScrollPane)は整数 ±1 を前提にしているので、符号だけを取って -1/0/1 にした。1.9.8 の lwjgl3 バックエンドも 1 イベントにつき ±1 を渡していたので、マウスホイールでは挙動は同じ。トラックパッドの小さな量も ±1 になるため、1.9.8 より敏感に感じる可能性はある(未確認)
+- **`sourceCompatibility` は 1.8 のまま**: Task 1.3 のスパイクで「1.4 で 17 へ」と書かれていたが、今回の Task 1.4 のチェックリストと指示に含まれず、コンパイルにも不要だったため変えなかった。JDK 17 の javac で `-source 8 -target 8` のまま JDK 17 のクラスライブラリに対してコンパイルされる(`--release` 未指定)。このため `java.lang.Module` が見え、`Control.java` の曖昧エラーが出た。**オーケストレーターの判断: 1.8 のまま。GWT 2.11 で使える言語レベルが確定する Task 1.5 で判断する(1.5 へ持ち越し)**
+- **スクロール量の扱い**: 1.13.1 の lwjgl3 バックエンドは `scrolled(amountX, amountY)` に float(トラックパッドでは小数)を渡す。既存の利用側(ズーム、回転、チャット、マップエディタ、ScrollPane)は整数 ±1 を前提にしているので、符号だけを取って -1/0/1 にした。1.9.8 の lwjgl3 バックエンドも 1 イベントにつき ±1 を渡していたので、マウスホイールでは挙動は同じ。トラックパッドの小さな量も ±1 になるため、1.9.8 より敏感に感じる可能性はある(未確認)。**オーケストレーターの判断: 変更不要。手動確認項目として残す(第 6 節)**
 - **`Input` のコントローラー定数を予約枠として残した**: 消すと後ろの定数の `ordinal()` がずれ、既存のキー設定(`keybind-default-keyboard-*`)が別のキーに化ける
 - **`DeviceType.controller` を消した影響**: `KeyBinds` は `DeviceType.values()` を回すだけなので無変更でよい(`KeyBinds.java` は触っていない)。保存済みの `keybind-default-controller-*` は読まれなくなるだけ。`<section>-last-device-type` が 1 以上でも `Mathf.clamp` で 0(キーボード)になる
 - **非推奨 API はそのまま**: `-Xlint:deprecation` で 35 件の警告(第 6 節)。いずれも 1.13.1 で動作は同じなので、最小変更の方針により直していない
-- **arm64 での Discord RPC**: 置き換えも回避コードも入れていない(第 5 節)
+- **Discord RPC を desktop から削除(オーケストレーターの判断、案 (b))**: 理由は、desktop は開発用モジュールで配布しないこと、設計書 Task 4.4 で Discord 系リンクを削除する予定であること、arm64 で起動できない害の方が大きいこと。変更内容:
+  - ルート `build.gradle` の `project(":desktop")` から `implementation 'com.github.MinnDevelopment:java-discord-rpc:v2.0.1'` を削除(`jna:4.4.0`、`discord-rpc-release:v3.3.0` も依存から消えた)
+  - `desktop/src/io/anuke/mindustry/desktop/DesktopPlatform.java`: `club.minnced.discord.rpc.*` の import、`useDiscord`(Discord 専用)と `applicationId` のフィールド、コンストラクタの `Discord_Initialize`、`updateRPC()` の Presence 組み立てと `Discord_UpdatePresence`、`onGameExit()` の `Discord_Shutdown` を削除。`updateRPC()`/`onGameExit()` は中身が Discord 処理だけだったので空のオーバーライドとして残した。未使用になった import(`GameState.State`、`Net`、`UCore`、`Strings`)も削除
+  - core の `Platform.java`(`hasDiscord()` など)、メニューの Discord ボタン、`DiscordDialog` は触っていない(Task 4.4 の範囲)
 
 ## 4. 1.5 への引き継ぎ
 
@@ -105,7 +108,7 @@ gdx-controllers の依存はすべて外した(ルート `build.gradle` から�
 
 ## 5. 未解決・報告事項
 
-- **`:desktop:run` が arm64 Mac で起動直後に落ちる(libGDX 移行とは無関係)**: `DesktopPlatform` のコンストラクタが `DiscordRPC.INSTANCE` を触った時点で、JNA 4.4.0 のディスパッチライブラリ(`i386,x86_64` のみ)を読めずに `java.lang.UnsatisfiedLinkError` になる(`at io.anuke.mindustry.desktop.DesktopPlatform.<init>(DesktopPlatform.java:37)`)。依存とこのコードは変更前と同じで、arm64 環境に固有。x86_64 の JDK や Intel Mac、Windows、Linux x64 では起きないはず(未確認)。対処案(要判断): (a) `useDiscord` の条件に `os.arch` を加えて arm64 では無効にする、(b) `java-discord-rpc` を外す、(c) JNA を 5.x に上げる(ただし `discord-rpc-release` のネイティブ自体が arm64 非対応の可能性が高い)。指示に従い、置き換えはしていない
+- **(解決済み: 第 3 節で Discord RPC を削除)`:desktop:run` が arm64 Mac で起動直後に落ちる(libGDX 移行とは無関係)**: `DesktopPlatform` のコンストラクタが `DiscordRPC.INSTANCE` を触った時点で、JNA 4.4.0 のディスパッチライブラリ(`i386,x86_64` のみ)を読めずに `java.lang.UnsatisfiedLinkError` になる(`at io.anuke.mindustry.desktop.DesktopPlatform.<init>(DesktopPlatform.java:37)`)。依存とこのコードは変更前と同じで、arm64 環境に固有。x86_64 の JDK や Intel Mac、Windows、Linux x64 では起きないはず(未確認)。対処案(要判断): (a) `useDiscord` の条件に `os.arch` を加えて arm64 では無効にする、(b) `java-discord-rpc` を外す、(c) JNA を 5.x に上げる(ただし `discord-rpc-release` のネイティブ自体が arm64 非対応の可能性が高い)。オーケストレーターが (b) を選び、対応した
 - 残置(今回は触らないと決めたもの): `Vars.controllerMin`(`AndroidInput` が使用)、`Vars.baseControllerSpeed`(未使用になった)、設定画面の感度スライダー(`sensitivity`)、`controller-cursor` のスプライトとアトラスの項目、`uiskin.json` の `controllerColor`(`KeybindDialogStyle.controllerColor` フィールドも、スキン読み込みのため残した)、`Input.Type.controller`
 - `desktop` の `dist`(fat jar)の重複エントリは未確認(Task 1.3 からの引き継ぎのまま)
 
@@ -138,6 +141,16 @@ Failed to find custom map directory.
 - `Failed to find custom map directory.` はカスタムマップのフォルダが無いときに `Maps.loadMaps()` が出す通常のログ
 - アトラス(`sprites.atlas`)、スキン、サウンド、マップの読み込みは `Control`/`UI` のコンストラクタと `init()` で行われ、失敗すれば例外になるので、少なくともそこまでは通っている
 
+3 回目(Discord RPC を削除してコミット対象にしたコードのまま。一時的な変更なし): JDK 17 で `./gradlew :desktop:compileJava` が `BUILD SUCCESSFUL`。`./gradlew :desktop:run` をバックグラウンドで起動し、45 秒後にログを確認してからプロセスを止めた。ログ全文(`> Task :desktop:run` 以降、Gradle の定型メッセージを除く):
+
+```
+Got locale: ja_JP
+Total blocks loaded: 96
+```
+
+- `Exception` / `Error` / `at io.anuke` の出現は 0 件。45 秒後もプロセスは動いていた(`pgrep` で確認後に停止。Gradle は `ignoreExitValue` のため `BUILD SUCCESSFUL in 51s`)
+- `Failed to find custom map directory.` が出なくなったのは、2 回目の実行で `Maps.loadMaps()` がカスタムマップの `maps.json` を作ったため(`Maps.java:84-86`)。異常ではない
+
 **ユーザーの手動確認待ち(画面が見えないため未確認)**:
 - メニューが表示される
 - 既存マップを開いてウェーブが始まる
@@ -146,4 +159,5 @@ Failed to find custom map directory.
 - キー設定ダイアログ(デバイス表示が「Keyboard」だけ、再割り当て、スクロールの軸割り当て、リセット)
 - ブロックの配置と撤去
 - 9-patch の UI(ボタンや枠。`findValue("split")` の変更)の見た目
-- 注意: arm64 Mac では上記の Discord RPC の問題で、そのままでは起動しない
+- トラックパッドでのズーム・スクロールの敏感さ(符号だけを使う変更の影響)
+- 注意: Discord RPC 削除後は arm64 Mac でもそのまま起動する(3 回目の実行)
