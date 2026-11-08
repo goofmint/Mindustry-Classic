@@ -69,7 +69,9 @@ public class AboutDialog extends FloatingDialog {
         FloatingDialog dialog = new FloatingDialog("$text.credits");
         dialog.addCloseButton();
 
-        Table in = new Table();
+        //opaque panel so the text stays readable over the menu behind the dialog
+        Table in = new Table("pane");
+        in.margin(12f);
         for(String key : creditKeys){
             in.labelWrap("$" + key).width(w).left().padBottom(20f).row();
         }
