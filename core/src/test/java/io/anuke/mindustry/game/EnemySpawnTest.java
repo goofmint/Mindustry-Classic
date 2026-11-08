@@ -30,11 +30,9 @@ public class EnemySpawnTest{
 
     @Test
     public void lowMultiplierReduces(){
-        //10 * 0.7 = 7.0(float 誤差で 6.99999 になりうるので 6 か 7)
-        int low = EnemySpawn.applyMultiplier(10, 0.7f, 0.999f);
-        int high = EnemySpawn.applyMultiplier(10, 0.7f, 0f);
-        assertEquals(true, low >= 6 && low <= 7);
-        assertEquals(true, high >= 6 && high <= 7 && high < 10);
+        //10 * 0.7f は float でもちょうど 7.0f になるので、端数が無く抽選に依らず 7
+        assertEquals(7, EnemySpawn.applyMultiplier(10, 0.7f, 0.999f));
+        assertEquals(7, EnemySpawn.applyMultiplier(10, 0.7f, 0f));
         //3 * 0.7 = 2.1: 2 か 3
         assertEquals(2, EnemySpawn.applyMultiplier(3, 0.7f, 0.99f));
         assertEquals(3, EnemySpawn.applyMultiplier(3, 0.7f, 0f));
