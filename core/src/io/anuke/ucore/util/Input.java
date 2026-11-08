@@ -1,3 +1,4 @@
+// Modified for the AI SDLC browser game fork (goofmint/Mindustry-Classic) by Atsushi Nakatsugawa, 2026. See LICENSE (GPL-3.0).
 package io.anuke.ucore.util;
 
 /**Enum for storing input codes of mouse, keyboard and controllers at once.*/

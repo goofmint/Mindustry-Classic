@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Modified for the AI SDLC browser game fork (goofmint/Mindustry-Classic) by Atsushi Nakatsugawa, 2026. See LICENSE (GPL-3.0).
 """Generate the three level maps and check map PNGs.
 
 Writes (256x256 opaque RGB PNG):

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Modified for the AI SDLC browser game fork (goofmint/Mindustry-Classic) by Atsushi Nakatsugawa, 2026. See LICENSE (GPL-3.0).
 """Collect the characters the Japanese bitmap font must contain.
 
 Reads the UI bundles (.properties), adds fixed ranges and fixed strings, and
