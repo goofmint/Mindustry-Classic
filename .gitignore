@@ -136,3 +136,6 @@ gradle-app.setting
 .DS_Store
 Thumbs.db
 android/libs/
+
+# 仕様駆動開発の文書(要件・設計・タスク)は追跡する
+!/.tmp/
