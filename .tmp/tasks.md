@@ -320,8 +320,8 @@ GitHub Issues: https://github.com/goofmint/Mindustry-Classic/issues (2026-11-08 
 #### Task 5.4: 公開 (Issue #30)
 
 - [ ] GitHub Pages への配置を CI に足す(`:html:dist` の成果物を `gh-pages` に置く)
-- [ ] `README.md` を仕上げる(遊び方、ビルド、ライセンス、本家へのクレジット)
-- [ ] `LICENSE` が GPL-3.0 のままであることを確認し、変更したファイルの著作権表記を整える
+- [x] `README.md` を仕上げる(遊び方、ビルド、ライセンス、本家へのクレジット)
+- [x] `LICENSE` が GPL-3.0 のままであることを確認し、変更したファイルの著作権表記を整える
 - **完了条件**: 公開 URL でブラウザから遊べる
 - **依存**: 5.3
 - **推定時間**: 2h
