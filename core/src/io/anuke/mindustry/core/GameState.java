@@ -4,12 +4,15 @@ import io.anuke.mindustry.game.Difficulty;
 import io.anuke.mindustry.game.EventType.StateChangeEvent;
 import io.anuke.mindustry.game.GameMode;
 import io.anuke.mindustry.game.Inventory;
+import io.anuke.mindustry.game.Score;
 import io.anuke.ucore.core.Events;
 
 public class GameState{
 	private State state = State.menu;
 
 	public final Inventory inventory = new Inventory();
+	public final Score score = new Score(inventory);
+	public boolean won;
 
 	public int wave = 1;
 	public int lastUpdated = -1;
