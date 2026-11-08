@@ -106,9 +106,9 @@ GitHub Issues: https://github.com/goofmint/Mindustry-Classic/issues (2026-11-08 
 
 #### Task 2.3: ロケールによるフォント切り替え (Issue #9)
 
-- [ ] `UI.loadSkin()` で、`getLocale().getLanguage()` が `ja` のとき `skin` の `default-font` と `default-font-chat` を `japanese` に差し替える(`Skin.add("default-font", font)` で上書き)。`Core.font` も同じフォントを指すようにする
-- [ ] `title` フォント(`title.fnt`)はロゴ用なので触らない。タイトル画面の日本語はラベルで出す
-- [ ] 既存の `korean` フォントと `korean.fnt/png` を削除する(未使用、確認済み)
+- [x] `UI.loadSkin()` で、`getLocale().getLanguage()` が `ja` のとき `skin` の `default-font` と `default-font-chat` を `japanese` に差し替える(`Skin.add("default-font", font)` で上書き)。`Core.font` も同じフォントを指すようにする(実装: `default-font-chat` は `japanese-chat`。`Core.font` は `Draw.tscl()` で UI が縮むのを避けるため美咲の別インスタンス。詳細は verify-2.3.md)
+- [x] `title` フォント(`title.fnt`)はロゴ用なので触らない。タイトル画面の日本語はラベルで出す
+- [x] 既存の `korean` フォントと `korean.fnt/png` を削除する(未使用、確認済み)
 - [ ] 日本語で UI のレイアウト崩れ(ボタン幅、折り返し)を確認し、`BlocksFragment` の説明欄(`width(120f)`、`width(200)`)を日本語の長さに合わせて調整する
 - **完了条件**: 言語を日本語にして再起動すると、メニュー、設定、配置メニュー、ブロック情報が日本語フォントで表示される
 - **依存**: 2.2

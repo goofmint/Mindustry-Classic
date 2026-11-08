@@ -255,7 +255,7 @@ public class BlocksFragment implements Fragment{
 		header.addImage(region).size(8*5).padTop(4);
 		Label nameLabel = new Label(recipe.result.formalName);
 		nameLabel.setWrap(true);
-		header.add(nameLabel).padLeft(2).width(120f);
+		header.add(nameLabel).padLeft(2).width(160f);
 		
 		//extra info
 		if(recipe.result.fullDescription != null){
@@ -292,7 +292,7 @@ public class BlocksFragment implements Fragment{
 		
 		Label label = new Label("[health]"+ Bundles.get("text.health")+": " + recipe.result.health);
 		label.setWrap(true);
-		desctable.add(label).width(200).padTop(4).padBottom(2);
+		desctable.add(label).width(240).padTop(4).padBottom(2);
 	}
 
 	public void showBlockInfo(Block block){
