@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.TimeUtils;
 import io.anuke.mindustry.ai.Pathfind;
 import io.anuke.mindustry.entities.TileEntity;
 import io.anuke.mindustry.game.SpawnPoint;
@@ -17,6 +18,7 @@ import io.anuke.mindustry.world.blocks.WeaponBlocks;
 import io.anuke.ucore.entities.Entities;
 import io.anuke.ucore.entities.Entity;
 import io.anuke.ucore.modules.Module;
+import io.anuke.ucore.util.Log;
 import io.anuke.ucore.util.Mathf;
 import io.anuke.ucore.util.Tmp;
 
@@ -161,6 +163,7 @@ public class World extends Module{
 	}
 	
 	public void loadMap(Map map, int seed){
+		long loadStart = TimeUtils.millis();
 		currentMap = map;
 		state.score.target = map.targetScore;
 		
@@ -191,6 +194,8 @@ public class World extends Module{
 		setDefaultBlocks();
 		
 		pathfind.resetPaths();
+		Log.info("[world] map {0} ({1}x{2}, {3} spawns) loaded in {4} ms", map.name, map.getWidth(), map.getHeight(), spawns.size, TimeUtils.millis() - loadStart);
+		pathfind.measureInitialPaths();
 	}
 	
 	void setDefaultBlocks(){

@@ -1,9 +1,11 @@
+// Modified for the AI SDLC browser game fork (goofmint/Mindustry-Classic) by Atsushi Nakatsugawa, 2026. See LICENSE (GPL-3.0).
 package io.anuke.mindustry.ai;
 
 import com.badlogic.gdx.ai.pfa.PathFinderRequest;
 import com.badlogic.gdx.ai.pfa.PathSmoother;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.TimeUtils;
 import io.anuke.mindustry.entities.enemies.Enemy;
 import io.anuke.mindustry.game.SpawnPoint;
 import io.anuke.mindustry.world.Tile;
@@ -28,6 +30,11 @@ public class Pathfind{
 	Vector2 v1 = new Vector2();
 	Vector2 v2 = new Vector2();
 	Vector2 v3 = new Vector2();
+
+	/**Diagnostics for the first path calculation after a map load: start time in ms, or -1 when not measuring.*/
+	private long initialStart = -1;
+	private long initialSearchMs;
+	private int initialFrames, initialRemaining, initialPublished, initialUnreachable, initialFailed;
 
 	/**Finds the position on the path an enemy should move to.
 	 * If the path is not yet calculated, this returns the enemy's position (i. e. "don't move")
@@ -132,19 +139,52 @@ public class Pathfind{
 			}
 
 			if(!point.request.pathFound){
+				long searchStart = TimeUtils.millis();
 				try{
 					if(point.finder.search(point.request, maxTime)){
 						smoother.smoothPath(point.path);
 						point.pathTiles = point.path.nodes.toArray(Tile.class);
 						point.finder = null;
+						if(initialStart >= 0){
+							if(point.request.pathFound) initialPublished ++;
+							else initialUnreachable ++;
+							initialRemaining --;
+						}
 					}
 				}catch (ArrayIndexOutOfBoundsException e){
 					//no path
 					point.request.pathFound = true;
+					if(initialStart >= 0){
+						initialFailed ++;
+						initialRemaining --;
+					}
 				}
+				if(initialStart >= 0) initialSearchMs += TimeUtils.millis() - searchStart;
 			}
 		}
 
+		if(initialStart >= 0){
+			initialFrames ++;
+			if(initialRemaining <= 0){
+				Log.info("[pathfind] initial paths for {0} spawns done in {1} ms (search+smooth {2} ms, {3} frames): published {4}, unreachable {5}, exception {6}",
+						world.getSpawns().size, TimeUtils.millis() - initialStart, initialSearchMs, initialFrames, initialPublished, initialUnreachable, initialFailed);
+				initialStart = -1;
+			}
+		}
+
+	}
+
+	/**Measures the paths just reset by {@link io.anuke.mindustry.core.World#loadMap} as the initial generation, and logs one summary line when every spawn has finished.*/
+	public void measureInitialPaths(){
+		initialSearchMs = 0;
+		initialFrames = initialPublished = initialUnreachable = initialFailed = 0;
+		initialRemaining = world.getSpawns().size;
+		if(initialRemaining == 0){
+			Log.info("[pathfind] initial paths: no spawns");
+			initialStart = -1;
+		}else{
+			initialStart = TimeUtils.millis();
+		}
 	}
 
 	//1300-1500ms, usually 1400 unoptimized on Caldera
@@ -169,6 +209,11 @@ public class Pathfind{
 
 	/**Reset and clear the paths.*/
 	public void resetPaths(){
+		if(initialStart >= 0){
+			Log.info("[pathfind] initial paths aborted by another reset after {0} ms ({1}/{2} spawns done)",
+					TimeUtils.millis() - initialStart, world.getSpawns().size - initialRemaining, world.getSpawns().size);
+			initialStart = -1;
+		}
 		for(int i = 0; i < world.getSpawns().size; i ++){
 			resetPathFor(world.getSpawns().get(i));
 		}
