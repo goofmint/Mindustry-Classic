@@ -20,3 +20,6 @@ task pack(){
 		TexturePacker.process("core/assets-raw/sprites/", "core/assets/sprites/", "sprites.atlas")
 	}
 }
+
+//desktop の genIcons と一緒に実行したとき、生成したアイコンをパックに含める
+pack.mustRunAfter ':desktop:genIcons'

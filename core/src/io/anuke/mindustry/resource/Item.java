@@ -2,6 +2,7 @@ package io.anuke.mindustry.resource;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
+import io.anuke.ucore.function.Predicate;
 import io.anuke.ucore.graphics.Draw;
 import io.anuke.ucore.util.Bundles;
 
@@ -66,6 +67,18 @@ public class Item{
 
 	public static Item getByID(int id){
 		return items.get(id);
+	}
+
+	/** アイコン領域 icon-&lt;name&gt; が無い Item の領域名を、登録順に返す。hasRegion は領域の有無を答える関数 */
+	public static Array<String> missingIcons(Predicate<String> hasRegion){
+		Array<String> missing = new Array<>();
+		for(Item item : items){
+			String region = "icon-" + item.name;
+			if(!hasRegion.test(region)){
+				missing.add(region);
+			}
+		}
+		return missing;
 	}
 
 	/** 登録数が上限を超えていれば RuntimeException。起動時に Mindustry.init() の最初で呼ぶ */

@@ -158,11 +158,11 @@ GitHub Issues: https://github.com/goofmint/Mindustry-Classic/issues (2026-11-08 
 
 #### Task 3.3: アイコン生成ツール (Issue #14)
 
-- [ ] `core/assets-raw/sprites/code-base/q<0-6>-i<1-2>.png`(8×8、14 枚)を作る。色は設計書の表、形は丸と星
-- [ ] `desktop/src/.../tools/IconGenerator.java` を書く(`javax.imageio` のみ)。右下 (5,7) 白、(6,7) 黒、(7,7) 緑のドットを通過状態に応じて重ね、`icon-code-q*-p*-i*.png` を 70 枚出す
-- [ ] `icon-credit.png`、`icon-igpu.png`、`icon-pcie.png` を作る(本家 `icon-coal`、`icon-uranium` を流用してよい)
-- [ ] `desktop/build.gradle` に `genIcons` タスクを足し、`./gradlew :desktop:genIcons pack` で `sprites.atlas` を再生成する
-- [ ] 起動時検査: 全 Item の `region != null`。欠けていれば名前を列挙して止める
+- [x] `core/assets-raw/sprites/code-base/q<0-6>-i<1-2>.png`(8×8、14 枚)を作る。色は設計書の表、形は丸と星
+- [x] `desktop/src/.../tools/IconGenerator.java` を書く(`javax.imageio` のみ)。右下 (5,7) 白、(6,7) 黒、(7,7) 緑のドットを通過状態に応じて重ね、`icon-code-q*-p*-i*.png` を 70 枚出す
+- [x] `icon-credit.png`、`icon-igpu.png`、`icon-pcie.png` を作る(本家 `icon-coal`、`icon-uranium` を流用してよい)
+- [x] `desktop/build.gradle` に `genIcons` タスクを足し、`./gradlew :desktop:genIcons pack` で `sprites.atlas` を再生成する
+- [x] 起動時検査: 全 Item の `region != null`。欠けていれば名前を列挙して止める
 - **完了条件**: 生成物がリポジトリに入り、起動時検査が通る
 - **依存**: 3.2
 - **推定時間**: 3h

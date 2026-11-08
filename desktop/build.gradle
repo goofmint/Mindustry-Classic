@@ -29,6 +29,12 @@ task debug(dependsOn: classes, type: JavaExec) {
     debug = true
 }
 
+task genIcons(dependsOn: classes, type: JavaExec) {
+    mainClass.set('io.anuke.mindustry.desktop.tools.IconGenerator')
+    classpath = sourceSets.main.runtimeClasspath
+    workingDir = rootProject.projectDir
+}
+
 task dist(type: Jar) {
     dependsOn classes
     dependsOn configurations.runtimeClasspath
