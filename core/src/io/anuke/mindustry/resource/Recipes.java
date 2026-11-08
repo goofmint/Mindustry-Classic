@@ -47,6 +47,10 @@ public class Recipes {
 
 			new Recipe(production, ProductionBlocks.coaldrill, stack(Item.credit, 65)),
 			new Recipe(production, ProductionBlocks.uraniumdrill, stack(Item.credit, 80)),
+			new Recipe(production, ProductionBlocks.humanEngineer, stack(Item.credit, 50)),
+			new Recipe(production, ProductionBlocks.aiAgent1, stack(Item.credit, 20)),
+			new Recipe(production, ProductionBlocks.aiAgent2, stack(Item.credit, 30)),
+			new Recipe(production, ProductionBlocks.aiAgent3, stack(Item.credit, 40)),
 
 			new Recipe(power, ProductionBlocks.coalgenerator, stack(Item.credit, 50)),
 			new Recipe(power, ProductionBlocks.thermalgenerator, stack(Item.credit, 60)),
