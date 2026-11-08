@@ -11,6 +11,10 @@ public class RestartDialog extends Dialog {
     public RestartDialog(){
         super("$text.gameover", "dialog");
 
+        //opaque panel so the result stays readable over the menu shown behind the dialog
+        content().background("pane");
+        content().margin(12f);
+
         shown(() -> {
             content().clearChildren();
             if(state.won){
