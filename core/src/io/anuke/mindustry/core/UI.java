@@ -20,6 +20,7 @@ import io.anuke.ucore.core.Timers;
 import io.anuke.ucore.function.Consumer;
 import io.anuke.ucore.function.Listenable;
 import io.anuke.ucore.graphics.Draw;
+import io.anuke.ucore.graphics.JapaneseFontData;
 import io.anuke.ucore.modules.SceneModule;
 import io.anuke.ucore.scene.Skin;
 import io.anuke.ucore.scene.builders.build;
@@ -128,8 +129,10 @@ public class UI extends SceneModule{
 		if(getLocale().getLanguage().equals("ja")){
 			BitmapFont squareFont = skin.font();
 			BitmapFont squareChat = skin.getFont("default-font-chat");
-			BitmapFont japanese = skin.getFont("japanese");
-			BitmapFont japaneseChat = skin.getFont("japanese-chat");
+			//wrap Japanese text between characters (JapaneseFontData). The fonts share the pages of the skin's
+			//misaki fonts, which stay in the skin and own the textures
+			BitmapFont japanese = japaneseWrapping(skin.getFont("japanese"));
+			BitmapFont japaneseChat = japaneseWrapping(skin.getFont("japanese-chat"));
 
 			skin.add("default-font", japanese, BitmapFont.class);
 			skin.add("default-font-chat", japaneseChat, BitmapFont.class);
@@ -169,6 +172,13 @@ public class UI extends SceneModule{
 	 * dot font, so a non-integer or smaller scale (0.75 for fontscale*1.5) makes it unreadable.*/
 	public static float labelScale(float squareScale){
 		return japaneseScale > 0f ? japaneseScale : squareScale;
+	}
+
+	/**A misaki font with the same file, pages and markup setting as the given one, using JapaneseFontData.*/
+	private static BitmapFont japaneseWrapping(BitmapFont font){
+		BitmapFont result = new BitmapFont(new JapaneseFontData(font.getData().fontFile, font.getData().flipped), font.getRegions(), font.usesIntegerPositions());
+		result.getData().markupEnabled = font.getData().markupEnabled;
+		return result;
 	}
 
 	/**Replaces style font references that are the same object as the replaced square fonts.*/
