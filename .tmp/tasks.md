@@ -38,11 +38,11 @@ GitHub Issues: https://github.com/goofmint/Mindustry-Classic/issues (2026-11-08 
 
 #### Task 1.3: Gradle 8 への移行(スパイク、時間を区切る) (Issue #3)
 
-- [ ] `gradle/wrapper/gradle-wrapper.properties` を 8.14 にする
-- [ ] ルート `build.gradle` の `compile` を `implementation`/`api` に、`archiveName`/`destinationDir` を `archiveFileName`/`destinationDirectory` に直す
-- [ ] `desktop/build.gradle` の `task run(type: JavaExec)` を `mainClass.set(...)` 形式に直す
-- [ ] `html/build.gradle` の `de.richsource.gradle.plugins:gwt-gradle-plugin:0.6` を、gdx-liftoff が生成する `html/build.gradle` と同じ GWT プラグインに差し替える(gdx-liftoff 1.14.0.2 の生成物を参照して書き写す。プラグインの座標とバージョンはこの時点で確定して記録する)
-- [ ] `./gradlew :core:compileJava` が設定段階のエラーを出さずに進むところまで持っていく(コンパイルエラーは次のタスク)
+- [x] `gradle/wrapper/gradle-wrapper.properties` を 8.14 にする
+- [x] ルート `build.gradle` の `compile` を `implementation`/`api` に、`archiveName`/`destinationDir` を `archiveFileName`/`destinationDirectory` に直す
+- [x] `desktop/build.gradle` の `task run(type: JavaExec)` を `mainClass.set(...)` 形式に直す
+- [x] `html/build.gradle` の `de.richsource.gradle.plugins:gwt-gradle-plugin:0.6` を、gdx-liftoff が生成する `html/build.gradle` と同じ GWT プラグインに差し替える(gdx-liftoff 1.14.0.2 の生成物を参照して書き写す。プラグインの座標とバージョンはこの時点で確定して記録する)
+- [x] `./gradlew :core:compileJava` が設定段階のエラーを出さずに進むところまで持っていく(コンパイルエラーは次のタスク)
 - **完了条件**: `./gradlew help` と `./gradlew :core:compileJava --dry-run` が通る。壊れた箇所の一覧を `.tmp/spike-gradle.md` に残す
 - **依存**: 1.2
 - **推定時間**: 4h(上限。超えたら中断して報告)

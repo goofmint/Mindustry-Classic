@@ -7,7 +7,7 @@ project.ext.mainClassName = "io.anuke.mindustry.desktop.DesktopLauncher"
 project.ext.assetsDir = new File("../core/assets")
 
 task run(dependsOn: classes, type: JavaExec) {
-    main = project.mainClassName
+    mainClass.set(project.mainClassName)
     classpath = sourceSets.main.runtimeClasspath
     standardInput = System.in
     workingDir = project.assetsDir
@@ -21,7 +21,7 @@ task run(dependsOn: classes, type: JavaExec) {
 }
 
 task debug(dependsOn: classes, type: JavaExec) {
-    main = project.mainClassName
+    mainClass.set(project.mainClassName)
     classpath = sourceSets.main.runtimeClasspath
     standardInput = System.in
     workingDir = project.assetsDir
@@ -31,12 +31,13 @@ task debug(dependsOn: classes, type: JavaExec) {
 
 task dist(type: Jar) {
     dependsOn classes
+    dependsOn configurations.runtimeClasspath
     
     writeVersion()
 
     from files(sourceSets.main.output.classesDirs)
     from files(sourceSets.main.output.resourcesDir)
-    from {configurations.compile.collect {zipTree(it)}}
+    from {configurations.runtimeClasspath.collect {zipTree(it)}}
     from files(project.assetsDir)
 
     manifest {
