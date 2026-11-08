@@ -65,7 +65,7 @@ GitHub Issues: https://github.com/goofmint/Mindustry-Classic/issues (2026-11-08 
 - [x] `core/src/Mindustry.gwt.xml` の `gdx.reflect.include` から `net.Packets`、`net.Packet`、`net.Streamable` を外す(ネットワークを切ったため)
 - [x] GWT コンパイルで出るエラー(エミュレーション外の JRE API、`java.io.DataInputStream` 周りなど)を 1 件ずつ直す。`.tmp/spike-gwt.md` に記録する
 - [x] `./gradlew :html:dist` を通し、`html/build/dist` をローカル HTTP サーバーで開いて起動を確認する(Playwright + Chromium で確認。caldera で 1 ウェーブ。詳細は `.tmp/spike-gwt.md` §6)
-- **完了条件**: ブラウザで本家のゲームが起動し、既存マップで 1 ウェーブ遊べる。初回ロード時間を記録する。経路計算の秒数は、Task 1.5 では「ウェーブ開始から敵がコアに到達するまでの秒数」で代え、計測コードを入れた厳密な値は Task 5.2 で記録する(2026-11-08 にローカルレビューの指摘を受けて条件を明示的に変更)
+- **完了条件**: ブラウザで本家のゲームが起動し、既存マップで 1 ウェーブ遊べる。初回ロード時間を記録する。経路計算の秒数は、Task 1.5 では「ウェーブ開始から敵がコア付近(砲台の射程内)に到達するまでの秒数」で代える。観察では 65 秒時点でコア付近への到達と迎撃を確認した(コアそのものへの到達時刻は未計測)。計測コードを入れた厳密な値は Task 5.2 で記録する(2026-11-08 にローカルレビューと PR レビューの指摘を受けて条件を明示的に変更)
 - **依存**: 1.4
 - **推定時間**: 6h(上限 8h)
 
@@ -82,10 +82,10 @@ GitHub Issues: https://github.com/goofmint/Mindustry-Classic/issues (2026-11-08 
 
 #### Task 2.1: 言語の構成を en と ja に絞る (Issue #7)
 
-- [x] `core/assets/bundles/` から `bundle_de`、`es`、`fr`、`in_ID`、`ita`、`ko`、`pl`、`pt_BR`、`ru`、`tk`、`uk_UA` を削除する
-- [x] `Vars.locales` を `{new Locale("en"), new Locale("ja")}` にする
-- [x] `bundle.properties` に `text.locale.en=English`、`text.locale.ja=日本語` を足し、`LanguageDialog` のボタン表示を `Platform.getLocaleName()` から `Bundles.get("text.locale." + loc)` に変える
-- [x] `BundleLoader.getLocale()` の既定値(`"default"` = OS のロケール)が `ja` のとき `bundle_ja` を読むことをデスクトップで確認する(ゲーム内ログは未取得。同じ引数の `I18NBundle.createBundle` で `ja_JP` → `bundle_ja` を確認。ブラウザ版で言語ダイアログが 2 ボタンになることも確認。詳細は `.tmp/verify-2.1.md`)
+- [ ] `core/assets/bundles/` から `bundle_de`、`es`、`fr`、`in_ID`、`ita`、`ko`、`pl`、`pt_BR`、`ru`、`tk`、`uk_UA` を削除する
+- [ ] `Vars.locales` を `{new Locale("en"), new Locale("ja")}` にする
+- [ ] `bundle.properties` に `text.locale.en=English`、`text.locale.ja=日本語` を足し、`LanguageDialog` のボタン表示を `Platform.getLocaleName()` から `Bundles.get("text.locale." + loc)` に変える
+- [ ] `BundleLoader.getLocale()` の既定値(`"default"` = OS のロケール)が `ja` のとき `bundle_ja` を読むことをデスクトップで確認する
 - **完了条件**: 言語ダイアログに「English / 日本語」の2つだけが出る
 - **依存**: 1.4
 - **推定時間**: 1h
