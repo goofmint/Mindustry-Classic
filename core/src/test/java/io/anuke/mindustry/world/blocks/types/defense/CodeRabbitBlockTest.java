@@ -86,10 +86,10 @@ public class CodeRabbitBlockTest {
 	}
 
 	@Test
-	public void recipeIsInWeaponAndCosts100(){
+	public void recipeIsInCraftingAndCosts100(){
 		Recipe recipe = Recipes.getByResult(block());
 		assertNotNull(recipe);
-		assertSame(Section.weapon, recipe.section);
+		assertSame(Section.crafting, recipe.section);
 		assertEquals(1, recipe.requirements.length);
 		assertSame(Item.credit, recipe.requirements[0].item);
 		assertEquals(100, recipe.requirements[0].amount);
