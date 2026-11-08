@@ -110,7 +110,7 @@ public class BlockLoader {
 
         Block[] blockClasses = {
             Blocks.air,
-            DefenseBlocks.compositewall,
+            DefenseBlocks.stonewall,
             DistributionBlocks.conduit,
             ProductionBlocks.coaldrill,
             WeaponBlocks.chainturret,

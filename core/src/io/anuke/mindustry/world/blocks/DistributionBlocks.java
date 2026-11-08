@@ -57,7 +57,5 @@ public class DistributionBlocks{
 		laserDirections = 2;
 	}},
 	teleporter = new Teleporter("teleporter"){{
-	}},
-	sorter = new Sorter("sorter"){{
 	}};
 }
