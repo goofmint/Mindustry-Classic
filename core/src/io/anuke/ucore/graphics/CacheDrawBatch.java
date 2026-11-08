@@ -39,7 +39,7 @@ public class CacheDrawBatch implements Batch{
     }
 
     @Override
-    public void setColor(float color) {
+    public void setPackedColor(float color) {
         stub();
     }
 

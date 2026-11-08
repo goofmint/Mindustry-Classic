@@ -208,7 +208,7 @@ public class Player extends SyncEntity{
 		
 		if(!shooting){
 			if(!movement.isZero())
-				angle = Mathf.slerpDelta(angle, movement.angle(), 0.13f);
+				angle = Mathf.slerpDelta(angle, movement.angleDeg(), 0.13f);
 		}else{
 			float angle = Angles.mouseAngle(x, y);
 			this.angle = Mathf.slerpDelta(this.angle, angle, 0.1f);

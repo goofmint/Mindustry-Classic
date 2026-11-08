@@ -92,6 +92,6 @@ public abstract class BulletEntity<T extends BaseBulletType> extends SolidEntity
 	}
 	
 	public float angle(){
-		return velocity.angle();
+		return velocity.angleDeg();
 	}
 }
