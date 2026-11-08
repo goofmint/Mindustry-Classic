@@ -24,8 +24,8 @@ public class RecipesTest {
 	}
 
 	@Test
-	public void recipeCountIs56(){
-		assertEquals(56, Recipes.all().size);
+	public void recipeCountIs57(){
+		assertEquals(57, Recipes.all().size);
 	}
 
 	@Test

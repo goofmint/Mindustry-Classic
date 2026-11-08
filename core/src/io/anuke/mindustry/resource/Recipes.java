@@ -44,6 +44,7 @@ public class Recipes {
 			new Recipe(weapon, WeaponBlocks.plasmaturret, stack(Item.credit, 45)),
 			new Recipe(weapon, WeaponBlocks.chainturret, stack(Item.credit, 115)),
 			new Recipe(weapon, WeaponBlocks.titanturret, stack(Item.credit, 175)),
+			new Recipe(weapon, WeaponBlocks.coderabbit, stack(Item.credit, 100)),
 
 			new Recipe(production, ProductionBlocks.coaldrill, stack(Item.credit, 65)),
 			new Recipe(production, ProductionBlocks.uraniumdrill, stack(Item.credit, 80)),

@@ -7,6 +7,7 @@ import io.anuke.mindustry.graphics.Fx;
 import io.anuke.mindustry.resource.Item;
 import io.anuke.mindustry.world.Block;
 import io.anuke.mindustry.world.Tile;
+import io.anuke.mindustry.world.blocks.types.defense.CodeRabbitBlock;
 import io.anuke.mindustry.world.blocks.types.defense.LaserTurret;
 import io.anuke.mindustry.world.blocks.types.defense.PowerTurret;
 import io.anuke.mindustry.world.blocks.types.defense.Turret;
@@ -199,6 +200,17 @@ public class WeaponBlocks{
 			shootEffect = Fx.titanshot;
 			shootShake = 3f;
 			powerUsed = 1.5f;
+		}
+	},
+
+	coderabbit = new CodeRabbitBlock("coderabbit"){
+		{
+			shootsound = "laser";
+			range = 60;
+			reload = 4f;
+			bullet = BulletType.coderabbitShot;
+			health = 110;
+			powerUsed = 0.2f;
 		}
 	};
 }
