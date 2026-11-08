@@ -1,0 +1,126 @@
+# Issue #56 検証記録: ブラウザ版の TextField への日本語入力(IME)
+
+## 概要
+- 日時: 2026-11-09
+- ブランチ: `issue-56-ime`(`issue-57-wrap` から分岐)
+- 範囲: 計画の Phase 1(ソースから分かる事実の整理)と、実機 IME での確認手順の準備。IME 対応の実装はしていない。コードの変更はない
+- 結論(静的): libGDX 1.13.1 の GWT 入力は `keydown`/`keypress`/`keyup` だけを受け取り、`compositionstart/update/end`、`beforeinput`/`input`、`paste` を登録していない。また、ページに編集可能な DOM 要素がない。このため、**実機の IME でも日本語の確定文字列は TextField に届かない可能性が高い**。ただし実機での確認はまだで、下の手順をオーナーが行う必要がある
+
+## 入力の経路
+
+```
+ブラウザのキーイベント(document、バブリング段階)
+  └ DefaultGwtInput.handleEvent()            ※ keydown / keypress / keyup だけ
+      ├ keydown  → keyForCode(keyCode) → InputProcessor.keyDown(code)
+      │            (BACKSPACE のときだけ keyTyped('\b') も送る)
+      ├ keypress → (char) charCode      → InputProcessor.keyTyped(c)
+      └ keyup    → InputProcessor.keyUp(code)(TAB のときだけ keyTyped('\t'))
+  └ InputMultiplexer → Scene(ucore)の keyTyped
+      └ TextField.keyTyped(c)
+          ├ onlyFontChars(既定 true)のとき style.font.getData().hasGlyph(c) が false の文字は捨てる
+          ├ UI.showTextInput() のフィルター: 12 文字まで(セーブ名、名前変更)
+          └ 描画: TextField のフォント(日本語ロケールでは美咲、英語では square)
+```
+
+## ソースから確定した事実
+参照: `gdx-backend-gwt-1.13.1-sources.jar` と `gdx-1.13.1-sources.jar`(Gradle キャッシュから、リポジトリ外に展開して読んだ)。行番号は 1.13.1 のソースのもの。
+
+1. `HtmlLauncher` は `createInput` を上書きしていない。`GwtApplication.createInput()`(496〜498 行)が `new DefaultGwtInput(canvas, config)` を返す
+2. `DefaultGwtInput.hookEvents()`(623〜639 行)が登録するのは、canvas と document の `mousedown`/`mouseup`/`mousemove`、canvas のホイール、**document の `keydown`/`keyup`/`keypress`**、window の `blur`、canvas の `touch*` だけ。`compositionstart`/`compositionupdate`/`compositionend`、`beforeinput`/`input`、`paste` は登録していない(ソース全体を `grep` しても出てこない)
+3. 文字は `keypress` の `charCode` から作る(753〜762 行: `char c = (char)e.getCharCode(); processor.keyTyped(c)`)。IME の変換中の `keydown` は `keyCode` 229 になるが、`keyForCode` の `default` は `Keys.UNKNOWN`(1128〜1129 行)なので、ゲームには「不明なキー」として届くだけ
+4. キーイベントを処理するのは `hasFocus` が true のときだけ。`hasFocus` は canvas の `mousedown` で true、canvas の外のクリックで false になる(649〜660 行)。DOM のフォーカスとは無関係
+5. ページには `<input>`/`<textarea>`/`contenteditable` がなく、`document.activeElement` は `BODY` のまま(下の Playwright の観測)。ブラウザが IME を有効にする対象(編集可能な要素)がない
+6. `setOnscreenKeyboardVisible` は空実装(308〜313 行)。`openTextInputField` も空
+7. `GwtClipboard.getContents()` は内部のフィールド `content` を返すだけで(38〜40 行)、OS のクリップボードを読まない。`setContents` で入れた文字列しか貼り付けられない
+8. `TextField` は `onlyFontChars` が既定で true で、`style.font.getData().hasGlyph(c)` が false の文字を捨てる。`BitmapFontData.hasGlyph` は `missingGlyph`(`id=0` のグリフ)があれば常に true を返す
+   - `square.fnt` は `char id=0` を持つので、英語ロケールではどの文字も受け付ける(表示は代替グリフになる)
+   - `misaki.fnt` は `id=0` を持たず、`tools/chars_ja.txt` の 815 文字だけを収録している。日本語ロケールでは、**文字が届いても、この 815 文字以外の漢字は捨てられる**
+9. `Platform.addDialog(field)` は既定では何もせず、`HtmlLauncher` の `Platform` も上書きしていない(ネイティブの入力ダイアログに逃がす経路はない)
+
+## Playwright での観測(参考)
+ヘッドレス Chromium で、ゲームの canvas をクリックした後に document へイベントロガー(下のスクリプトと同じもの)を付けて観測した。
+
+| 操作 | document に届いたイベント |
+|---|---|
+| `keyboard.type('abc')` | 文字ごとに `keydown` → `keypress`(`charCode` 97〜99)→ `keyup`。`target` は `BODY` |
+| `keyboard.insertText('日本語')` | **何も届かない**(`input` も `keypress` もない) |
+| `keyboard.type('日')` | 何も届かない(US キー配列にない文字は `insertText` と同じ扱い) |
+
+- `document.activeElement` は `BODY`(編集可能ではない)
+- Task 5.2 で「設計書レビュー済v1」が「v1」だけになった現象(`.tmp/verify-web.md` の N2)は、事実 2 と 3 で説明できる。ASCII は `keypress` で届き、日本語は `keypress` が発生しないので届かない
+- **これは Playwright の挙動で、実機の IME の結果ではない**
+
+## 仮説(実機で確かめること)
+- H1: 編集可能な DOM 要素がないので、ブラウザが IME を有効にしない、または composition が発生しない(ローマ字がそのまま `keypress` で入る)
+- H2: composition は発生するが、確定文字列は `compositionend`/`input` でしか届かず、`keypress` が出ないのでゲームが受け取らない
+- H3: 文字は `keyTyped` まで届くが、12 文字のフィルターや `hasGlyph`(事実 8)で捨てられる
+- H4: 値は入るが、フォントにない字が代替グリフで表示される(英語ロケール)
+
+静的には H1 か H2 の可能性が高い。H3 は日本語ロケールで美咲フォントにない漢字に限って起きうる。
+
+## オーナーの手動確認の手順
+
+### 準備
+1. JDK 17 で `./gradlew :html:dist` を実行する
+2. `html/build/dist` を HTTP で配信する(例: `cd html/build/dist && python3 -m http.server 8765`)。`http://localhost:8765/index.html` を開く
+3. 対象: Chrome と Firefox(必須)、Safari か Edge(可能なら)。OS の日本語 IME を 1 種類以上(macOS の日本語入力、または Windows の Microsoft IME)
+4. 開発者ツールのコンソールで、次のイベントロガーを実行する。`preventDefault` や伝播の停止はしないので、ゲームの動作は変わらない
+
+```js
+(() => {
+  const types = ['keydown', 'keypress', 'keyup', 'beforeinput', 'input',
+    'compositionstart', 'compositionupdate', 'compositionend', 'paste'];
+  window.__imeLog = [];
+  for (const t of types) {
+    document.addEventListener(t, e => {
+      const row = {
+        type: e.type, key: e.key, code: e.code, keyCode: e.keyCode, charCode: e.charCode,
+        isComposing: e.isComposing, data: e.data ?? null,
+        target: e.target && e.target.nodeName, defaultPrevented: e.defaultPrevented,
+      };
+      window.__imeLog.push(row);
+      console.log(JSON.stringify(row));
+    }, true);
+  }
+  console.log('IME logger installed. document.activeElement =', document.activeElement.nodeName);
+})();
+```
+
+5. 保存値の確認方法: セーブ名を確定した後、開発者ツールの Application(Firefox は Storage)→ Local Storage で、`save-<番号>-name` を含むキーの値を見る。画面の表示とは別に、実際に入った文字列が分かる
+
+### 手順
+各ブラウザで、英語と日本語の両方のロケールで行う。
+
+1. 基準(ASCII): ゲームを開始 → メニュー → セーブ → 新しいスロット。入力欄をクリックし、`abc` を入力して保存する。ロガーに `keydown`→`keypress`→`keyup` が出ること、Local Storage の値が `abc` になることを確認する。13 文字目が拒否されることも確認する。ここで失敗する場合は IME の確認より先に記録する
+2. IME(ローマ字入力): IME をオンにして `nihongo` と打ち、変換して Enter で確定する。記録すること
+   - 変換候補のウィンドウが出るか、出る場合はどこに出るか
+   - `compositionstart/update/end` が出るか
+   - `keydown` が `keyCode=229`(`key="Process"`)で届くか
+   - `keypress` が出るか、出る場合の `charCode`
+   - 入力欄にローマ字や記号がそのまま入らないか
+   - 確定後の入力欄の表示と Local Storage の値
+3. IME の取り消し: 未確定のまま Esc を押す。ゲームのメニューやダイアログが閉じないか、入力欄に何か入らないかを記録する
+4. ひらがなのまま確定: 変換せずに Enter で確定する
+5. 可能ならかな入力モードで 2 を繰り返す
+6. 貼り付け: OS のクリップボードに「日本語」を入れて、入力欄で Cmd+V(Windows は Ctrl+V)。`paste` イベントの有無と入力欄の結果を記録する(事実 7 から、OS のクリップボードの内容は入らない見込み)
+7. 名前変更: ロード画面の鉛筆ボタンで既存のセーブの名前を変え、1〜6 のうち必要なものを繰り返す
+
+### 結果表(記入用)
+
+| シナリオ | ブラウザ | ロケール | 観測した DOM イベント | 入力欄の表示 | Local Storage の値 | 判定(H1〜H4) |
+|---|---|---|---|---|---|---|
+| ASCII `abc` | | | | | | |
+| IME 変換して確定 | | | | | | |
+| IME 取り消し(Esc) | | | | | | |
+| ひらがなで確定 | | | | | | |
+| 貼り付け | | | | | | |
+
+### 判定の目安
+- `compositionstart` が 1 つも出ず、ローマ字が `keypress` で入る → H1
+- `compositionend`/`input` に確定文字列が出るが、`keypress` が出ず入力欄に何も入らない → H2
+- `keypress` に日本語の `charCode` が出るのに入力欄に入らない → H3(日本語ロケールなら美咲フォントにない字、または 12 文字の制限)
+- Local Storage には日本語が入っているが、表示が四角などになる → H4
+
+## 後続の対応(実機の結果を見て判断)
+- H1/H2 なら、IME 対応には入力バックエンドの変更が要る(例: 隠した `<input>` にフォーカスを移して `compositionend`/`input` を `keyTyped` に流す)。Issue #56 は確認だけの Issue なので、実装するなら別 Issue にする
+- 日本語ロケールでは、美咲フォントに収録した 815 文字以外は入力できても捨てられる(事実 8)。セーブ名に任意の漢字を許すなら、フォントの収録文字の扱いも決める必要がある

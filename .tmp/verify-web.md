@@ -179,3 +179,4 @@ Task 5.3 で初期配置(ユニットテスト、発電機)、初期資金 200�
 ## テストとビルド(最後に実行)
 - `./gradlew :core:test`: 成功
 - `./gradlew :html:dist`: 成功
+- N2(実際の IME での日本語入力)の静的な調査と、オーナーが行う実機確認の手順は `.tmp/verify-issue-56.md`(Issue #56)
