@@ -77,6 +77,9 @@ public class AboutDialog extends FloatingDialog {
 
         dialog.shown(() -> Timers.run(1f, () -> Core.scene.setScrollFocus(pane)));
         dialog.content().add(pane).growX();
+        //the credits are long, so hide this dialog while they are open and come back to it afterwards
+        dialog.hidden(this::show);
+        hide();
         dialog.show();
     }
 }
