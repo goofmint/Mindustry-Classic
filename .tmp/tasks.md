@@ -60,10 +60,10 @@ GitHub Issues: https://github.com/goofmint/Mindustry-Classic/issues (2026-11-08 
 
 #### Task 1.5: GWT 2.11.0 への移行(html のコンパイル) (Issue #5)
 
-- [ ] `html/build.gradle` に `com.google.jsinterop:jsinterop-annotations:2.0.2:sources` を足す
-- [ ] `GdxDefinition.gwt.xml` と `GdxDefinitionSuperdev.gwt.xml` の `inherits` を 1.13.1 のバックエンドに合わせる(`gdx-controllers-gwt` の `inherits` を外す)
-- [ ] `core/src/Mindustry.gwt.xml` の `gdx.reflect.include` から `net.Packets`、`net.Packet`、`net.Streamable` を外す(ネットワークを切ったため)
-- [ ] GWT コンパイルで出るエラー(エミュレーション外の JRE API、`java.io.DataInputStream` 周りなど)を 1 件ずつ直す。`.tmp/spike-gwt.md` に記録する
+- [x] `html/build.gradle` に `com.google.jsinterop:jsinterop-annotations:2.0.2:sources` を足す
+- [x] `GdxDefinition.gwt.xml` と `GdxDefinitionSuperdev.gwt.xml` の `inherits` を 1.13.1 のバックエンドに合わせる(`gdx-controllers-gwt` の `inherits` を外す)
+- [x] `core/src/Mindustry.gwt.xml` の `gdx.reflect.include` から `net.Packets`、`net.Packet`、`net.Streamable` を外す(ネットワークを切ったため)
+- [x] GWT コンパイルで出るエラー(エミュレーション外の JRE API、`java.io.DataInputStream` 周りなど)を 1 件ずつ直す。`.tmp/spike-gwt.md` に記録する
 - [ ] `./gradlew :html:dist` を通し、`html/build/dist` をローカル HTTP サーバーで開いて起動を確認する
 - **完了条件**: ブラウザで本家のゲームが起動し、既存マップで 1 ウェーブ遊べる。初回ロード時間と、経路計算が終わるまでの秒数を記録する
 - **依存**: 1.4
