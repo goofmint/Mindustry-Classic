@@ -85,7 +85,7 @@ GitHub Issues: https://github.com/goofmint/Mindustry-Classic/issues (2026-11-08 
 - [x] `core/assets/bundles/` から `bundle_de`、`es`、`fr`、`in_ID`、`ita`、`ko`、`pl`、`pt_BR`、`ru`、`tk`、`uk_UA` を削除する
 - [x] `Vars.locales` を `{new Locale("en"), new Locale("ja")}` にする
 - [x] `bundle.properties` に `text.locale.en=English`、`text.locale.ja=日本語` を足し、`LanguageDialog` のボタン表示を `Platform.getLocaleName()` から `Bundles.get("text.locale." + loc)` に変える
-- [ ] `BundleLoader.getLocale()` の既定値(`"default"` = OS のロケール)が `ja` のとき `bundle_ja` を読むことをデスクトップで確認する
+- [x] `BundleLoader.getLocale()` の既定値(`"default"` = OS のロケール)が `ja` のとき `bundle_ja` を読むことをデスクトップで確認する(ゲーム内ログは未取得。同じ引数の `I18NBundle.createBundle` で `ja_JP` → `bundle_ja` を確認。ブラウザ版で言語ダイアログが 2 ボタンになることも確認。詳細は `.tmp/verify-2.1.md`)
 - **完了条件**: 言語ダイアログに「English / 日本語」の2つだけが出る
 - **依存**: 1.4
 - **推定時間**: 1h

@@ -48,3 +48,12 @@ This is not the in-game log. The in-game line is now `Got locale: {locale}, bund
 - Old saved values (e.g. `fr`) load the root (English) bundle; none of the buttons is checked.
 - `Platform.getLocaleName()` and DesktopPlatform's override are left in place (unused by the dialog now).
 - The Korean font references (`uiskin.json`, `UI.java`) are untouched (Task 2.3).
+
+
+## オーケストレーターによる追加確認(ブラウザ版、2026-11-08 09:40Z ごろ)
+
+- このブランチで `./gradlew :html:dist` を再実行し、`html/build/dist/assets/bundles/` に `bundle.properties` と `bundle_ja.properties` の 2 ファイルだけが含まれることを確認した(ハッシュ付きファイル名)。
+- Playwright + Chromium(ヘッドレス)で `http://localhost:8765/index.html` を開き、Settings → Language を操作した。
+  - ボタンは 2 つだけ。1 つ目のラベルは「ENGLISH」。
+  - 2 つ目のボタンは存在し、`???` は表示されない。ラベル「日本語」は現在の `square.fnt` に字形が無いため空白(短い横線)として描かれる。字形の表示は Task 2.2 / 2.3 の範囲。
+- ゲーム内ログ(`Got locale: …, bundle locale: …`)は、デスクトップをディスプレイ付きで起動できなかったため未取得。代わりに libGDX 1.13.1 の `I18NBundle.createBundle` を同じ引数で直接呼び、`ja_JP` → `ja`、`en_US` → ルート、`fr` → ルートになることを確認した(上記の表)。
