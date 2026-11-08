@@ -3,6 +3,8 @@ package io.anuke.mindustry.world;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.I18NBundle;
+import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.PropertiesUtils;
 import io.anuke.mindustry.resource.Recipe;
 import io.anuke.mindustry.resource.Recipes;
 import io.anuke.mindustry.world.blocks.ProductionBlocks;
@@ -12,6 +14,8 @@ import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.io.Reader;
 import java.util.Locale;
 
 import static org.junit.Assert.assertEquals;
@@ -86,6 +90,25 @@ public class BlockInfoTest {
 				String shown = translate(line).replaceAll("\\[[^\\]]*\\]", "").replaceAll("\\d+x\\d+", "")
 						.replace("iGPU", "").replace("PCIe", "").replace("dGPU", "").replace("vGPU", "").replace("CI", "");
 				assertFalse(block.name + ": " + shown, shown.matches(".*[A-Za-z].*"));
+			}
+		}
+	}
+
+	/**
+	 * 詳細説明が無いと配置メニューに「?」ボタンが出ないので、対象の全ブロックに両言語で書く。
+	 * 日本語の I18NBundle は無いキーを英語から引くので、ファイルを直接読んでキーの有無を見る
+	 */
+	@Test
+	public void everyTargetHasFullDescriptionInBothLanguages() throws IOException{
+		for(String file : new String[]{"assets/bundles/bundle.properties", "assets/bundles/bundle_ja.properties"}){
+			ObjectMap<String, String> properties = new ObjectMap<>();
+			try(Reader reader = new FileHandle(file).reader("UTF-8")){
+				PropertiesUtils.load(properties, reader);
+			}
+			for(Block block : targets()){
+				String key = "block." + block.name + ".fulldescription";
+				assertTrue(file + ": " + key, properties.containsKey(key));
+				assertFalse(file + ": " + key, properties.get(key).trim().isEmpty());
 			}
 		}
 	}
