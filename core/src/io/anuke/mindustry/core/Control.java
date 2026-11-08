@@ -33,6 +33,7 @@ public class Control extends Module{
 	private UpgradeInventory upgrades = new UpgradeInventory();
 	private Tutorial tutorial = new Tutorial();
 	private boolean hiscore = false;
+	private boolean bestscore = false;
 
 	private boolean wasPaused = false;
 
@@ -111,6 +112,7 @@ public class Control extends Module{
 
 		for(Map map : world.maps().list()){
 			Settings.defaults("hiscore" + map.name, 0);
+			Settings.defaults("bestscore" + map.name, 0);
 		}
 
 		player = new Player();
@@ -148,6 +150,7 @@ public class Control extends Module{
 
 			respawntime = -1;
 			hiscore = false;
+			bestscore = false;
 
 			ui.hudfrag.updateItems();
 			ui.hudfrag.updateWeapons();
@@ -169,12 +172,23 @@ public class Control extends Module{
 		});
 
 		Events.on(GameOverEvent.class, () -> {
-			Effects.shake(5, 6, Core.camera.position.x, Core.camera.position.y);
-			Sounds.play("corexplode");
-			for(int i = 0; i < 16; i ++){
-				Timers.run(i*2, ()-> Effects.effect(Fx.explosion, world.getCore().worldx()+Mathf.range(40), world.getCore().worldy()+Mathf.range(40)));
+			int balance = state.score.balance();
+			if(!state.mode.infiniteResources && !state.mode.disableWaveTimer
+					&& balance > Settings.getInt("bestscore" + world.getMap().name, 0)){
+				Settings.putInt("bestscore" + world.getMap().name, balance);
+				Settings.save();
+				bestscore = true;
 			}
-			Effects.effect(Fx.coreexplosion, world.getCore().worldx(), world.getCore().worldy());
+
+			//目標到達の勝ちではコアは壊れていないので、爆発を出さない
+			if(!state.won){
+				Effects.shake(5, 6, Core.camera.position.x, Core.camera.position.y);
+				Sounds.play("corexplode");
+				for(int i = 0; i < 16; i ++){
+					Timers.run(i*2, ()-> Effects.effect(Fx.explosion, world.getCore().worldx()+Mathf.range(40), world.getCore().worldy()+Mathf.range(40)));
+				}
+				Effects.effect(Fx.coreexplosion, world.getCore().worldx(), world.getCore().worldy());
+			}
 
 			ui.restart.show();
 
@@ -216,6 +230,10 @@ public class Control extends Module{
 
 	public boolean isHighScore(){
 		return hiscore;
+	}
+
+	public boolean isBestScore(){
+		return bestscore;
 	}
 
 	public float getRespawnTime(){

@@ -109,6 +109,18 @@ public class Logic extends Module {
         Events.fire(WaveEvent.class);
     }
 
+    /** 得点による勝敗。目標到達を破産より先に見る。サンドボックスは全アイテムが満タンなので判定しない */
+    enum Outcome{
+        none, won, bankrupt
+    }
+
+    static Outcome evaluateOutcome(GameState state){
+        if(state.mode.infiniteResources) return Outcome.none;
+        if(state.score.reachedTarget()) return Outcome.won;
+        if(state.score.bankrupt()) return Outcome.bankrupt;
+        return Outcome.none;
+    }
+
     @Override
     public void update(){
 
@@ -127,6 +139,15 @@ public class Logic extends Module {
                 state.gameOver = true;
                 if(Net.server()) NetEvents.handleGameOver();
                 Events.fire(GameOverEvent.class);
+            }
+
+            if(!state.gameOver){
+                Outcome outcome = evaluateOutcome(state);
+                if(outcome != Outcome.none){
+                    state.gameOver = true;
+                    state.won = outcome == Outcome.won;
+                    Events.fire(GameOverEvent.class);
+                }
             }
 
             if(!state.is(State.paused) || Net.active()){
