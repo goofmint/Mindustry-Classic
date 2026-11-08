@@ -55,9 +55,9 @@ jobs:
       group: pages
       cancel-in-progress: false
     steps:
+      # Pages 自体の有効化(Settings → Pages → Source = GitHub Actions)は手動。
+      # configure-pages の enablement は GITHUB_TOKEN では権限不足で失敗するため使わない。
       - uses: actions/configure-pages@v5
-        with:
-          enablement: true
 
       - id: deployment
         uses: actions/deploy-pages@v4

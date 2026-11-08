@@ -6,7 +6,7 @@
 
 ### CI と Gradle(`999e00d`)
 - `.github/workflows/build.yml`: 既存の `build` ジョブ(単体テスト、`:html:dist`、`html-dist` の artifact)はそのまま残し、最後に `actions/upload-pages-artifact@v3`(`path: html/build/dist`)を足した。出力の確認に `test -f html/build/dist/.nojekyll` を足した。
-- 新しい `deploy` ジョブ: `needs: build`、`if: github.event_name == 'push' && github.ref == 'refs/heads/main'`、`permissions: pages: write / id-token: write`、`environment: github-pages`(URL は `deploy-pages` の `page_url`)、`concurrency: group: pages, cancel-in-progress: false`。手順は `actions/configure-pages@v5`(`enablement: true`)→ `actions/deploy-pages@v4`。pull request と手動実行ではデプロイしない。
+- 新しい `deploy` ジョブ: `needs: build`、`if: github.event_name == 'push' && github.ref == 'refs/heads/main'`、`permissions: pages: write / id-token: write`、`environment: github-pages`(URL は `deploy-pages` の `page_url`)、`concurrency: group: pages, cancel-in-progress: false`。手順は `actions/configure-pages@v5` → `actions/deploy-pages@v4`(`enablement` は使わない。後述)。pull request と手動実行ではデプロイしない。
 - `html/build.gradle` の `dist`: コピーの後に `build/dist/.nojekyll`(空ファイル)を書く。ローカルの成果物と Pages の成果物を同じにするため、ワークフローではなく Gradle で作った。Pages の Actions 方式では Jekyll は動かないので実害の回避ではなく念のため。なお `upload-artifact@v7` は既定で隠しファイルを含めないので、`html-dist` の artifact には `.nojekyll` が入らない(Pages 用の artifact には入る)。
 
 #### 計画からの逸脱: `gh-pages` ブランチではなく Pages の Actions 方式
@@ -42,7 +42,7 @@ Pages のプロジェクト URL(`/Mindustry-Classic/`)と同じ条件にする�
 - `python3 -I tools/check_bundles.py`: OK
 
 ## 所有者の手作業(残り)
-1. (推奨。先にやっておくと確実)GitHub の Settings → Pages → Build and deployment → Source を「GitHub Actions」にする。2026-11-09 時点で `gh api repos/goofmint/Mindustry-Classic/pages` は 404(Pages 未設定)。`configure-pages` の `enablement: true` は Pages を自動で有効にしようとするが、`GITHUB_TOKEN` には管理権限が無いため失敗する可能性が高い。失敗した場合は上の設定をしてから、失敗した実行を Re-run する。
+1. (必須。マージの前に行う)GitHub の Settings → Pages → Build and deployment → Source を「GitHub Actions」にする。2026-11-09 時点で `gh api repos/goofmint/Mindustry-Classic/pages` は 404(Pages 未設定)。`configure-pages` の `enablement: true` は `GITHUB_TOKEN` では権限不足で失敗する(action の定義でも別トークンが要ると明記されている)ため、ワークフローでは使っていない。設定前にマージすると初回の `deploy` ジョブは失敗するので、設定後に Re-run する。
 2. このブランチを `main` にマージする → `build` の後に `deploy` ジョブが動く。
 3. デプロイの完了後、`https://goofmint.github.io/Mindustry-Classic/` を開き、メニューの表示、マップの開始、ウェーブの進行、セーブと再読み込みを確認する。
 4. Settings → Environments → `github-pages` の配置ブランチの制限は既定で `main` のみ。変えなくてよい。

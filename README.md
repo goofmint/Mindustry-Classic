@@ -90,7 +90,7 @@ JDK 17 の入れ方の例:
 
 ### CI と公開
 
-GitHub Actions(`.github/workflows/build.yml`)が、push と pull request のたびに単体テストと `:html:dist` を実行し、`html/build/dist` を `html-dist` という artifact として保存します。`main` ブランチへの push では、同じ成果物を GitHub Pages に配置します。
+GitHub Actions(`.github/workflows/build.yml`)が、push と pull request のたびに単体テストと `:html:dist` を実行し、`html/build/dist` を `html-dist` という artifact として保存します。`main` ブランチへの push では、同じ成果物を GitHub Pages に配置します。配置には、リポジトリの Settings → Pages → Source を「GitHub Actions」にしておく必要があります(初回のみ、手動)。
 
 ## ライセンスとクレジット
 
