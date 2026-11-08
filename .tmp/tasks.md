@@ -26,12 +26,12 @@ GitHub Issues: https://github.com/goofmint/Mindustry-Classic/issues (2026-11-08 
 
 #### Task 1.2: モジュールの整理 (Issue #2)
 
-- [ ] `settings.gradle` を `core`、`desktop`、`html` に絞る
-- [ ] `android/`、`ios/`、`kryonet/`、`server/` ディレクトリを削除する
-- [ ] ルート `build.gradle` から Android、RoboVM、kryonet 関連の `buildscript` 依存と `project(":android")`、`project(":ios")` ブロックを消す
-- [ ] `desktop/DesktopLauncher.java` から `KryoClient`、`KryoServer` の登録と import を消す
-- [ ] `html/HtmlLauncher.java` から `WebsocketClient` の登録を消し、`WebsocketClient.java` を削除する。`html/build.gradle` と `GdxDefinition.gwt.xml` から `gwt-websockets` を外す
-- [ ] `desktop/build.gradle` の packr 関連タスク(`packrCmd`、`fixMac`、`fixWindows32`、`packrZip`、`clearOut`)を消す
+- [x] `settings.gradle` を `core`、`desktop`、`html` に絞る
+- [x] `android/`、`ios/`、`kryonet/`、`server/` ディレクトリを削除する
+- [x] ルート `build.gradle` から Android、RoboVM、kryonet 関連の `buildscript` 依存と `project(":android")`、`project(":ios")` ブロックを消す
+- [x] `desktop/DesktopLauncher.java` から `KryoClient`、`KryoServer` の登録と import を消す
+- [x] `html/HtmlLauncher.java` から `WebsocketClient` の登録を消し、`WebsocketClient.java` を削除する。`html/build.gradle` と `GdxDefinition.gwt.xml` から `gwt-websockets` を外す
+- [x] `desktop/build.gradle` の packr 関連タスク(`packrCmd`、`fixMac`、`fixWindows32`、`packrZip`、`clearOut`)を消す
 - **完了条件**: `git grep -i kryo` と `git grep -i websocket` が core 以外でヒットしない
 - **依存**: 1.1
 - **推定時間**: 2h

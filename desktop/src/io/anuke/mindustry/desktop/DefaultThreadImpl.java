@@ -1,4 +1,4 @@
-package io.anuke.kryonet;
+package io.anuke.mindustry.desktop;
 
 import io.anuke.mindustry.core.ThreadHandler.ThreadProvider;
 import io.anuke.ucore.entities.Entity;
