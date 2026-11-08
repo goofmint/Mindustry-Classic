@@ -18,6 +18,7 @@ import io.anuke.ucore.core.*;
 import io.anuke.ucore.core.Inputs.*;
 import io.anuke.ucore.entities.*;
 import io.anuke.ucore.modules.*;
+import io.anuke.ucore.modules.Module;
 import io.anuke.ucore.scene.ui.layout.*;
 import io.anuke.ucore.util.*;
 
@@ -39,45 +40,18 @@ public class Control extends Module{
 	private float respawntime;
 	private InputHandler input;
 
-    private InputProxy proxy;
-    private float controlx, controly;
-    private boolean controlling;
     private Throwable error;
 
 	public Control(){
 		saves = new Saves();
 
-		Inputs.useControllers(!gwt);
-
-		Gdx.input.setCatchBackKey(true);
+		Gdx.input.setCatchKey(Keys.BACK, true);
 
 		if(mobile){
 			input = new AndroidInput();
 		}else{
 			input = new DesktopInput();
 		}
-
-        proxy = new InputProxy(Gdx.input){
-            @Override
-            public int getY() {
-                return controlling ? (int)controly : input.getY();
-            }
-
-            @Override
-            public int getX() {
-                return controlling ? (int)controlx : input.getX();
-            }
-
-			@Override
-			public int getY(int pointer) {
-				return pointer == 0 ? getY() : super.getY(pointer);
-			}
-
-			@Override
-			public int getX(int pointer) {
-				return pointer == 0 ? getX() : super.getX(pointer);
-			}
-        };
 
 		Inputs.addProcessor(input);
 
@@ -192,7 +166,6 @@ public class Control extends Module{
 	}
 
 	public void triggerInputUpdate(){
-		Gdx.input = proxy;
 	}
 
 	public void setError(Throwable error){
@@ -205,10 +178,6 @@ public class Control extends Module{
 
 	public Saves getSaves(){
 		return saves;
-	}
-
-	public boolean showCursor(){
-		return controlling;
 	}
 
 	public InputHandler input(){
@@ -280,51 +249,9 @@ public class Control extends Module{
 			throw new RuntimeException(error);
 		}
 
-		Gdx.input = proxy;
-
         if(Inputs.keyTap("console")){
 			console = !console;
 		}
-
-        if(KeyBinds.getSection("default").device.type == DeviceType.controller){
-            if(Inputs.keyTap("select")){
-                Inputs.getProcessor().touchDown(Gdx.input.getX(), Gdx.input.getY(), 0, Buttons.LEFT);
-            }
-
-            if(Inputs.keyRelease("select")){
-				Inputs.getProcessor().touchUp(Gdx.input.getX(), Gdx.input.getY(), 0, Buttons.LEFT);
-            }
-
-            float xa = Inputs.getAxis("cursor_x");
-            float ya = Inputs.getAxis("cursor_y");
-
-            if(Math.abs(xa) > controllerMin || Math.abs(ya) > controllerMin) {
-            	float scl = Settings.getInt("sensitivity")/100f * Unit.dp.scl(1f);
-                controlx += xa*baseControllerSpeed*scl;
-                controly -= ya*baseControllerSpeed*scl;
-                controlling = true;
-
-                Gdx.input.setCursorCatched(true);
-
-				Inputs.getProcessor().touchDragged(Gdx.input.getX(), Gdx.input.getY(), 0);
-            }
-
-            controlx = Mathf.clamp(controlx, 0, Gdx.graphics.getWidth());
-            controly = Mathf.clamp(controly, 0, Gdx.graphics.getHeight());
-
-            if(Gdx.input.getDeltaX() > 1 || Gdx.input.getDeltaY() > 1) {
-				controlling = false;
-				Gdx.input.setCursorCatched(false);
-			}
-        }else{
-            controlling = false;
-			Gdx.input.setCursorCatched(false);
-        }
-
-        if(!controlling){
-            controlx = Gdx.input.getX();
-            controly = Gdx.input.getY();
-        }
 
         saves.update();
 

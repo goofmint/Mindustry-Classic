@@ -8,8 +8,6 @@ import io.anuke.mindustry.net.NetEvents;
 import io.anuke.mindustry.world.Tile;
 import io.anuke.ucore.core.Graphics;
 import io.anuke.ucore.core.Inputs;
-import io.anuke.ucore.core.Inputs.DeviceType;
-import io.anuke.ucore.core.KeyBinds;
 import io.anuke.ucore.core.Timers;
 import io.anuke.ucore.scene.utils.Cursors;
 import io.anuke.ucore.util.Mathf;
@@ -55,13 +53,9 @@ public class DesktopInput extends InputHandler{
 		endx = Gdx.input.getX();
 		endy = Gdx.input.getY();
 
-		boolean controller = KeyBinds.getSection("default").device.type == DeviceType.controller;
-		
-		if(Inputs.getAxisActive("zoom") && (Inputs.keyDown("zoom_hold") || controller)
+		if(Inputs.getAxisActive("zoom") && Inputs.keyDown("zoom_hold")
 				&& !state.is(State.menu) && !ui.hasDialog()){
-			if((!zoomed || !controller)) {
-				renderer.scaleCamera((int) Inputs.getAxis("zoom"));
-			}
+			renderer.scaleCamera((int) Inputs.getAxis("zoom"));
 			zoomed = true;
 		}else{
 			zoomed = false;

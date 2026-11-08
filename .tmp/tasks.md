@@ -49,11 +49,11 @@ GitHub Issues: https://github.com/goofmint/Mindustry-Classic/issues (2026-11-08 
 
 #### Task 1.4: libGDX 1.13.1 への移行(core のコンパイル) (Issue #4)
 
-- [ ] `gdxVersion` を 1.13.1、`aiVersion` を 1.8.2 にする。gdx-tools も 1.13.1 に揃える
-- [ ] `Vector2.angle()` 28 か所(5 ファイル)を `angleDeg()` に直す。`angleRad()` はそのまま
-- [ ] gdx-controllers の参照(`Inputs.java`、`XboxBinds.java`、`Input.java`、`KeybindDialog.java`、`Control.java`)を消し、`Inputs.useControllers()` と `DeviceType.controller` の分岐を取り除く。`gdx-controllers` の依存を外す
-- [ ] 残りのコンパイルエラーを 1 件ずつ直す。直した API 差分を `.tmp/spike-libgdx.md` に「旧 API → 新 API」で記録する
-- [ ] `./gradlew :core:compileJava` と `./gradlew :desktop:compileJava` を通す
+- [x] `gdxVersion` を 1.13.1、`aiVersion` を 1.8.2 にする。gdx-tools も 1.13.1 に揃える
+- [x] `Vector2.angle()` 28 か所(5 ファイル)を `angleDeg()` に直す。`angleRad()` はそのまま(実際に Vector2 だったのは 3 か所。残り 25 か所は独自の `BulletEntity.angle()` で対象外。`.tmp/spike-libgdx.md` 2.2)
+- [x] gdx-controllers の参照(`Inputs.java`、`XboxBinds.java`、`Input.java`、`KeybindDialog.java`、`Control.java`)を消し、`Inputs.useControllers()` と `DeviceType.controller` の分岐を取り除く。`gdx-controllers` の依存を外す
+- [x] 残りのコンパイルエラーを 1 件ずつ直す。直した API 差分を `.tmp/spike-libgdx.md` に「旧 API → 新 API」で記録する
+- [x] `./gradlew :core:compileJava` と `./gradlew :desktop:compileJava` を通す
 - **完了条件**: `./gradlew :desktop:run` でメニューが表示され、既存マップでウェーブが始まる(本家のゲームがそのまま動く)
 - **依存**: 1.3
 - **推定時間**: 6h(上限 8h)

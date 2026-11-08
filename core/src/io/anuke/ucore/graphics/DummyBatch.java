@@ -32,7 +32,7 @@ public class DummyBatch implements Batch{
 	}
 
 	@Override
-	public void setColor(float color){
+	public void setPackedColor(float color){
 	}
 
 	@Override
