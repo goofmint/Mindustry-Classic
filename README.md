@@ -6,30 +6,41 @@ An old, classic version of the pixelated sandbox tower defense game known as [Mi
 
 ### Distribution and toolchain of this fork
 
-- Distribution is the browser (HTML/GWT) build only (ブラウザ版のみ配布). The planned output is `html/build/dist` (unverified yet).
+[![build](https://github.com/goofmint/Mindustry-Classic/actions/workflows/build.yml/badge.svg)](https://github.com/goofmint/Mindustry-Classic/actions/workflows/build.yml)
+
+- Distribution is the browser (HTML/GWT) build only (ブラウザ版のみ配布). The output is `html/build/dist`.
 - The `desktop` module is for development-time verification and for running tools. It is NOT distributed (decision date: 2026-11-08; 開発用で配布しない).
-- Target toolchain, all UNVERIFIED targets to be confirmed in later tasks: JDK 17 / Gradle 8.14 / libGDX 1.13.1 / GWT 2.11.
+- Verified toolchain: JDK 17 / Gradle 8.14 (wrapper) / libGDX 1.13.1 / GWT 2.11.0. The old versions and the migration notes are in [`docs/UPGRADE.md`](docs/UPGRADE.md).
 
 ### Notice from the upstream repository
 
 This repository is **no longer being maintained.** No features will be implemented, no PR will be accepted, no bugs will be fixed and no additional releases will be made.
 If you find an issue and know how to fix it, feel free to fork this repo.
 
-### Building (legacy upstream instructions, to be replaced in Task 1.6)
+### Building
 
-First, make sure you have Java 8 and JDK 8 installed. Open a terminal in the root directory, and run the following commands:
+#### Requirements
 
+- JDK 17 (a JDK with `javac`, not only a JRE). Gradle itself is downloaded by the wrapper (`./gradlew`), so it does not need to be installed.
+- Network access on the first run (Gradle and Maven dependencies are downloaded).
 
-**_Windows_**
+Ways to install JDK 17:
 
-_Running:_ `gradlew.bat desktop:run`  
-_Building:_ `gradlew.bat desktop:dist`
+- Homebrew (macOS): `brew install openjdk@17`, then
+  `export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home` and `export PATH="$JAVA_HOME/bin:$PATH"`
+- SDKMAN: `sdk list java` and install a 17.x Temurin build
+- Eclipse Temurin installers: https://adoptium.net/
 
+Check with `java -version` (it must print version 17) and `javac -version`.
 
-**_Linux_**
+#### Commands
 
-_Running:_ `./gradlew desktop:run`  
-_Building:_ `./gradlew desktop:dist`
+Run all commands in the repository root. On Windows use `gradlew.bat` instead of `./gradlew`.
 
-Gradle may take up to several minutes to download files. Be patient. <br>
-After building, the output .JAR file should be in the output JAR file should be in `/desktop/build/libs/desktop-release.jar.`
+- `./gradlew :desktop:run`: starts the desktop version. For development only; it needs a GUI. The working directory is `core/assets`, and the macOS `-XstartOnFirstThread` flag is handled by the task.
+- `./gradlew :html:dist`: builds the browser version into `html/build/dist`. It does not work over `file://`; serve the directory and open `index.html`, for example:
+  `cd html/build/dist && python3 -m http.server 8765`, then open http://localhost:8765/index.html.
+  The browser build has no multiplayer (Join).
+- `./gradlew pack`: packs the sprites in `core/assets-raw/sprites` into `core/assets/sprites/sprites.atlas` and `sprites.png`. These two files are tracked in git, so run it after changing the raw sprites and commit the result. It is not needed for a normal build.
+
+CI (`.github/workflows/build.yml`) runs `./gradlew :core:compileJava :desktop:compileJava :html:dist` on JDK 17 and uploads `html/build/dist` as the `html-dist` artifact.
