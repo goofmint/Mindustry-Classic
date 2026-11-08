@@ -27,7 +27,7 @@ If you find an issue and know how to fix it, feel free to fork this repo.
 Ways to install JDK 17:
 
 - Homebrew (macOS): `brew install openjdk@17`, then
-  `export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home` and `export PATH="$JAVA_HOME/bin:$PATH"`
+  `export JAVA_HOME=$(brew --prefix openjdk@17)/libexec/openjdk.jdk/Contents/Home` and `export PATH="$JAVA_HOME/bin:$PATH"`
 - SDKMAN: `sdk list java` and install a 17.x Temurin build
 - Eclipse Temurin installers: https://adoptium.net/
 
