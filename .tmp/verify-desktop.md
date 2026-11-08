@@ -26,14 +26,14 @@ Playwright をデーモンとして常駐させ、1 つのページを HTTP 経�
 | 2 | ゲートに 1 個ずつ入り、色とドットが変わる | OK | 黄→黄緑+白ドット、黄緑→青緑+白ドット、テストで空色+黒ドット |
 | 3 | 同じ施設 2 回で色が変わらず時間はかかる | OK | 2 台目のシニアで約 5 秒の進捗バーが進み、色とドットは同じ |
 | 4 | コア納品で残高が増減、品質 -5 で減る | OK | 70→68(減)、66→67(増)を HUD で観測。品質 -5 の減少は単体テストと AI 出力の流入で確認 |
-| 5 | 0 未満で負け、目標で勝ち | 一部 OK | 破産ダイアログは英日とも表示。勝ちは 1000 に届かず **ブラウザでは未到達、単体テストで確認**。サンドボックスで即勝利しない |
+| 5 | 0 未満で負け、目標で勝ち | OK(Task 5.2 で勝ちを確認) | 破産ダイアログは英日とも表示。勝ちは Task 5.1 の時点では未到達だったが、Task 5.3 の調整後に Task 5.2 でブラウザの英日とも勝ちダイアログを出した(`.tmp/verify-web.md`)。サンドボックスで即勝利しない |
 | 6 | 低品質で次ウェーブの敵が増える | OK | wave 1 の基礎数 1 に対し、`Mult 1.42` で 2 体出現 |
 | 7 | 電力切れで AI/テスト/CI/CodeRabbit が止まり、シニアと人間は止まらない | OK | 発電機撤去後、AI と CodeRabbit の蓄電が尽きて停止。無給電の Jenkins とユニットテストは進捗 0 のまま。シニアと人間は動き続けた |
 | 8 | CodeRabbit が撃ちつつ変換、電力が尽きると両方止まる | OK(射撃停止は間接) | 射撃と変換の進捗バーを同じ配置で観測。電力切れ後は変換が止まりキューが詰まった。射撃の停止は敵が来ず未観測 |
 | 9 | セーブ/ロードで処理中アイテムと残高が戻る | OK | サンドボックスで Jenkins とユニットテストの処理中コード、ウェーブで残高 60 と処理中コードが戻った |
 | 10 | 日英切り替えで名前、説明、勝敗の文言が変わる | OK(修正後) | ブロック名、`?` の説明と統計、破産ダイアログが日本語になる。ダイアログ本文が後ろのメニューに重なって読めない問題を `RestartDialog` で直した |
 
-勝ちダイアログ(項目 5)をブラウザで出せていないので、**10 項目すべてが OK とは言えない**。`tasks.md` の Task 5.1 のチェックは付けていない。
+勝ちダイアログ(項目 5)は Task 5.1 の時点ではブラウザで出せず、Task 5.1 のチェックは付けていなかった。**Task 5.2(2026-11-09)で、Task 5.3 の調整後のビルドで英日とも勝ちダイアログを出した**(`.tmp/verify-web.md`、`.tmp/verify-5.2/03-en-victory.png`、`10-ja-victory.png`)。これでブラウザ版では 10 項目すべてが OK になったので、`tasks.md` の Task 5.1 にチェックを付けた。**デスクトップ版での通し確認は引き続き利用者に残る**(末尾)。
 
 ---
 
@@ -82,7 +82,8 @@ Playwright をデーモンとして常駐させ、1 つのページを HTTP 経�
   - (b) サンドボックスは「BALANCE INF」と表示され、目標 1000 を超える残高のまま数分経っても勝ちダイアログは出なかった(`Logic.evaluateOutcome` がサンドボックスを判定しない)
   - 勝ち: ブラウザでは残高が 70 前後から増えず、1000 に届かなかった(初期配置のままだと残高が減り続ける。Task 5.3 の論点)
 - **証跡**: `05-item5-bankrupt-en.png`(修正前)、`05-item5-bankrupt-en-after-fix.png`、`05-item5-sandbox-no-victory.png`、`10-item10-ja-bankrupt-before-fix.png`
-- **判定**: 負けは OK。勝ちは **ブラウザでは未到達、単体テストで確認**(`LogicOutcomeTest.wonWhenTargetReached`、`wonIsCheckedBeforeBankrupt`、`sandboxNeverEndsByScore`、`ScoreTest.reachedTarget`)
+- **追記(Task 5.2)**: 初期資金 200、目標 300 に調整したビルドで、構成 C(合流点に CodeRabbit)で勝ちダイアログ「TARGET REACHED!」「Delivered score: 300」(約 8 分 40 秒、wave 5)と「目標達成!」「納品した得点: 300」(約 7 分 30 秒、wave 4)を出した。手順と証跡は `.tmp/verify-web.md` の「通しプレイ」、`.tmp/verify-5.2/03-en-victory.png`、`10-ja-victory.png`
+- **判定**: OK(Task 5.2 で勝ちを確認)。Task 5.1 の時点では、負けは OK、勝ちは **ブラウザでは未到達、単体テストで確認**(`LogicOutcomeTest.wonWhenTargetReached`、`wonIsCheckedBeforeBankrupt`、`sandboxNeverEndsByScore`、`ScoreTest.reachedTarget`)
 - **備考**: 端数が残る状態での破産境界、勝敗の同時成立は OK 判定の対象外(計画の指示どおり)。`ScoreTest.landingExactlyOnZeroIsNotBankrupt` がちょうど 0 の継続を確かめている
 
 ## 項目 6: 低品質を流し続けると次のウェーブの敵が増える
