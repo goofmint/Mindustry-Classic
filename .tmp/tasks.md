@@ -253,10 +253,10 @@ GitHub Issues: https://github.com/goofmint/Mindustry-Classic/issues (2026-11-08 
 
 #### Task 4.1: マップ 3 枚 (Issue #23)
 
-- [ ] 256×256 の PNG を 3 枚描く(`ColorMapper` の色表に従う。コード鉱脈 `c3a490`、iGPU `161616`、PCIe `83bc58`、水 `506eb4`、石油 `292929`、溶岩 `ed5334`、プレイヤー `00ff00`、敵出現 `ff0000`)
-- [ ] `maps.json` に 3 枚を登録し、`targetScore` を仮に 1000 / 1500 / 2000 とする。`oreGen: true`
-- [ ] 本家マップ(22 枚)を `maps.json` と `core/assets/maps/` から外す
-- [ ] 両言語の `map.<name>.name` と `map.<name>.description` を書く
+- [x] 256×256 の PNG を 3 枚描く(`ColorMapper` の色表に従う。コード鉱脈 `c3a490`、iGPU `161616`、PCIe `83bc58`、水 `506eb4`、石油 `292929`、溶岩 `ed5334`、プレイヤー `00ff00`、敵出現 `ff0000`)
+- [x] `maps.json` に 3 枚を登録し、`targetScore` を仮に 1000 / 1500 / 2000 とする。`oreGen: true`
+- [x] 本家マップ(22 枚)を `maps.json` と `core/assets/maps/` から外す
+- [x] 両言語の `map.<name>.name` と `map.<name>.description` を書く
 - **完了条件**: レベル選択に 3 枚だけ出て、各マップに鉱脈と燃料の床、液体の床がある
 - **依存**: 3.11
 - **推定時間**: 4h
