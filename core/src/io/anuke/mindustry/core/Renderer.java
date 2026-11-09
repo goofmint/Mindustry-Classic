@@ -13,11 +13,14 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.Pools;
+import com.badlogic.gdx.utils.TimeUtils;
 import io.anuke.mindustry.core.GameState.State;
 import io.anuke.mindustry.entities.Player;
 import io.anuke.mindustry.entities.SyncEntity;
 import io.anuke.mindustry.entities.enemies.Enemy;
 import io.anuke.mindustry.game.SpawnPoint;
+import io.anuke.mindustry.game.TutorialController;
+import io.anuke.mindustry.game.TutorialStep;
 import io.anuke.mindustry.graphics.BlockRenderer;
 import io.anuke.mindustry.graphics.Shaders;
 import io.anuke.mindustry.input.InputHandler;
@@ -44,6 +47,10 @@ import static io.anuke.ucore.core.Core.batch;
 import static io.anuke.ucore.core.Core.camera;
 
 public class Renderer extends RendererModule{
+	/** チュートリアルの強調表示の点滅周期(ミリ秒)と、最も薄いときの不透明度。アウトラインはブロックの縁から 2 ワールド単位外 */
+	private static final long TUTORIAL_BLINK_PERIOD_MS = 1000L;
+	private static final float TUTORIAL_BLINK_MIN_ALPHA = 0.35f;
+	private static final float TUTORIAL_OUTLINE_PAD = 2f;
 	private final static float shieldHitDuration = 18f;
 	
 	public Surface shadowSurface, shieldSurface, indicatorSurface;
@@ -382,7 +389,9 @@ public class Renderer extends RendererModule{
 					tile.block().width * tilesize / 2f + 1f);
 			Draw.reset();
 		}
-		
+
+		drawTutorialHighlights();
+
 		int tilex = control.input().getBlockX();
 		int tiley = control.input().getBlockY();
 		
@@ -507,6 +516,38 @@ public class Renderer extends RendererModule{
 				if(!player.isDead() && !player.isAndroid) drawHealth(player);
 			}
 		}
+	}
+
+	/**チュートリアルの強調表示(Issue #78)。設定中ブロックのアウトラインと同じ描き方で、scene の actor を持たないので入力を妨げない。
+	 * 手順 3 と 5 は合流タイル、手順 2 はエンジニア、ユニットテスト、コアを点滅するアウトラインで示す。
+	 * 一時停止中は Timers が進まないので、点滅には実時間を使う*/
+	void drawTutorialHighlights(){
+		TutorialController tutorial = control.tutorial();
+		if(!tutorial.active()) return;
+
+		TutorialStep step = tutorial.step();
+		float phase = (TimeUtils.millis() % TUTORIAL_BLINK_PERIOD_MS) / (float)TUTORIAL_BLINK_PERIOD_MS;
+		float alpha = TUTORIAL_BLINK_MIN_ALPHA + (1f - TUTORIAL_BLINK_MIN_ALPHA) * (0.5f + 0.5f * MathUtils.sin(phase * MathUtils.PI2));
+
+		Draw.color(Colors.get("accent"));
+		Draw.alpha(alpha);
+		Lines.stroke(2f);
+
+		if(step == TutorialStep.breakMerge || step == TutorialStep.placeCodeRabbit){
+			drawTutorialOutline(tutorial.mergeTile());
+		}else if(step == TutorialStep.pipeline){
+			drawTutorialOutline(tutorial.engineerTile(-1));
+			drawTutorialOutline(tutorial.engineerTile(1));
+			drawTutorialOutline(tutorial.gateTile());
+			drawTutorialOutline(world.getCore());
+		}
+
+		Draw.reset();
+	}
+
+	private void drawTutorialOutline(Tile tile){
+		if(tile == null) return;
+		Lines.square(tile.drawx(), tile.drawy(), tile.block().width * tilesize / 2f + TUTORIAL_OUTLINE_PAD);
 	}
 
 	void drawHealth(SyncEntity dest){

@@ -100,6 +100,12 @@ public class MenuFragment implements Fragment{
 		})).width(bw).colspan(2);
 		dialog.content().row();
 
+		dialog.content().add(new MenuButton("icon-tutorial", "$text.tutorial", () -> {
+			dialog.hide();
+			control.startTutorial();
+		})).width(bw).colspan(2);
+		dialog.content().row();
+
 		dialog.content().add(new MenuButton("icon-add", "$text.joingame", () -> {
 			if(!gwt){
 				ui.join.show();

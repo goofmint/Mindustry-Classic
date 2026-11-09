@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import io.anuke.mindustry.game.Difficulty;
 import io.anuke.mindustry.game.GameMode;
+import io.anuke.mindustry.game.TutorialController;
 import io.anuke.mindustry.world.Map;
 import io.anuke.ucore.core.Core;
 import io.anuke.ucore.core.Settings;
@@ -178,6 +179,16 @@ public class LevelDialog extends FloatingDialog{
 			Timers.run(2f, ()->{
 				Core.scene.setScrollFocus(pane);
 			});
+
+			//初めて New Game を開いたときだけ、チュートリアルを案内する(Issue #78)。どちらを選んでも二度は出さない
+			if(!Settings.getBool(TutorialController.PROMPTED_SETTING)){
+				Settings.putBool(TutorialController.PROMPTED_SETTING, true);
+				Settings.save();
+				ui.showConfirm("$text.tutorial", "$text.tutorial.prompt", () -> {
+					hide();
+					control.startTutorial();
+				});
+			}
 		});
 	}
 

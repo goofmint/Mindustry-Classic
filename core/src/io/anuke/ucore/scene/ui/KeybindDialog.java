@@ -201,8 +201,9 @@ public class KeybindDialog extends Dialog{
 		}
 	}
 
-	/**Mouse and scroll inputs have translated names (input.*.name); key names come from Input.toString().*/
-	private static String inputName(Input input){
+	/**Mouse and scroll inputs have translated names (input.*.name); key names come from Input.toString().
+	 * Public so that other UI (the tutorial panel) can show the current binding with the same names.*/
+	public static String inputName(Input input){
 		if(input.type == Input.Type.mouse || input.type == Input.Type.scroll){
 			return Bundles.get("input." + input.name().toLowerCase(Locale.ROOT) + ".name");
 		}
