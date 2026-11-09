@@ -1,0 +1,9 @@
+[warning] [.WebGL-0x11c0050b400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[warning] [.WebGL-0x11c0050b400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[warning] [.WebGL-0x11c0050b400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[warning] [.WebGL-0x11c0050b400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[requestfailed] http://127.0.0.1:8766/Mindustry-Classic/assets/music/1-2a83e21565d9773647e102c523f263fa.mp3 net::ERR_ABORTED
+[requestfailed] http://127.0.0.1:8766/Mindustry-Classic/assets/music/2-4f78f2f6377df2d5c9d4e9934dbcbd47.mp3 net::ERR_ABORTED
+[requestfailed] http://127.0.0.1:8766/Mindustry-Classic/assets/music/3-fe89fda6fe527cfe1d9bfbc998b2ca0e.mp3 net::ERR_ABORTED
+[requestfailed] http://127.0.0.1:8766/Mindustry-Classic/assets/music/4-cb872ae1dd31637ddc150f97193f172f.mp3 net::ERR_ABORTED
+[requestfailed] http://127.0.0.1:8766/Mindustry-Classic/assets/music/6-88158470fe2e63f38cb990cb6b64b5dd.mp3 net::ERR_ABORTED

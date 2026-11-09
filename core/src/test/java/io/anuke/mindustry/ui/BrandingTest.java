@@ -1,3 +1,4 @@
+// Modified for the AI SDLC browser game fork (goofmint/Mindustry-Classic) by Atsushi Nakatsugawa, 2026. See LICENSE (GPL-3.0).
 package io.anuke.mindustry.ui;
 
 import static org.junit.Assert.assertEquals;

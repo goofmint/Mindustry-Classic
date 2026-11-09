@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Modified for the AI SDLC browser game fork (goofmint/Mindustry-Classic) by Atsushi Nakatsugawa, 2026. See LICENSE (GPL-3.0).
 """Convert a BDF bitmap font into an AngelCode BMFont (text .fnt + one .png page).
 
 Glyphs are copied dot for dot at their original size (no scaling, no
