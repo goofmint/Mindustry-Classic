@@ -4,7 +4,7 @@
 - `core/src/io/anuke/mindustry/resource/Item.java`: `credit`(id 0)、`igpu`(1)、`pcie`(2)を先頭に宣言。旧 8 種はその後に残す(Task 3.11 で削除)。`MAX_ITEMS = 127`、`checkRegistrationLimit()` / `checkRegistrationLimit(int)`(超過で `RuntimeException`、件数と上限を表示)。静的宣言の末尾で `CodeItem.registerAll()`。コンストラクタと `init()` は変更なし
 - `core/src/io/anuke/mindustry/resource/CodeItem.java`(新規): 設計書 §2.2 の公開インターフェース。出発点(stage 0〜3、passed 0)から REVIEW+1、REVIEW+2、TEST+1、CI+1 の遷移で到達探索し、重要度 → 通過状態 → 段階の昇順で `code-q<stage>-p<passed>-i<importance>` を登録。正引きは `Item[stage][passed][importance-1]`、逆引きは `ObjectMap<Item, CodeAttr>`(Item ごとに 1 個の `CodeAttr`)。未登録・範囲外は `IllegalArgumentException`(フォールバックなし)。`advance()` は通過ビット以外の値、負の `stages`、コードでない Item で `IllegalArgumentException`
 - `core/src/io/anuke/mindustry/Mindustry.java`: `init()` の最初の文で `Item.checkRegistrationLimit()`
-- `bundle.properties` / `bundle_ja.properties`: `item.credit.name`(credits / 得点)を `item.igpu.name` の直前に追加。「得」「点」は `tools/chars_ja.txt` に収録済みのためフォント再生成は不要
+- `bundle.properties` / `bundle_ja.properties`: `item.credit.name`(credits / クレジット)を `item.igpu.name` の直前に追加。当初は「得点」としたが、PR レビューで「`Item.credit` は残高(通貨)であり、納品の得点や `Score` と紛らわしい」と指摘されたため、英語の credits に合わせてカタカナ語にした。カタカナは常に収録されるのでフォント再生成は不要
 - テスト: `core/src/test/java/io/anuke/mindustry/resource/CodeItemTest.java`(16 件)、`ItemTest.java`(6 件)
 
 ## 結果

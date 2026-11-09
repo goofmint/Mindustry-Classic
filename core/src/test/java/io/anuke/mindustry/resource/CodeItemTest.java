@@ -162,6 +162,20 @@ public class CodeItemTest{
     }
 
     @Test
+    public void advanceRejectsStagesOutsideTransitions(){
+        Item item = CodeItem.get(0, 0, 1);
+        int[][] invalid = {{CodeItem.REVIEW, 0}, {CodeItem.REVIEW, 3}, {CodeItem.TEST, 2}, {CodeItem.CI, 2}, {CodeItem.CI, -1}};
+        for(int[] pair : invalid){
+            try{
+                CodeItem.advance(item, pair[0], pair[1]);
+                fail("expected IllegalArgumentException for bit " + pair[0] + " stages " + pair[1]);
+            }catch(IllegalArgumentException expected){
+                assertTrue(expected.getMessage(), expected.getMessage().contains("transition"));
+            }
+        }
+    }
+
+    @Test
     public void registerAllIsIdempotent(){
         int before = Item.getAllItems().size;
         CodeItem.registerAll();
