@@ -103,7 +103,7 @@ public class HudFragment implements Fragment{
 
 				//目標と残高。波表と違って折り畳みでも隠さない
 				scorelabel = new label(() -> Bundles.format("text.score.status",
-						scoreValue(state.score.target), scoreValue(state.score.balance())))
+						colorReset(BlocksFragment.format(state.score.target)), colorReset(BlocksFragment.formatAmount(state.score.balance()))))
 						.scale(UI.labelScale(fontscale*1.5f)).left().get();
 
 				row();
@@ -187,9 +187,9 @@ public class HudFragment implements Fragment{
 		}
 	}
 
-	/** 数量の書式は資源欄と同じ。k や mil の [gray] がラベルの後ろの文字に残らないよう色を戻す */
-	private String scoreValue(int amount){
-		return BlocksFragment.formatAmount(amount) + "[]";
+	/** 目標は常に数値、残高は資源欄と同じ書式(無限資源モードでは inf)。k や mil の [gray] がラベルの後ろの文字に残らないよう色を戻す */
+	private String colorReset(String formatted){
+		return formatted + "[]";
 	}
 
 	private String getEnemiesRemaining() {

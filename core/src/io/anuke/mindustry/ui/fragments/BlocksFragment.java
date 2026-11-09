@@ -360,9 +360,9 @@ public class BlocksFragment implements Fragment{
 		itemtable.add(label).expandX().left();
 	}
 
-	/** 資源欄と HUD の数量表示。99999999 を超える値は inf にする */
+	/** 資源欄と HUD の残高表示。無限資源モード(sandbox)では inf、それ以外は値の大きさに関係なく数値で出す */
 	static String formatAmount(int amount){
-		return amount > 99999999 ? "inf" : format(amount);
+		return state.mode.infiniteResources ? "inf" : format(amount);
 	}
 
 	static String format(int number){
