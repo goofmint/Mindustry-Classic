@@ -130,13 +130,23 @@ public final class CodeItem{
 		if(passedBit != REVIEW && passedBit != TEST && passedBit != CI){
 			throw new IllegalArgumentException("passedBit must be exactly one of REVIEW, TEST, CI: " + passedBit);
 		}
-		if(stages < 0){
-			throw new IllegalArgumentException("stages must not be negative: " + stages);
+		//registerAll() only registers the combinations reachable through TRANSITIONS, so any other
+		//(passedBit, stages) pair would end in get() with a misleading "not registered" error
+		if(!isTransition(passedBit, stages)){
+			throw new IllegalArgumentException("stages " + stages + " is not a registered transition for bit " + passedBit
+					+ " (see TRANSITIONS: REVIEW 1 or 2, TEST 1, CI 1)");
 		}
 
 		if((attr.passed & passedBit) != 0) return item;
 
 		return get(Math.min(attr.stage + stages, MAX_STAGE), attr.passed | passedBit, attr.importance);
+	}
+
+	private static boolean isTransition(int passedBit, int stages){
+		for(int[] transition : TRANSITIONS){
+			if(transition[0] == passedBit && transition[1] == stages) return true;
+		}
+		return false;
 	}
 
 	/** コードの属性。Item ごとに 1 個だけ作るので、== で比べられる */
