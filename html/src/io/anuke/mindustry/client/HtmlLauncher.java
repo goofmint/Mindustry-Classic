@@ -20,6 +20,8 @@ import io.anuke.mindustry.Mindustry;
 import io.anuke.mindustry.core.Platform;
 import io.anuke.ucore.core.Settings;
 
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.Date;
 import java.util.Random;
 
@@ -80,6 +82,15 @@ public class HtmlLauncher extends GwtApplication {
     public ApplicationListener createApplicationListener() {
         instance = this;
         setLogLevel(LOG_NONE);
+        //GWT's System.out does nothing in web mode; send io.anuke.ucore.util.Log lines to the browser console
+        System.setOut(new PrintStream((OutputStream)null){
+            @Override
+            public void println(String s){
+                consoleLog(s);
+            }
+        });
+        //Log.err(Throwable) prints the stack trace to System.err, so send that to the same console
+        System.setErr(System.out);
         setLoadingListener(new LoadingListener() {
             @Override
             public void beforeSetup() {
