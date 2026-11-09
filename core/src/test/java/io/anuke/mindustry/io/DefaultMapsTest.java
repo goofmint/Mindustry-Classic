@@ -22,7 +22,7 @@ import org.junit.Test;
 /** core/assets/maps/maps.json の 3 マップ(Task 4.1)と、その PNG と bundle のキーの確認 */
 public class DefaultMapsTest{
     private static final String[] NAMES = {"prototype", "sprint", "release"};
-    private static final int[] TARGETS = {1000, 1500, 2000};
+    private static final int[] TARGETS = {300, 450, 600};
     private static final int SIZE = 256;
 
     private Array<Map> readMaps(){

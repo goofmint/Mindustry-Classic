@@ -5,7 +5,7 @@
       "name": "prototype",
       "visible": true,
       "oreGen": true,
-      "targetScore": 1000,
+      "targetScore": 300,
       "backgroundColor": "646464"
     },
     {
@@ -13,7 +13,7 @@
       "name": "sprint",
       "visible": true,
       "oreGen": true,
-      "targetScore": 1500,
+      "targetScore": 450,
       "backgroundColor": "646464"
     },
     {
@@ -21,7 +21,7 @@
       "name": "release",
       "visible": true,
       "oreGen": true,
-      "targetScore": 2000,
+      "targetScore": 600,
       "backgroundColor": "646464"
     }
   ]

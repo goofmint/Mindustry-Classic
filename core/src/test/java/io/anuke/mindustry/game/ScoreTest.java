@@ -45,29 +45,29 @@ public class ScoreTest{
     @Test
     public void halfTwiceAddsOne(){
         score.deliver(Item.igpu, 0.5f);
-        assertEquals(150, score.balance());
+        assertEquals(Balance.INITIAL_CREDIT, score.balance());
         score.deliver(Item.igpu, 0.5f);
-        assertEquals(151, score.balance());
+        assertEquals(Balance.INITIAL_CREDIT + 1, score.balance());
     }
 
     @Test
     public void exactOneAddsOne(){
         score.deliver(Item.igpu, 1f);
-        assertEquals(151, score.balance());
+        assertEquals(Balance.INITIAL_CREDIT + 1, score.balance());
     }
 
     @Test
     public void pointEightFiveTimesAddsFourAtFifth(){
         for(int i = 0; i < 4; i++) score.deliver(Item.igpu, 0.8f);
-        assertEquals(153, score.balance());
+        assertEquals(Balance.INITIAL_CREDIT + 3, score.balance());
         score.deliver(Item.igpu, 0.8f);
-        assertEquals(154, score.balance());
+        assertEquals(Balance.INITIAL_CREDIT + 4, score.balance());
     }
 
     @Test
     public void negativeIsAppliedImmediately(){
         score.deliver(Item.igpu, -5f);
-        assertEquals(145, score.balance());
+        assertEquals(Balance.INITIAL_CREDIT - 5, score.balance());
         assertFalse(score.bankrupt());
     }
 
@@ -191,7 +191,7 @@ public class ScoreTest{
         score.target = 0;
         assertFalse(score.reachedTarget());
 
-        score.target = 151;
+        score.target = Balance.INITIAL_CREDIT + 1;
         assertFalse(score.reachedTarget());
         score.deliver(Item.igpu, 1f);
         assertTrue(score.reachedTarget());

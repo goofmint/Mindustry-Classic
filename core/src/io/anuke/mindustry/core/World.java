@@ -198,8 +198,17 @@ public class World extends Module{
 		int flip = Mathf.sign(!currentMap.flipBase);
 		int fr = currentMap.flipBase ? 2 : 0;
 		
+		//中央の列: 合流点 (x, y-4) → ユニットテスト (x, y-3) → (x, y-2) → コア。(x, y-2) はプレイヤーの出現位置なので、固い施設を置かない(Task 5.3)
+		//ユニットテストがあるので、レビュー(シニアか CodeRabbit)を 1 回足せば納品の得点がプラスになり、何もしなくても赤字が緩やかになる
 		set(x, y-2*flip, DistributionBlocks.conveyor, 1 + fr);
-		set(x, y-3*flip, DistributionBlocks.conveyor, 1 + fr);
+		set(x, y-3*flip, ProductionBlocks.unitTest, 1 + fr);
+		set(x, y-4*flip, DistributionBlocks.conveyor, 1 + fr);
+		
+		//発電機 2 台と、その間で両方に燃料を配る家電屋 1 台。(x+4, y-3) の左向きのレーザーがユニットテストに、
+		//(x+5, y-4) の左向きのレーザーが合流点 (x, y-4) に届く(そこに置いた CodeRabbit が電力を受ける)
+		set(x+4, y-3*flip, ProductionBlocks.coalgenerator, 0);
+		set(x+4, y-4*flip, ProductionBlocks.coaldrill, 0);
+		set(x+5, y-4*flip, ProductionBlocks.coalgenerator, 0);
 		
 		for(int i = 0; i < 2; i ++){
 			int d = Mathf.sign(i-0.5f);
@@ -208,10 +217,14 @@ public class World extends Module{
 			set(x+2*d, y-1*flip, DistributionBlocks.conveyor, 1 + fr);
 			set(x+2*d, y, DistributionBlocks.conveyor, 1 + fr);
 			set(x+2*d, y+1*flip, WeaponBlocks.turret, 0 + fr);
+			//砲台ごとに発電機と家電屋を 1 組。発電機のレーザーが隣の砲台に届く(電力が無いと撃たず、放っておくと wave 2〜3 の少数の敵に約 7 分でコアを壊された。Task 5.3)
+			set(x+3*d, y+1*flip, ProductionBlocks.coalgenerator, 0);
+			set(x+4*d, y+1*flip, ProductionBlocks.coaldrill, 0);
 			
-			set(x+1*d, y-3*flip, DistributionBlocks.conveyor, 2*d);
-			set(x+2*d, y-3*flip, DistributionBlocks.conveyor, 2*d);
-			set(x+2*d, y-4*flip, DistributionBlocks.conveyor, 1 + fr);
+			//左右の 4 台のコードは (x±2, y-4) に集まり、(x±1, y-4) を通って中央の合流点へ入る
+			set(x+1*d, y-4*flip, DistributionBlocks.conveyor, 2*d);
+			set(x+2*d, y-3*flip, DistributionBlocks.conveyor, 3 + fr);
+			set(x+2*d, y-4*flip, DistributionBlocks.conveyor, 2*d);
 			set(x+2*d, y-5*flip, DistributionBlocks.conveyor, 1 + fr);
 			
 			set(x+3*d, y-5*flip, ProductionBlocks.humanEngineer, 0 + fr);
@@ -226,6 +239,9 @@ public class World extends Module{
 		}
 		if(type == ProductionBlocks.humanEngineer){
 			tiles[x][y].setFloor(Blocks.iron);
+		}
+		if(type == ProductionBlocks.coaldrill){
+			tiles[x][y].setFloor(Blocks.coal);
 		}
 		tiles[x][y].setBlock(type, rot);
 	}
