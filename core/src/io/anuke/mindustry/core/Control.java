@@ -255,11 +255,15 @@ public class Control extends Module{
 		saves.resetSave();
 
 		Timers.runTask(10, () -> {
-			logic.reset();
-			world.loadMap(map);
-			logic.play();
-			ui.loadfrag.hide();
-			tutorial.begin();
+			//読み込みや begin()(コアが無いと IllegalStateException)が失敗しても、読み込み画面は必ず閉じる
+			try{
+				logic.reset();
+				world.loadMap(map);
+				logic.play();
+				tutorial.begin();
+			}finally{
+				ui.loadfrag.hide();
+			}
 		});
 	}
 
