@@ -94,12 +94,12 @@ GitHub Issues: https://github.com/goofmint/Mindustry-Classic/issues (2026-11-08 
 
 既存の 8×8 ドット日本語フォント「美咲フォント」(littlelimit.net、2021-05-05 版)を使う。文字を描く作業は無い。libGDX の `BitmapFont` は AngelCode 形式(`.fnt` + `.png`)しか読まないので、配布物(TTF、BDF、PNG)からその形式へ変換するだけ。ライセンスは利用・複製・配布・改変が無制限で表記義務なし(配布ページの font.htm で確認済み)。
 
-- [ ] `misaki_ttf_2021-05-05.zip`(ビットマップ埋め込み TTF)と `misaki_bdf_2021-05-05.zip` を取得し、`tools/fonts/misaki/` に置く。同梱のライセンス文を一緒に入れる
-- [ ] `tools/collect_chars.py`(標準ライブラリのみ)を書く。`bundle_ja.properties` の文字と、ASCII 全印字文字、ひらがな、カタカナ、よく使う記号を集めて `tools/chars_ja.txt` に出す(全収録文字 7,000 字超を入れずに済ませるため)
-- [ ] Hiero(gdx-tools に同梱、`java -cp gdx-tools.jar com.badlogic.gdx.tools.hiero.Hiero`)で `misaki_gothic_2nd.ttf` をサイズ 8、アンチエイリアスなし、`chars_ja.txt` の文字だけで `misaki.fnt` + `misaki.png` に書き出す
-- [ ] Hiero の描画がにじむ、または埋め込みビットマップを拾わない場合は、BDF から `.fnt` を書く変換スクリプト(`tools/bdf2fnt.py`、標準ライブラリのみ)に切り替える。BDF はドットの並びそのものなので、原寸で確実に出せる
-- [ ] `core/assets/ui/uiskin.json` の `BitmapFont` に `japanese: { file: misaki.fnt, markupEnabled: true, scale: ... }` を足す。`square.fnt`(本家の英字フォント)と並べて高さが揃う `scale` を決める
-- [ ] 文字を足したとき(`bundle_ja` を増やしたとき)の再変換手順を `tools/README.md` に書く
+- [x] `misaki_ttf_2021-05-05.zip`(ビットマップ埋め込み TTF)と `misaki_bdf_2021-05-05.zip` を取得し、`tools/fonts/misaki/` に置く。同梱のライセンス文を一緒に入れる
+- [x] `tools/collect_chars.py`(標準ライブラリのみ)を書く。`bundle_ja.properties` の文字と、ASCII 全印字文字、ひらがな、カタカナ、よく使う記号を集めて `tools/chars_ja.txt` に出す(全収録文字 7,000 字超を入れずに済ませるため)
+- [ ] Hiero(gdx-tools に同梱、`java -cp gdx-tools.jar com.badlogic.gdx.tools.hiero.Hiero`)で `misaki_gothic_2nd.ttf` をサイズ 8、アンチエイリアスなし、`chars_ja.txt` の文字だけで `misaki.fnt` + `misaki.png` に書き出す(見送り: Hiero は GUI で自動実行できないため、下の BDF 変換を使った)
+- [x] Hiero の描画がにじむ、または埋め込みビットマップを拾わない場合は、BDF から `.fnt` を書く変換スクリプト(`tools/bdf2fnt.py`、標準ライブラリのみ)に切り替える。BDF はドットの並びそのものなので、原寸で確実に出せる
+- [x] `core/assets/ui/uiskin.json` の `BitmapFont` に `japanese: { file: misaki.fnt, markupEnabled: true, scale: ... }` を足す。`square.fnt`(本家の英字フォント)と並べて高さが揃う `scale` を決める(ブラウザ描画で比較し scale 2 を採用。詳細は `.tmp/verify-2.2.md`)
+- [x] 文字を足したとき(`bundle_ja` を増やしたとき)の再変換手順を `tools/README.md` に書く
 - **完了条件**: `misaki.fnt` と `misaki.png` がリポジトリにあり、デスクトップ版で「設計書」「レビュー済」が原寸のドットで(にじまずに)描かれる
 - **依存**: 2.1
 - **推定時間**: 2h
