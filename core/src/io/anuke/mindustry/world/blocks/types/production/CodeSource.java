@@ -1,5 +1,6 @@
 package io.anuke.mindustry.world.blocks.types.production;
 
+import com.badlogic.gdx.utils.Array;
 import io.anuke.mindustry.entities.TileEntity;
 import io.anuke.mindustry.resource.CodeItem;
 import io.anuke.mindustry.resource.Item;
@@ -7,6 +8,7 @@ import io.anuke.mindustry.world.Block;
 import io.anuke.mindustry.world.Tile;
 import io.anuke.mindustry.world.blocks.Blocks;
 import io.anuke.ucore.core.Effects;
+import io.anuke.ucore.util.Bundles;
 import io.anuke.ucore.util.Mathf;
 
 /**
@@ -41,6 +43,29 @@ public class CodeSource extends Drill{
 
 	/** コードを 1 個出したときに呼ばれる。電力を使うサブクラスが上書きする */
 	protected void onProduced(TileEntity entity){
+	}
+
+	@Override
+	public void getStats(Array<String> list){
+		super.getStats(list);
+
+		StringBuilder quality = new StringBuilder();
+		for(int stage : stageChoices){
+			if(quality.length() > 0) quality.append(", ");
+			float value = CodeItem.QUALITY[stage];
+			quality.append(value == (int)value ? Integer.toString((int)value) : Float.toString(value));
+		}
+		list.add("[iteminfo]Start Quality: " + quality);
+
+		StringBuilder importance = new StringBuilder();
+		for(int value : CodeItem.IMPORTANCE){
+			if(importance.length() > 0) importance.append(", ");
+			importance.append(value);
+		}
+		list.add("[iteminfo]Importance: " + importance);
+
+		//コロンの無い行は showBlockInfo() が訳さないので、訳した文をそのまま入れる(Generator の爆発警告と同じ)
+		list.add("[iteminfo]" + Bundles.get("text.blocks.codevein"));
 	}
 
 	@Override
