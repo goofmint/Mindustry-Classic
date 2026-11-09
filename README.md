@@ -42,6 +42,7 @@ Run all commands in the repository root. On Windows use `.\gradlew.bat` instead 
 - `./gradlew :desktop:run`: starts the desktop version. For development only; it needs a GUI. The working directory is `core/assets`, and the macOS `-XstartOnFirstThread` flag is handled by the task.
 - `./gradlew :html:dist`: builds the browser version into `html/build/dist`. It does not work over `file://`; serve the directory and open `index.html`, for example:
   `cd html/build/dist && python3 -m http.server 8765`, then open http://localhost:8765/index.html.
+  On Windows (PowerShell 5.1 does not accept `&&`): `py -3 -m http.server 8765 --directory html/build/dist`, then open the same URL.
   The browser build has no multiplayer (Join).
 - `./gradlew pack`: packs the sprites in `core/assets-raw/sprites` into `core/assets/sprites/sprites.atlas` and `sprites.png`. These two files are tracked in git, so run it after changing the raw sprites and commit the result. It is not needed for a normal build. Running it on the current tree already rewrites both files (the atlas header spacing and the PNG bytes change; the sprite layout does not), so commit them only together with a real sprite change.
 
