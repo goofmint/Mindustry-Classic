@@ -80,11 +80,19 @@ public class EventType {
         void handle(Weapon weapon, float x, float y, float angle);
     }
 
+    /**確定したプレイヤーの配置(オフラインまたはホスト)。マップ生成とセーブ読み込みでは発火しない。
+     * block は Block.id: Events.fire() は引数の実行時クラスで handle を探すので、Block のサブクラスは渡せない(Issue #78)*/
     public interface PlaceEvent extends Event{
-        void handle(int x, int y, Block block, int rotation);
+        void handle(int x, int y, int block, int rotation);
     }
 
+    /**確定したプレイヤーの撤去(オフラインまたはホスト)。block は撤去前のブロックの Block.id*/
     public interface BreakEvent extends Event{
-        void handle(int x, int y);
+        void handle(int x, int y, int block);
+    }
+
+    /**コアへの納品(オフラインまたはサーバー)。item は Item.id、score は残高に加えた得点(負もある)*/
+    public interface DeliverEvent extends Event{
+        void handle(int item, float score);
     }
 }

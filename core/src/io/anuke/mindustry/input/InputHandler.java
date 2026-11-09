@@ -3,6 +3,8 @@ package io.anuke.mindustry.input;
 
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector2;
+import io.anuke.mindustry.game.EventType.BreakEvent;
+import io.anuke.mindustry.game.EventType.PlaceEvent;
 import io.anuke.mindustry.net.Net;
 import io.anuke.mindustry.net.NetEvents;
 import io.anuke.mindustry.resource.ItemStack;
@@ -10,6 +12,7 @@ import io.anuke.mindustry.resource.Recipe;
 import io.anuke.mindustry.world.Block;
 import io.anuke.mindustry.world.Placement;
 import io.anuke.mindustry.world.Tile;
+import io.anuke.ucore.core.Events;
 import io.anuke.ucore.core.Graphics;
 import io.anuke.ucore.util.Mathf;
 
@@ -94,12 +97,17 @@ public abstract class InputHandler extends InputAdapter{
 		if(!Net.client()){
 			Tile tile = world.tile(x, y);
 			if(tile != null) result.placed(tile);
+			//確定したプレイヤーの配置(オフラインまたはホスト)。マップ生成とセーブ読み込みは Placement を直接呼ぶのでここを通らない
+			Events.fire(PlaceEvent.class, x, y, result.id, rotation);
 		}
 	}
 
 	public void breakBlock(int x, int y, boolean sound){
-		if(!Net.client())
-			Placement.breakBlock(x, y, true, sound);
+		if(!Net.client()){
+			Block broken = Placement.breakBlock(x, y, true, sound);
+			//確定したプレイヤーの撤去(オフラインまたはホスト)。タイルが無ければ null で、何も壊していない
+			if(broken != null) Events.fire(BreakEvent.class, x, y, broken.id);
+		}
 
 		if(Net.active()){
 			NetEvents.handleBreak(x, y);
