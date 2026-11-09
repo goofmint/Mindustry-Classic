@@ -189,11 +189,11 @@ GitHub Issues: https://github.com/goofmint/Mindustry-Classic/issues (2026-11-08 
 
 #### Task 3.6: CodeSource(コードを生む設備) (Issue #17)
 
-- [ ] `CodeSource extends Drill implements PowerAcceptor` を実装する
-- [ ] `ProductionBlocks` に `human-engineer`、`ai-agent-1/2/3` を定義する(設計書の表の値)
-- [ ] `canReplace()` で `CodeSource` 同士の置き替えを許す
-- [ ] 8×8 のブロック画像を 4 枚作る(仮絵でよい)
-- [ ] 両言語の `block.<name>.name` と `description` を足す
+- [x] `CodeSource extends Drill implements PowerAcceptor` を実装する(電力を使わない `CodeSource extends Drill` と、`PoweredCodeSource extends CodeSource implements PowerAcceptor` に分けた。理由は verify-3.6.md)
+- [x] `ProductionBlocks` に `human-engineer`、`ai-agent-1/2/3` を定義する(設計書の表の値)
+- [x] `canReplace()` で `CodeSource` 同士の置き替えを許す
+- [x] 8×8 のブロック画像を 4 枚作る(仮絵でよい)
+- [x] 両言語の `block.<name>.name` と `description` を足す
 - **完了条件**: 鉄鉱石の床(コード鉱脈)の上に置くとコードが出て、コンベアで運べる。鉱脈の外では `cross` が出る。AI エージェントは電力が無いと止まる
 - **依存**: 3.5
 - **推定時間**: 3h
