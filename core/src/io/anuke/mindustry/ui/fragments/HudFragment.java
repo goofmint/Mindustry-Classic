@@ -18,6 +18,7 @@ import io.anuke.ucore.scene.ui.ImageButton;
 import io.anuke.ucore.scene.ui.Label;
 import io.anuke.ucore.scene.ui.layout.Table;
 import io.anuke.ucore.util.Bundles;
+import io.anuke.ucore.util.Strings;
 
 import static io.anuke.mindustry.Vars.*;
 
@@ -102,7 +103,8 @@ public class HudFragment implements Fragment{
 				visible(() -> !state.is(State.menu));
 
 				infolabel = new Label(() -> (Settings.getBool("fps") ? (Gdx.graphics.getFramesPerSecond() + " FPS") +
-						(threads.isEnabled() ?  " / " + threads.getFPS() + " TPS" : "") + (Net.client() && !gwt ? "\nPing: " + Net.getPing() : "") : ""));
+						(threads.isEnabled() ?  " / " + threads.getFPS() + " TPS" : "") + (Net.client() && !gwt ? "\nPing: " + Net.getPing() : "") +
+						"\nMult: " + Strings.toFixed(state.score.qualityMultiplier, 2) : ""));
 				row();
 				add(infolabel).size(-1);
 
