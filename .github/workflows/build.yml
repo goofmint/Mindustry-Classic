@@ -10,9 +10,9 @@ on:
 permissions:
   contents: read
 
-# ワークフロー全体で同じ ref の実行を直列にする。main では実行中のデプロイを止めず(GitHub の Pages
-# ワークフローの推奨)、待ちの実行は最新の 1 本だけ残るので、古いビルドが新しい配置を上書きしない。
-# PR では新しい push が古い実行を取り消す
+# ワークフロー全体で同じ ref の実行を直列にする。main では実行中のデプロイを止めない(GitHub の Pages
+# ワークフローの推奨)。待ちの実行は最新の 1 本だけ残るが、GitHub は待ち行列の順序を保証しないので、
+# 古いビルドの配置は deploy ジョブの先頭で main の最新 SHA と比べて飛ばす。PR では新しい push が古い実行を取り消す
 concurrency:
   group: build-${{ github.ref }}
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
@@ -57,15 +57,28 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     permissions:
+      contents: read
       pages: write
       id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      # 待ち行列の順序は保証されないので、この実行のコミットが main の最新でなければ配置しない
+      - id: latest
+        name: Check that this commit is still the head of main
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          head=$(gh api "repos/${GITHUB_REPOSITORY}/branches/main" --jq .commit.sha)
+          echo "run=${GITHUB_SHA} main=${head}"
+          if [ "$head" = "$GITHUB_SHA" ]; then echo "latest=true" >> "$GITHUB_OUTPUT"; else echo "latest=false" >> "$GITHUB_OUTPUT"; echo "::notice::main has moved on; skipping this deployment"; fi
+
       # Pages 自体の有効化(Settings → Pages → Source = GitHub Actions)は手動。
       # configure-pages の enablement は GITHUB_TOKEN では権限不足で失敗するため使わない。
-      - uses: actions/configure-pages@v5
+      - if: steps.latest.outputs.latest == 'true'
+        uses: actions/configure-pages@v5
 
       - id: deployment
+        if: steps.latest.outputs.latest == 'true'
         uses: actions/deploy-pages@v4

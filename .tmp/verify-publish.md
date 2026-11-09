@@ -52,5 +52,5 @@ Pages のプロジェクト URL(`/Mindustry-Classic/`)と同じ条件にする�
 
 ## PR レビュー後の補足(concurrency)
 
-- `pages` の concurrency を `deploy` ジョブだけに置いていたため、連続した main への push で古いビルドが後から配置され、公開サイトが巻き戻る可能性があった(PR #67 のレビュー指摘)。ワークフロー全体の `concurrency`(group は `build-<ref>`)に移し、同じ ref の実行を直列にした。main では `cancel-in-progress: false`(実行中のデプロイを止めない。GitHub の Pages ワークフローの推奨)。待ちの実行は最新の 1 本だけ残るので、配置の順序は push の順になる。PR では新しい push が古い実行を取り消す。
+- `pages` の concurrency を `deploy` ジョブだけに置いていたため、連続した main への push で古いビルドが後から配置され、公開サイトが巻き戻る可能性があった(PR #67 のレビュー指摘)。ワークフロー全体の `concurrency`(group は `build-<ref>`)に移し、同じ ref の実行を直列にした。main では `cancel-in-progress: false`(実行中のデプロイを止めない。GitHub の Pages ワークフローの推奨)。待ちの実行は最新の 1 本だけ残る。ただし GitHub は待ち行列の順序を保証しないため、`deploy` ジョブの先頭で `gh api repos/<repo>/branches/main` の SHA と `GITHUB_SHA` を比べ、main が先に進んでいる実行は `configure-pages` と `deploy-pages` を飛ばす(古いビルドが新しい配置を上書きしない)。この比較のため deploy ジョブに `contents: read` を足した。PR では新しい push が古い実行を取り消す。
 - あわせて既定のトークン権限を `permissions: contents: read` に絞った(zizmor の excessive-permissions 警告)。deploy ジョブは従来どおり `pages: write` と `id-token: write` を自分で持つ。
