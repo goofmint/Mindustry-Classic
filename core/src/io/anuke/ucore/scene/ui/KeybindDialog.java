@@ -23,6 +23,7 @@ import io.anuke.ucore.util.Bundles;
 import io.anuke.ucore.util.Input;
 import io.anuke.ucore.util.Input.Type;
 import io.anuke.ucore.util.Strings;
+import java.util.Locale;
 
 public class KeybindDialog extends Dialog{
 	protected KeybindDialogStyle style;
@@ -130,11 +131,11 @@ public class KeybindDialog extends Dialog{
 					table.add(Strings.capitalize(Bundles.get("keybind."+key+".name", key)), style.keyNameColor).left().padRight(40).padLeft(8);
 
 					if(axis.min.axis){
-						table.add(axis.min.toString(), style.keyColor).left().minWidth(90).padRight(20);
+						table.add(inputName(axis.min), style.keyColor).left().minWidth(90).padRight(20);
 					}else{
 						Table axt = new Table();
 						axt.left();
-						axt.labelWrap(axis.min.toString() + " [red]/[] " + axis.max.toString()).color(style.keyColor).width(140f).padRight(5);
+						axt.labelWrap(inputName(axis.min) + " [red]/[] " + inputName(axis.max)).color(style.keyColor).width(140f).padRight(5);
 						table.add(axt).left().minWidth(90).padRight(20);
 					}
 
@@ -146,7 +147,7 @@ public class KeybindDialog extends Dialog{
 					table.row();
 				}else{
 					table.add(Strings.capitalize(Bundles.get("keybind."+key+".name", key)), style.keyNameColor).left().padRight(40).padLeft(8);
-					table.add(section.binds.get(section.device.type).get(key, keybind.input).toString(), style.keyColor).left().minWidth(90).padRight(20);
+					table.add(inputName(section.binds.get(section.device.type).get(key, keybind.input)), style.keyColor).left().minWidth(90).padRight(20);
 					table.addButton(Bundles.get("text.keybind.rebind"), () -> openDialog(section, key));
 					table.row();
 				}
@@ -198,6 +199,14 @@ public class KeybindDialog extends Dialog{
 			rebindAxis = false;
 			setup();
 		}
+	}
+
+	/**Mouse and scroll inputs have translated names (input.*.name); key names come from Input.toString().*/
+	private static String inputName(Input input){
+		if(input.type == Input.Type.mouse || input.type == Input.Type.scroll){
+			return Bundles.get("input." + input.name().toLowerCase(Locale.ROOT) + ".name");
+		}
+		return input.toString();
 	}
 
 	private void openDialog(KeyBinds.Section section, String name){
