@@ -672,6 +672,7 @@ U+8EE2 転
 U+8EF8 軸
 U+8EFD 軽
 U+8FBC 込
+U+8FCE 迎
 U+8FD1 近
 U+8FF7 迷
 U+9001 送

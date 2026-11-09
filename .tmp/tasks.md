@@ -210,10 +210,10 @@ GitHub Issues: https://github.com/goofmint/Mindustry-Classic/issues (2026-11-08 
 
 #### Task 3.8: CodeRabbitBlock(変換と迎撃) (Issue #19)
 
-- [ ] `CodeRabbitBlock extends PowerTurret` と `CodeRabbitEntity` を実装し、`GateLogic` を呼ぶ
-- [ ] `acceptItem()` を上書きして `QualityGate` と同じ条件にする
-- [ ] `WeaponBlocks` に `coderabbit` を定義する(射程 60、リロード 4、stages 2、processTime 3 秒)
-- [ ] 砲塔画像 `coderabbit.png`(`laserturret.png` の色替え)、両言語の文言
+- [x] `CodeRabbitBlock extends PowerTurret` と `CodeRabbitEntity` を実装し、`GateLogic` を呼ぶ
+- [x] `acceptItem()` を上書きして `QualityGate` と同じ条件にする
+- [x] `WeaponBlocks` に `coderabbit` を定義する(射程 60、リロード 4、stages 2、processTime 3 秒)
+- [x] 砲塔画像 `coderabbit.png`(`laserturret.png` の色替え)、両言語の文言
 - **完了条件**: 敵を撃ちつつコードを変換する。電力が尽きると両方止まる
 - **依存**: 3.7
 - **推定時間**: 3h

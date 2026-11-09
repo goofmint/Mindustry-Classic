@@ -471,7 +471,22 @@ public abstract class BulletType extends BaseBulletType<Bullet>{
 			Draw.rect("circle", b.x, b.y, 3f*f, 3f*f);
 			Lines.lineAngle(b.x, b.y, b.angle(), length);
 		}
+	},
+	/** CodeRabbit の弾(トークン)。shot と同じ描き方で、ダメージは本家 laserturret と同じ 10、色は CodeRabbit のオレンジ */
+	coderabbitShot = new BulletType(2.7f, 10){
+		{
+			lifetime = 40;
+		}
+
+		public void draw(Bullet b){
+			Draw.color(Color.WHITE, coderabbitOrange, b.fout()/2f + 0.25f);
+			Lines.stroke(1.5f);
+			Lines.lineAngle(b.x, b.y, b.angle(), 3f);
+			Draw.reset();
+		}
 	};
+
+	private static final Color coderabbitOrange = Color.valueOf("ff570a");
 	
 	private BulletType(float speed, int damage){
 		this.speed = speed;
