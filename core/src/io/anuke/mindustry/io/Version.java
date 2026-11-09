@@ -14,6 +14,8 @@ public class Version {
     public static final String code;
     public static final int build;
     public static final String buildName;
+    /**build name that build.gradle writes into version.properties when no buildversion property is given*/
+    public static final String customBuild = "custom build";
 
     static{
         try {
