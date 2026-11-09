@@ -134,7 +134,10 @@ public class TutorialFragment implements Fragment{
 			case placeCodeRabbit:
 				return Bundles.format("tutorial.place", keyName("select")) + lowBalance(tutorial);
 			case unpause:
-				return Bundles.format("tutorial.unpause", keyName("pause"));
+				//手順 1〜5 の途中で自分で解除していることがある。動いているときに「解除する」と案内すると止めてしまう
+				return state.is(State.paused)
+						? Bundles.format("tutorial.unpause", keyName("pause"))
+						: Bundles.get("tutorial.unpause.running");
 			case done:
 				return Bundles.format("tutorial.done", keyName("block_info"), keyName("select"));
 			case unguidable:

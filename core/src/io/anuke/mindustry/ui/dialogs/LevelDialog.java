@@ -182,7 +182,9 @@ public class LevelDialog extends FloatingDialog{
 
 			//初めて New Game を開いたときだけ、チュートリアルを案内する(Issue #78)。どちらを選んでも二度は出さない。
 			//shown() はこのダイアログが scene に載る前に呼ばれるので、上の削除の確認と同じく 1 フレーム遅らせて手前に出す
-			if(!Settings.getBool(TutorialController.PROMPTED_SETTING)){
+			//完了またはスキップ済み(DONE_SETTING)なら、Play メニューからやった人にも案内しない
+			if(!Settings.getBool(TutorialController.PROMPTED_SETTING)
+					&& !Settings.getBool(TutorialController.DONE_SETTING)){
 				Settings.putBool(TutorialController.PROMPTED_SETTING, true);
 				Settings.save();
 				Timers.run(1f, () -> {

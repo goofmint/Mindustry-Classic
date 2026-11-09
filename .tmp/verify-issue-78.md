@@ -32,14 +32,14 @@
 - `tools/chars_ja.txt`、`core/assets/ui/misaki.fnt`、`misaki.png`: `collect_chars.py` → `bdf2fnt.py` → `check_fnt.py` で再生成。845 コードポイント、831 字、256×256、重なりなし。不足は以前から無いかな範囲の文字(U+3094 など)だけで、追加した文言の字はすべてある
 
 ## 自動テストとビルド
-- `./gradlew :core:test :desktop:compileJava`: 174 件すべて成功(既存 152 + `TutorialModelTest` 22)
+- `./gradlew :core:test :desktop:compileJava`: 176 件すべて成功(既存 154 + `TutorialModelTest` 22。main の #79 を取り込む前は 174 件だった)
 - `./gradlew :html:dist`: 成功。`Events.fire()` は GWT でも `ClassReflection` で `handle` を探すので、新しい `DeliverEvent` を含めてブラウザで実際に発火することを下の手順で確認した
 - `core/assets/crash-report-*.txt` は出ていない
 
 ## ブラウザでの確認
 
 ### 手順
-1. `html/build/dist` を `ThreadingHTTPServer` で 127.0.0.1:8768 に配信し、Playwright で操作した(`scratchpad/pw/load78.mjs`: 左右クリック、キー、待ち、スクリーンショット、`localStorage` の読み書き)。ブラウザは常に 1 つだけ動かした
+1. `html/build/dist` を `ThreadingHTTPServer` で 127.0.0.1:8768 に配信し、Playwright で操作した(操作スクリプト `load78.mjs` はリポジトリ外の作業用ディレクトリにあり、コミットしていない。左右クリック、キー、待ち、スクリーンショット、`localStorage` の読み書きができる)。証跡のスクリーンショットはこのリポジトリの `.tmp/verify-issue-78/` にコミットしてある(PNG のため CodeRabbit のレビュー対象からは除外される)。ブラウザは常に 1 つだけ動かした
 2. 日本語は `localStorage` の `io.anuke.moment:locales=ja` を読み込み前に入れて切り替えた(GwtPreferences の保存形式)。`tutorialdone` と `tutorialprompted` は `io.anuke.moment:tutorialdoneb` / `tutorialpromptedb` を読んだ
 3. 1280×800 の座標: Play (668,363) → チュートリアル (638,343)。パネルの「次へ」(970,212)、「スキップ」/「閉じる」(1093,212)(日本語は y=208)。合流コンベア (640,463) を右クリックで撤去、クラフトタブ (1055,490) → CodeRabbit (1027,600)、(640,463) を左クリックで配置、Space で解除
 4. 1024×640 の座標: Play (512,283) → チュートリアル (510,262)、「次へ」(734,212)、合流コンベア (512,382)、クラフトタブ (820,330) → CodeRabbit (792,440)
