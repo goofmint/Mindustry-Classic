@@ -89,6 +89,8 @@ public class HtmlLauncher extends GwtApplication {
                 consoleLog(s);
             }
         });
+        //Log.err(Throwable) prints the stack trace to System.err, so send that to the same console
+        System.setErr(System.out);
         setLoadingListener(new LoadingListener() {
             @Override
             public void beforeSetup() {
