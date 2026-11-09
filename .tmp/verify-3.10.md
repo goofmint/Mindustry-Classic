@@ -12,7 +12,7 @@
 - 倍率 1.0: 任意の roll で base のまま
 - 倍率 2.0: 3 -> 6
 - 倍率 1.5, base 3 (4.5): roll < 0.5 で 5、roll >= 0.5 で 4
-- 倍率 0.7: 10 -> 7、3 -> roll 0.99 で 2、roll 0 で 3(`EnemySpawnTest.lowMultiplierReduces` は roll に関係なく 7 ちょうどを検証する。`applyMultiplier()` は切り上げで端数を扱うため、base 10 × 0.7 = 7 で端数が出ない)
+- 倍率 0.7: 10 -> 7、3 -> roll 0.99 で 2、roll 0 で 3(`EnemySpawnTest.lowMultiplierReduces` は roll に関係なく 7 ちょうどを検証する。`applyMultiplier()` は端数の分だけ roll に応じて 1 を足す確率的な丸めで、base 10 × 0.7 は端数が出ないので roll に関係なく 7 になる)
 - base 0: 常に 0
 
 `WaveCreator` に `target` 型は無い(変更なし)。`Logic.runWave()` も変更なし。
