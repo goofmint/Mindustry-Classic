@@ -10,6 +10,8 @@ import io.anuke.ucore.core.KeyBinds;
 import io.anuke.ucore.scene.builders.table;
 import io.anuke.ucore.scene.event.Touchable;
 import io.anuke.ucore.scene.ui.KeybindDialog;
+import io.anuke.ucore.scene.ui.Label;
+import io.anuke.ucore.scene.ui.layout.Cell;
 import io.anuke.ucore.scene.ui.layout.Table;
 import io.anuke.ucore.scene.ui.layout.Unit;
 import io.anuke.ucore.util.Bundles;
@@ -22,20 +24,27 @@ import static io.anuke.mindustry.Vars.*;
  * 表示は毎フレーム TutorialController の状態から組み立て、セッションが無ければ隠す。
  */
 public class TutorialFragment implements Fragment{
-	/** パネルの幅(dp)。画面幅から左右の余白を引いた値を上限にする */
+	/** 本文の幅(dp)。狭い画面では画面幅の 48% を上限にする(4:3 の 853×640 で左上の HUD の目標と残高に重ならない幅)。
+	 * ブラウザ版は起動後に canvas が縮むので、幅は毎フレーム見直す */
 	private static final float PANEL_WIDTH_DP = 460f;
+	private static final float PANEL_MAX_FRACTION = 0.48f;
+	/** パネルの内側の余白(dp)。640 の高さで右下のブロックパネルに届かないよう詰めている */
+	private static final float PANEL_MARGIN_INNER = 8f;
 	/** 画面の右端からの余白(dp)。上部中央に置くと左上の HUD(目標と残高)に 1280 幅でも重なるので、右上に寄せる */
 	private static final float PANEL_MARGIN_DP = 8f;
 	/** 画面上端からの余白(dp)。HUD の「一時停止中」ラベル(上部中央)の下に出す */
 	private static final float TOP_PAD_DP = 52f;
-	/** 本文の最小の高さ(dp)。手順ごとに本文の行数が違っても、ボタンの位置が動かないようにする(英語の手順 1 の 6 行より 1 行多い) */
-	private static final float BODY_MIN_HEIGHT_DP = 126f;
+	/** 本文の最小の高さ(dp)。手順ごとに本文の行数が違っても、ボタンの位置が動かないようにする。
+	 * 英語の本文は狭い幅でも 6 行に収まる長さにしてあり、640 の高さで右下のレシピ説明(選択中に出る)の上に収まる */
+	private static final float BODY_MIN_HEIGHT_DP = 108f;
 	private static final float BUTTON_WIDTH = 120f;
-	private static final float BUTTON_HEIGHT = 44f;
+	private static final float BUTTON_HEIGHT = 40f;
 
 	private Table buttons;
 	/** ボタン列を作った時点の手順。手順が変わったら作り直す */
 	private TutorialStep builtFor;
+	/** 本文の幅を最後に反映した値 */
+	private float lastWidth = -1f;
 
 	@Override
 	public void build(){
@@ -47,23 +56,30 @@ public class TutorialFragment implements Fragment{
 			touchable(Touchable.childrenOnly);
 			visible(() -> !state.is(State.menu) && tutorial.active());
 
-			float width = Math.min(Unit.dp.scl(PANEL_WIDTH_DP), Gdx.graphics.getWidth() - Unit.dp.scl(PANEL_MARGIN_DP) * 2f);
-
 			Table pane = new Table("pane");
 			pane.setTouchable(Touchable.childrenOnly);
-			pane.margin(10f);
+			pane.margin(PANEL_MARGIN_INNER);
 
-			pane.labelWrap(() -> title(tutorial)).width(width).left().get().setTouchable(Touchable.disabled);
+			Cell<Label> titleCell = pane.labelWrap(() -> title(tutorial)).width(panelWidth()).left();
+			titleCell.get().setTouchable(Touchable.disabled);
 			pane.row();
-			pane.labelWrap(() -> body(tutorial)).width(width).minHeight(Unit.dp.scl(BODY_MIN_HEIGHT_DP)).top().left().padTop(4f)
-					.get().setTouchable(Touchable.disabled);
+			Cell<Label> bodyCell = pane.labelWrap(() -> body(tutorial)).width(panelWidth())
+					.minHeight(Unit.dp.scl(BODY_MIN_HEIGHT_DP)).top().left().padTop(2f);
+			bodyCell.get().setTouchable(Touchable.disabled);
 			pane.row();
 
 			buttons = new Table();
 			buttons.setTouchable(Touchable.childrenOnly);
-			pane.add(buttons).right().padTop(6f);
+			pane.add(buttons).right().padTop(4f);
 
 			pane.update(() -> {
+				float width = panelWidth();
+				if(width != lastWidth){
+					lastWidth = width;
+					titleCell.width(width);
+					bodyCell.width(width);
+					pane.invalidateHierarchy();
+				}
 				TutorialStep step = tutorial.step();
 				if(step != builtFor){
 					builtFor = step;
@@ -73,6 +89,11 @@ public class TutorialFragment implements Fragment{
 
 			add(pane).padTop(Unit.dp.scl(TOP_PAD_DP)).padRight(Unit.dp.scl(PANEL_MARGIN_DP));
 		}}.end();
+	}
+
+	/** 本文の幅。固定値と、画面幅の一定割合の小さいほう */
+	private static float panelWidth(){
+		return Math.min(Unit.dp.scl(PANEL_WIDTH_DP), Gdx.graphics.getWidth() * PANEL_MAX_FRACTION);
 	}
 
 	private void rebuildButtons(TutorialController tutorial, TutorialStep step){
