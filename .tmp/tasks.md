@@ -98,7 +98,7 @@ GitHub Issues: https://github.com/goofmint/Mindustry-Classic/issues (2026-11-08 
 - [x] `tools/collect_chars.py`(標準ライブラリのみ)を書く。`bundle_ja.properties` の文字と、ASCII 全印字文字、ひらがな、カタカナ、よく使う記号を集めて `tools/chars_ja.txt` に出す(全収録文字 7,000 字超を入れずに済ませるため)
 - [ ] Hiero(gdx-tools に同梱、`java -cp gdx-tools.jar com.badlogic.gdx.tools.hiero.Hiero`)で `misaki_gothic_2nd.ttf` をサイズ 8、アンチエイリアスなし、`chars_ja.txt` の文字だけで `misaki.fnt` + `misaki.png` に書き出す(見送り: Hiero は GUI で自動実行できないため、下の BDF 変換を使った)
 - [x] Hiero の描画がにじむ、または埋め込みビットマップを拾わない場合は、BDF から `.fnt` を書く変換スクリプト(`tools/bdf2fnt.py`、標準ライブラリのみ)に切り替える。BDF はドットの並びそのものなので、原寸で確実に出せる
-- [x] `core/assets/ui/uiskin.json` の `BitmapFont` に `japanese: { file: misaki.fnt, markupEnabled: true, scale: ... }` を足す。`square.fnt`(本家の英字フォント)と並べて高さが揃う `scale` を決める(`japanese` は候補値 `scale: 2` で登録済み。値はブラウザでの比較待ち)(ブラウザ描画で比較し scale 2 を採用。詳細は `.tmp/verify-2.2.md`)
+- [x] `core/assets/ui/uiskin.json` の `BitmapFont` に `japanese: { file: misaki.fnt, markupEnabled: true, scale: ... }` を足す。`square.fnt`(本家の英字フォント)と並べて高さが揃う `scale` を決める(ブラウザ描画で比較し scale 2 を採用。詳細は `.tmp/verify-2.2.md`)
 - [x] 文字を足したとき(`bundle_ja` を増やしたとき)の再変換手順を `tools/README.md` に書く
 - **完了条件**: `misaki.fnt` と `misaki.png` がリポジトリにあり、デスクトップ版で「設計書」「レビュー済」が原寸のドットで(にじまずに)描かれる
 - **依存**: 2.1
@@ -169,10 +169,10 @@ GitHub Issues: https://github.com/goofmint/Mindustry-Classic/issues (2026-11-08 
 
 #### Task 3.4: Score と残高 (Issue #15)
 
-- [x] `Score` を設計書 §2.2 のインターフェースで実装し、`GameState` に `score` と `won` を足す
-- [x] `Inventory.clearItems()` の `addItem(Item.stone, 40)` を `addItem(Item.credit, Balance.INITIAL_CREDIT)` に変える。`Balance.java` を作る
-- [x] `Map` に `targetScore` を足し、`maps.json` の読み込みで入ることを確認する
-- [x] テスト: 端数の繰り越し、納品での 0 割れで `bankrupt()`、建設では立たない、倍率の境界値
+- [ ] `Score` を設計書 §2.2 のインターフェースで実装し、`GameState` に `score` と `won` を足す
+- [ ] `Inventory.clearItems()` の `addItem(Item.stone, 40)` を `addItem(Item.credit, Balance.INITIAL_CREDIT)` に変える。`Balance.java` を作る
+- [ ] `Map` に `targetScore` を足し、`maps.json` の読み込みで入ることを確認する
+- [ ] テスト: 端数の繰り越し、納品での 0 割れで `bankrupt()`、建設では立たない、倍率の境界値
 - **完了条件**: テストが緑。HUD の既存アイテム欄に credit が 150 と出る
 - **依存**: 3.2
 - **推定時間**: 3h
