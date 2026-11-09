@@ -70,9 +70,11 @@ JDK 17 の入れ方の例:
 
 `java -version` と `javac -version` が 17 を表示することを確かめてください。
 
+Gradle ラッパーは `PATH` より `JAVA_HOME` を優先するので、古い `JAVA_HOME` が残っていると `java` が 17 でも `./gradlew` が失敗します。`JAVA_HOME` を JDK 17 に向け(macOS なら `export JAVA_HOME=$(/usr/libexec/java_home -v 17)`、または上の Homebrew のパス)、`./gradlew --version` でラッパーが実際に使う JVM を確かめてください。`Launcher JVM:` の行が 17 で、`Daemon JVM:` の行(バージョンか、JDK 未指定ならパス)も JDK 17 を指していれば問題ありません。違う場合は `gradle.properties` や `~/.gradle/gradle.properties` の `org.gradle.java.home` が別の JDK を指していないか確認してください。
+
 ### コマンド
 
-リポジトリのルートで実行します。Windows では `./gradlew` の代わりに `gradlew.bat` を使います。
+リポジトリのルートで実行します。Windows では `./gradlew` の代わりに `.\gradlew.bat` を使います。
 
 - `./gradlew :html:dist`: ブラウザ版を `html/build/dist` に出力します。`file://` では動かないので、HTTP サーバで配信して開きます。
 
@@ -81,6 +83,8 @@ JDK 17 の入れ方の例:
   python3 -m http.server 8765
   # http://localhost:8765/index.html を開く
   ```
+
+  Windows(PowerShell 5.1 は `&&` を受け付けません)では `py -3 -m http.server 8765 --directory html/build/dist` を実行して、同じ URL を開きます。
 
 - `./gradlew :core:test`: 単体テストを実行します。
 - `./gradlew :desktop:run`: デスクトップ版を起動します。開発用で、GUI が必要です。
