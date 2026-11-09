@@ -48,7 +48,17 @@ public class EnemySpawn{
 		}
 		float scaling = this.scaling * enemyScaling;
 		
-		return Math.min(amount-1 + Math.max((int)((wave / spacing) / scaling), 1) + (tier(wave, lane)-1) * tierscaleback, max);
+		int base = Math.min(amount-1 + Math.max((int)((wave / spacing) / scaling), 1) + (tier(wave, lane)-1) * tierscaleback, max);
+		
+		return applyMultiplier(base, state.score.qualityMultiplier, Mathf.random(1f));
+	}
+	
+	/**Scales a spawn count by the quality multiplier. The fractional part is rounded up when roll (0 to 1) is below it.*/
+	static int applyMultiplier(int base, float multiplier, float roll){
+		float scaled = base * multiplier;
+		int result = (int)scaled;
+		if(roll < scaled - result) result++;
+		return result;
 	}
 	
 	/**Scales a spawn count by the quality multiplier. The fractional part is rounded up when roll (0 to 1) is below it.*/

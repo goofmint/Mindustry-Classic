@@ -20,6 +20,7 @@ import io.anuke.ucore.core.Timers;
 import io.anuke.ucore.function.Consumer;
 import io.anuke.ucore.function.Listenable;
 import io.anuke.ucore.graphics.Draw;
+import io.anuke.ucore.graphics.JapaneseFontData;
 import io.anuke.ucore.modules.SceneModule;
 import io.anuke.ucore.scene.Skin;
 import io.anuke.ucore.scene.builders.build;
@@ -73,6 +74,8 @@ public class UI extends SceneModule{
     private Locale lastLocale;
     /**Integer scale of the misaki fonts; 0 when the square font is used (set in loadSkin()).*/
     private static float japaneseScale = 0f;
+    /**Ratio of the square font's unscaled cap height to the misaki font's; 1 when the square font is used (set in loadSkin()).*/
+    private static float worldScaleRatio = 1f;
 	
 	public UI() {
 		Dialog.setShowAction(()-> sequence(
@@ -128,8 +131,10 @@ public class UI extends SceneModule{
 		if(getLocale().getLanguage().equals("ja")){
 			BitmapFont squareFont = skin.font();
 			BitmapFont squareChat = skin.getFont("default-font-chat");
-			BitmapFont japanese = skin.getFont("japanese");
-			BitmapFont japaneseChat = skin.getFont("japanese-chat");
+			//wrap Japanese text between characters (JapaneseFontData). The fonts share the pages of the skin's
+			//misaki fonts, which stay in the skin and own the textures
+			BitmapFont japanese = japaneseWrapping(skin.getFont("japanese"));
+			BitmapFont japaneseChat = japaneseWrapping(skin.getFont("japanese-chat"));
 
 			skin.add("default-font", japanese, BitmapFont.class);
 			skin.add("default-font-chat", japaneseChat, BitmapFont.class);
@@ -150,10 +155,15 @@ public class UI extends SceneModule{
 				font.getData().setScale(jscale);
 			}, japanese, japaneseChat, japaneseWorld);
 			japaneseScale = jscale;
+			//in-world text (Draw.tscl()) uses absolute scales tuned for square: the cap heights are compared unscaled
+			BitmapFontData squareData = squareFont.getData();
+			BitmapFontData japaneseData = japaneseWorld.getData();
+			worldScaleRatio = (squareData.capHeight / squareData.scaleY) / (japaneseData.capHeight / japaneseData.scaleY);
 
 			Core.font = japaneseWorld;
 		}else{
 			japaneseScale = 0f;
+			worldScaleRatio = 1f;
 			Mathf.each(font -> {
 				font.setUseIntegerPositions(false);
 				font.getData().setScale(Vars.fontscale);
@@ -169,6 +179,21 @@ public class UI extends SceneModule{
 	 * dot font, so a non-integer or smaller scale (0.75 for fontscale*1.5) makes it unreadable.*/
 	public static float labelScale(float squareScale){
 		return japaneseScale > 0f ? japaneseScale : squareScale;
+	}
+
+	/**A misaki font with the same file, pages and markup setting as the given one, using JapaneseFontData.*/
+	private static BitmapFont japaneseWrapping(BitmapFont font){
+		BitmapFont result = new BitmapFont(new JapaneseFontData(font.getData().fontFile, font.getData().flipped), font.getRegions(), font.usesIntegerPositions());
+		result.getData().markupEnabled = font.getData().markupEnabled;
+		return result;
+	}
+
+	/**Scale for in-world text drawn through Draw.tscl() / Draw.text() (Core.font). squareScale is the absolute
+	 * scale tuned for the square font and is returned as is for other locales. With the misaki world font it is
+	 * multiplied by the ratio of the two fonts' unscaled cap heights, so the glyphs keep the same height in world units
+	 * (Draw.tscl(0.125) alone would shrink the 8px misaki glyphs to about one world unit).*/
+	public static float worldTextScale(float squareScale){
+		return squareScale * worldScaleRatio;
 	}
 
 	/**Replaces style font references that are the same object as the replaced square fonts.*/

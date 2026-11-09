@@ -75,8 +75,15 @@ public class MenuFragment implements Fragment{
 		new table(){{
 			visible(() -> state.is(State.menu));
 			abottom().aleft();
-			new label(Bundles.get("text.gamename") + " " + Version.code + " / " + (Version.build == -1 ? Version.buildName : Bundles.format("text.version.build", String.valueOf(Version.build))));
+			new label(Bundles.get("text.gamename") + " " + Version.code + " / " + buildLabel());
 		}}.end();
+	}
+
+	/**Numbered builds and the default custom build are translated; any other build name is shown as is.*/
+	private static String buildLabel(){
+		if(Version.build != -1) return Bundles.format("text.version.build", String.valueOf(Version.build));
+		if(Version.buildName.equals(Version.customBuild)) return Bundles.get("text.version.custom");
+		return Version.buildName;
 	}
 
 	private void showPlaySelect(){
