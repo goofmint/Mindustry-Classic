@@ -41,6 +41,7 @@ public class Control extends Module{
 
 	private float respawntime;
 	private InputHandler input;
+	private TutorialController tutorial;
 
     private Throwable error;
 
@@ -119,6 +120,9 @@ public class Control extends Module{
 			Settings.defaults("bestscore" + map.name, 0);
 		}
 
+		Settings.defaults(TutorialController.DONE_SETTING, false);
+		Settings.defaults(TutorialController.PROMPTED_SETTING, false);
+
 		player = new Player();
 		player.name = Settings.getString("name");
 		player.isAndroid = mobile;
@@ -126,6 +130,8 @@ public class Control extends Module{
 		player.isLocal = true;
 
 		saves.load();
+
+		tutorial = new TutorialController();
 
 		Events.on(StateChangeEvent.class, (from, to) -> {
 			if((from == State.playing && to == State.menu) || (from == State.menu && to != State.menu)){
@@ -219,6 +225,10 @@ public class Control extends Module{
 		return input;
 	}
 
+	public TutorialController tutorial(){
+		return tutorial;
+	}
+
 	public void playMap(Map map){
 		ui.loadfrag.show();
 		saves.resetSave();
@@ -230,6 +240,31 @@ public class Control extends Module{
 		});
 
 		Timers.runTask(18, () -> ui.loadfrag.hide());
+	}
+
+	/**チュートリアルを始める(Issue #78)。playMap() と同じ流れで Prototype を Waves、Normal で開き、
+	 * 同じタスクの中で logic.play() の直後にセッションを始める。begin() がゲームを一時停止し、一時停止中は Timers が進まないので、
+	 * 読み込み画面は後のタスクではなくここで閉じる*/
+	public void startTutorial(){
+		Map map = world.maps().getMap(TutorialController.MAP_NAME);
+		if(map == null) throw new IllegalStateException("Tutorial map not found: " + TutorialController.MAP_NAME);
+		state.mode = GameMode.waves;
+		state.difficulty = Difficulty.normal;
+
+		ui.loadfrag.show();
+		saves.resetSave();
+
+		Timers.runTask(10, () -> {
+			//読み込みや begin()(コアが無いと IllegalStateException)が失敗しても、読み込み画面は必ず閉じる
+			try{
+				logic.reset();
+				world.loadMap(map);
+				logic.play();
+				tutorial.begin();
+			}finally{
+				ui.loadfrag.hide();
+			}
+		});
 	}
 
 	public boolean isHighScore(){
@@ -297,6 +332,7 @@ public class Control extends Module{
 
 		if(!state.is(State.menu)){
 			input.update();
+			tutorial.update();
 
 			if(Inputs.keyTap("pause") && !ui.restart.isShown() && (state.is(State.paused) || state.is(State.playing))){
                 state.set(state.is(State.playing) ? State.paused : State.playing);

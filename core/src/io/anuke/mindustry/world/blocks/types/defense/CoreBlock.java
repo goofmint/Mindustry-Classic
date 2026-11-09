@@ -1,6 +1,7 @@
 // Modified for the AI SDLC browser game fork (goofmint/Mindustry-Classic) by Atsushi Nakatsugawa, 2026. See LICENSE (GPL-3.0).
 package io.anuke.mindustry.world.blocks.types.defense;
 
+import io.anuke.mindustry.game.EventType.DeliverEvent;
 import io.anuke.mindustry.graphics.Fx;
 import io.anuke.mindustry.net.Net;
 import io.anuke.mindustry.resource.CodeItem;
@@ -8,6 +9,7 @@ import io.anuke.mindustry.resource.Item;
 import io.anuke.mindustry.world.Block;
 import io.anuke.mindustry.world.Tile;
 import io.anuke.ucore.core.Effects;
+import io.anuke.ucore.core.Events;
 
 import static io.anuke.mindustry.Vars.debug;
 import static io.anuke.mindustry.Vars.state;
@@ -35,6 +37,7 @@ public class CoreBlock extends Block {
         if(Net.server() || !Net.active()){
             float score = CodeItem.score(item);
             state.score.deliver(item, score);
+            Events.fire(DeliverEvent.class, item.id, score);
             Effects.effect(score >= 0 ? Fx.deliverGood : Fx.deliverBad, tile.drawx(), tile.drawy());
         }
     }

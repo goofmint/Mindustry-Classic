@@ -70,6 +70,7 @@ public class UI extends SceneModule{
     public final LoadingFragment loadfrag = new LoadingFragment();
     public final BlockConfigFragment configfrag = new BlockConfigFragment();
     public final DebugFragment debugfrag = new DebugFragment();
+    public final TutorialFragment tutorialfrag = new TutorialFragment();
 
     private Locale lastLocale;
     /**Integer scale of the misaki fonts; 0 when the square font is used (set in loadSkin()).*/
@@ -257,6 +258,7 @@ public class UI extends SceneModule{
 		configfrag.build();
 		menufrag.build();
 		placefrag.build();
+		tutorialfrag.build();
 		toolfrag.build();
 		chatfrag.build();
 		listfrag.build();
