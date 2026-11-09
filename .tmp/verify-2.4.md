@@ -110,7 +110,7 @@ html/build/dist/assets/assets.txt lists bundle.properties, bundle_ja.properties,
 
 ## Pending: orchestrator browser check (locale ja)
 
-- [ ] Menu: プレイ / エディター / 設定 / このゲームについて / 寄付; the version line at the bottom left (the local build shows `Mindustry classic / custom build`: `custom build` is the raw value from `version.properties`, written by `build.gradle` when no `buildversion` is given, so it stays English. Only `build N` is translated)
+- [ ] Menu: プレイ / エディター / 設定 / このゲームについて / 寄付; the version line at the bottom left (the local build shows `Mindustry classic / custom build`: `custom build` is the raw value from `version.properties`, written by `build.gradle` when no `buildversion` is given, so it stayed English at first. PR review follow-up: the default `custom build` is shown through `text.version.custom`(カスタムビルド); `build N` through `text.version.build`; any other build name as is)
 - [ ] Play menu: 新しいゲーム / ゲームに参加 / チュートリアル / ロード
 - [ ] Level select: title, ゲームモード / 難易度 labels and buttons, "?" mode help, map names, ハイスコア line
 - [ ] Settings: ゲーム / グラフィック / サウンド / 操作 / 言語 sub-screens, slider values (`{0} 秒`), 初期設定に戻す
@@ -120,7 +120,7 @@ html/build/dist/assets/assets.txt lists bundle.properties, bundle_ja.properties,
 - [ ] HUD: 次のウェーブまで N (wider than the English text; the label has minWidth 126 and grows)
 - [ ] Button widths: long labels such as このゲームについて (9 chars) in the 200 px menu buttons
 
-Known English left: tutorial texts (excluded, deleted in Phase 3), multiplayer screens (excluded), `custom build`, key names shown by `Input.toString()` (W, Mouse Left, ...).
+Known English left: tutorial texts (excluded, deleted in Phase 3), multiplayer screens (excluded), keyboard key names shown by `Input.toString()` (W, A, ...). PR review follow-up: `custom build` and the mouse/scroll input names (Mouse Left, Scrollwheel, ...) are now translated (`text.version.custom`, `input.*.name`; `KeybindDialog.inputName()`), `text.blocks.repairssecond` was reworded to 修復割合/秒 because `RepairTurret.getStats()` shows a percentage of max health per second, and the font was regenerated for 割・央・進 (775 code points). Not re-checked in the browser.
 
 ## Uncertain translations
 
@@ -135,5 +135,5 @@ Known English left: tutorial texts (excluded, deleted in Phase 3), multiplayer s
 - Playwright + Chromium(ヘッドレス)で `html/build/dist` を開き、設定 → 言語 → 日本語 → 再読み込み。
 - OK: メインメニュー(プレイ / エディター / 設定 / 寄付)、プレイメニュー、マップ選択(ゲームモード、難易度、マップ名、ハイスコア)、ゲーム中 HUD(「ウェーブ 1」「次のウェーブまで 111」は枠内に収まる)、配置パネル(「砲台」「耐久力: 45」)、ブロック情報ダイアログ(説明文と統計名が日本語)。コンソールエラー 0 件。
 - 修正: 「このゲームについて」(9 字)は 200px のボタンで 2 行に折り返したため、`text.about.button` を「ゲーム情報」に変更した。
-- 英語のまま残るもの(想定どおり): ブロック情報の「弾薬: stone」(旧アイテム名は除外対象。Task 2.5 / 3.11 で扱う)、版表示 `custom build`。
+- 英語のまま残るもの(想定どおり): ブロック情報の「弾薬: stone」(旧アイテム名は除外対象。Task 2.5 / 3.11 で扱う)。版表示 `custom build` とマウス/スクロールの入力名は PR レビュー後に翻訳した(ブラウザでは未再確認)。
 - 観察: ダイアログのタイトル(「マップ選択」「ブロックの詳細情報」)は英語表示でも同じ小ささでロゴに重なって描かれる本家由来の挙動で、今回の変更による劣化ではない。見直すなら Task 4.2 の UI 調整で扱う。

@@ -262,7 +262,7 @@ public class Renderer extends RendererModule{
 	void drawPlayerNames(){
 		GlyphLayout layout = Pools.obtain(GlyphLayout.class);
 
-        Draw.tscl(0.25f/2);
+        Draw.tscl(UI.worldTextScale(0.25f/2));
 	    for(Player player : playerGroup.all()){
 	       if(!player.isLocal && !player.isDead()){
 	        	layout.setText(Core.font, player.name);
