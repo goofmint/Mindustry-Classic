@@ -10,13 +10,17 @@ on:
 permissions:
   contents: read
 
-# ワークフロー全体で同じ ref の実行を直列にする。main では実行中のデプロイを止めない(GitHub の Pages
-# ワークフローの推奨)。待ちの実行は最新の 1 本だけ残るが、GitHub は待ち行列の順序を保証しないので、
-# 古いビルドの配置は deploy ジョブの先頭で main の最新 SHA と比べて飛ばす。PR では新しい push が古い実行を取り消す。
-# 手動実行(workflow_dispatch)と push が同じ待ち行列に入らないよう、group にはイベント種別も含める
+# ワークフロー全体で同じイベント・同じ ref の実行を直列にする。
+# - main(push): 実行中のデプロイは止めず(GitHub の Pages ワークフローの推奨)、待ちの実行も取り消さずに
+#   全部並べる(queue: max)。GitHub は group に入る順序を push 順に保証しないので、古いコミットの実行が
+#   最新の待ちを置き換えて最新版が公開されないままになるのを防ぐ。古いビルドの配置そのものは
+#   deploy ジョブの先頭で main の最新 SHA と比べて飛ばす。
+# - PR: 新しい push が実行中の古い実行を取り消す(cancel-in-progress は式で main 以外だけ true)。
+# - 手動実行(workflow_dispatch)と push は group にイベント種別を含めて分ける。
 concurrency:
   group: build-${{ github.event_name }}-${{ github.ref }}
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+  queue: max
 
 jobs:
   build:
