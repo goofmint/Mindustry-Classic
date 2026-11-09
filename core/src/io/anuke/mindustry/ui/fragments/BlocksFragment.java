@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.utils.Array;
 import io.anuke.mindustry.core.GameState.State;
+import io.anuke.mindustry.core.UI;
 import io.anuke.mindustry.input.InputHandler;
 import io.anuke.mindustry.resource.*;
 import io.anuke.mindustry.ui.dialogs.FloatingDialog;
@@ -255,7 +256,7 @@ public class BlocksFragment implements Fragment{
 		header.addImage(region).size(8*5).padTop(4);
 		Label nameLabel = new Label(recipe.result.formalName);
 		nameLabel.setWrap(true);
-		header.add(nameLabel).padLeft(2).width(120f);
+		header.add(nameLabel).padLeft(2).width(160f);
 		
 		//extra info
 		if(recipe.result.fullDescription != null){
@@ -292,7 +293,7 @@ public class BlocksFragment implements Fragment{
 		
 		Label label = new Label("[health]"+ Bundles.get("text.health")+": " + recipe.result.health);
 		label.setWrap(true);
-		desctable.add(label).width(200).padTop(4).padBottom(2);
+		desctable.add(label).width(240).padTop(4).padBottom(2);
 	}
 
 	public void showBlockInfo(Block block){
@@ -361,7 +362,7 @@ public class BlocksFragment implements Fragment{
 			Image image = new Image(Draw.hasRegion("icon-" + Item.getByID(i).name) ?
 					Draw.region("icon-" + Item.getByID(i).name) : Draw.region("blank"));
 			Label label = new Label(formatted);
-			label.setFontScale(fontscale*1.5f);
+			label.setFontScale(UI.labelScale(fontscale*1.5f));
 			itemtable.add(image).size(8*3);
 			itemtable.add(label).expandX().left();
 			if(i % 2 == 1 && i > 0) itemtable.row();

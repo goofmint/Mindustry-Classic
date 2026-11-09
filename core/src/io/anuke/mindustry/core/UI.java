@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Colors;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.BitmapFont.BitmapFontData;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.utils.Align;
 import io.anuke.mindustry.Vars;
@@ -20,10 +22,17 @@ import io.anuke.ucore.graphics.Draw;
 import io.anuke.ucore.modules.SceneModule;
 import io.anuke.ucore.scene.Skin;
 import io.anuke.ucore.scene.builders.build;
+import io.anuke.ucore.scene.ui.CheckBox.CheckBoxStyle;
 import io.anuke.ucore.scene.ui.Dialog;
+import io.anuke.ucore.scene.ui.ImageTextButton.ImageTextButtonStyle;
+import io.anuke.ucore.scene.ui.Label.LabelStyle;
+import io.anuke.ucore.scene.ui.List.ListStyle;
+import io.anuke.ucore.scene.ui.TextButton.TextButtonStyle;
 import io.anuke.ucore.scene.ui.TextField;
 import io.anuke.ucore.scene.ui.TextField.TextFieldFilter;
+import io.anuke.ucore.scene.ui.TextField.TextFieldStyle;
 import io.anuke.ucore.scene.ui.TooltipManager;
+import io.anuke.ucore.scene.ui.Window.WindowStyle;
 import io.anuke.ucore.scene.ui.layout.Unit;
 import io.anuke.ucore.util.Mathf;
 
@@ -61,6 +70,10 @@ public class UI extends SceneModule{
     public final DebugFragment debugfrag = new DebugFragment();
 
     private Locale lastLocale;
+    /**Integer scale of the misaki fonts; 0 when the square font is used (set in loadSkin()).*/
+    private static float japaneseScale = 0f;
+    /**Ratio of the square font's unscaled cap height to the misaki font's; 1 when the square font is used (set in loadSkin()).*/
+    private static float worldScaleRatio = 1f;
 	
 	public UI() {
 		Dialog.setShowAction(()-> sequence(
@@ -112,12 +125,90 @@ public class UI extends SceneModule{
 	@Override
 	protected void loadSkin(){
 		skin = new Skin(Gdx.files.internal("ui/uiskin.json"), Core.atlas);
-		Mathf.each(font -> {
-			font.setUseIntegerPositions(false);
-			font.getData().setScale(Vars.fontscale);
-			font.getData().down += Unit.dp.scl(4f);
-			font.getData().lineHeight -= Unit.dp.scl(2f);
-		}, skin.font(), skin.getFont("default-font-chat"), skin.getFont("korean"));
+		//ui is still null here (called from the SceneModule constructor), so use this instance's locale
+		if(getLocale().getLanguage().equals("ja")){
+			BitmapFont squareFont = skin.font();
+			BitmapFont squareChat = skin.getFont("default-font-chat");
+			BitmapFont japanese = skin.getFont("japanese");
+			BitmapFont japaneseChat = skin.getFont("japanese-chat");
+
+			skin.add("default-font", japanese, BitmapFont.class);
+			skin.add("default-font-chat", japaneseChat, BitmapFont.class);
+			replaceStyleFonts(squareFont, japanese, squareChat, japaneseChat);
+
+			//Core.font needs the Japanese glyphs (Label.checkFallback() looks glyphs up in Core.font),
+			//but Draw.tscl() overwrites its scale for in-world text, so it is a separate misaki instance
+			//with its own font data that shares the page regions (and does not own the texture)
+			BitmapFont japaneseWorld = new BitmapFont(new BitmapFontData(japanese.getData().fontFile, false), japanese.getRegions(), false);
+			japaneseWorld.getData().markupEnabled = true;
+
+			//misaki is an 8px dot font: use an integer scale so every dot stays the same size.
+			//the square down/lineHeight adjustments are not applied: at scale 2 they would make the
+			//line step 12px for a 14px high glyph, so wrapped lines would overlap
+			float jscale = Math.max(1f, Math.round(Vars.fontscale * 4f));
+			Mathf.each(font -> {
+				font.setUseIntegerPositions(false);
+				font.getData().setScale(jscale);
+			}, japanese, japaneseChat, japaneseWorld);
+			japaneseScale = jscale;
+			//in-world text (Draw.tscl()) uses absolute scales tuned for square: the cap heights are compared unscaled
+			BitmapFontData squareData = squareFont.getData();
+			BitmapFontData japaneseData = japaneseWorld.getData();
+			worldScaleRatio = (squareData.capHeight / squareData.scaleY) / (japaneseData.capHeight / japaneseData.scaleY);
+
+			Core.font = japaneseWorld;
+		}else{
+			japaneseScale = 0f;
+			worldScaleRatio = 1f;
+			Mathf.each(font -> {
+				font.setUseIntegerPositions(false);
+				font.getData().setScale(Vars.fontscale);
+				font.getData().down += Unit.dp.scl(4f);
+				font.getData().lineHeight -= Unit.dp.scl(2f);
+			}, skin.font(), skin.getFont("default-font-chat"));
+		}
+	}
+
+	/**Font scale for labels that set an absolute scale (Label.setFontScale() / label.scale()).
+	 * squareScale is the scale used with the square font and is returned as is for other locales.
+	 * With the misaki fonts it is ignored and the integer misaki scale is returned: misaki is an 8px
+	 * dot font, so a non-integer or smaller scale (0.75 for fontscale*1.5) makes it unreadable.*/
+	public static float labelScale(float squareScale){
+		return japaneseScale > 0f ? japaneseScale : squareScale;
+	}
+
+	/**Scale for in-world text drawn through Draw.tscl() / Draw.text() (Core.font). squareScale is the absolute
+	 * scale tuned for the square font and is returned as is for other locales. With the misaki world font it is
+	 * multiplied by the ratio of the two fonts' unscaled cap heights, so the glyphs keep the same height in world units
+	 * (Draw.tscl(0.125) alone would shrink the 8px misaki glyphs to about one world unit).*/
+	public static float worldTextScale(float squareScale){
+		return squareScale * worldScaleRatio;
+	}
+
+	/**Replaces style font references that are the same object as the replaced square fonts.*/
+	private void replaceStyleFonts(BitmapFont oldFont, BitmapFont newFont, BitmapFont oldChat, BitmapFont newChat){
+		for(TextButtonStyle style : skin.getAll(TextButtonStyle.class).values())
+			style.font = swapFont(style.font, oldFont, newFont, oldChat, newChat);
+		for(ImageTextButtonStyle style : skin.getAll(ImageTextButtonStyle.class).values())
+			style.font = swapFont(style.font, oldFont, newFont, oldChat, newChat);
+		for(CheckBoxStyle style : skin.getAll(CheckBoxStyle.class).values())
+			style.font = swapFont(style.font, oldFont, newFont, oldChat, newChat);
+		for(WindowStyle style : skin.getAll(WindowStyle.class).values())
+			style.titleFont = swapFont(style.titleFont, oldFont, newFont, oldChat, newChat);
+		for(LabelStyle style : skin.getAll(LabelStyle.class).values())
+			style.font = swapFont(style.font, oldFont, newFont, oldChat, newChat);
+		for(TextFieldStyle style : skin.getAll(TextFieldStyle.class).values()){
+			style.font = swapFont(style.font, oldFont, newFont, oldChat, newChat);
+			style.messageFont = swapFont(style.messageFont, oldFont, newFont, oldChat, newChat);
+		}
+		for(ListStyle style : skin.getAll(ListStyle.class).values())
+			style.font = swapFont(style.font, oldFont, newFont, oldChat, newChat);
+	}
+
+	private static BitmapFont swapFont(BitmapFont font, BitmapFont oldFont, BitmapFont newFont, BitmapFont oldChat, BitmapFont newChat){
+		if(font == oldFont) return newFont;
+		if(font == oldChat) return newChat;
+		return font;
 	}
 
 	@Override
