@@ -142,5 +142,71 @@ public class ProductionBlocks{
 			processTime = 2;
 			powerPerItem = 0.4f;
 		}
+	},
+	humanEngineer = new CodeSource("human-engineer"){
+		{
+			stageChoices = new int[]{2, 3};
+			time = 6;
+		}
+	},
+	aiAgent1 = new PoweredCodeSource("ai-agent-1"){
+		{
+			stageChoices = new int[]{0, 1};
+			time = 2;
+			powerPerItem = 0.3f;
+		}
+	},
+	aiAgent2 = new PoweredCodeSource("ai-agent-2"){
+		{
+			stageChoices = new int[]{1, 3};
+			time = 2;
+			powerPerItem = 0.4f;
+		}
+	},
+	aiAgent3 = new PoweredCodeSource("ai-agent-3"){
+		{
+			stageChoices = new int[]{3};
+			time = 2;
+			powerPerItem = 0.5f;
+		}
+	},
+	seniorEngineer = new QualityGate("senior-engineer"){
+		{
+			passedBit = CodeItem.REVIEW;
+			stages = 1;
+			processTime = 5;
+		}
+	},
+	unitTest = new PoweredQualityGate("unit-test"){
+		{
+			passedBit = CodeItem.TEST;
+			stages = 1;
+			processTime = 2;
+			powerPerItem = 0.3f;
+		}
+	},
+	e2eTest = new PoweredQualityGate("e2e-test"){
+		{
+			passedBit = CodeItem.TEST;
+			stages = 1;
+			processTime = 4;
+			powerPerItem = 0.5f;
+		}
+	},
+	jenkins = new PoweredQualityGate("jenkins"){
+		{
+			passedBit = CodeItem.CI;
+			stages = 1;
+			processTime = 3;
+			powerPerItem = 0.4f;
+		}
+	},
+	githubActions = new PoweredQualityGate("github-actions"){
+		{
+			passedBit = CodeItem.CI;
+			stages = 1;
+			processTime = 2;
+			powerPerItem = 0.4f;
+		}
 	};
 }
