@@ -6,6 +6,17 @@ on:
   pull_request:
   workflow_dispatch:
 
+# 既定のトークン権限は読み取りだけにする。deploy ジョブは自分の permissions で pages/id-token を足す
+permissions:
+  contents: read
+
+# ワークフロー全体で同じ ref の実行を直列にする。main では実行中のデプロイを止めず(GitHub の Pages
+# ワークフローの推奨)、待ちの実行は最新の 1 本だけ残るので、古いビルドが新しい配置を上書きしない。
+# PR では新しい push が古い実行を取り消す
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -51,9 +62,6 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    concurrency:
-      group: pages
-      cancel-in-progress: false
     steps:
       # Pages 自体の有効化(Settings → Pages → Source = GitHub Actions)は手動。
       # configure-pages の enablement は GITHUB_TOKEN では権限不足で失敗するため使わない。
