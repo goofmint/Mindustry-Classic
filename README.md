@@ -33,11 +33,11 @@ Ways to install JDK 17:
 
 Check with `java -version` (it must print version 17) and `javac -version`.
 
-The Gradle wrapper prefers `JAVA_HOME` over `PATH`, so a stale or invalid `JAVA_HOME` makes `./gradlew` fail even when `java` is 17. Point it at the JDK 17 installation (for example `export JAVA_HOME=$(/usr/libexec/java_home -v 17)` on macOS, or the Homebrew path above) and confirm the JVM the wrapper actually uses with `./gradlew --version` (the `JVM:` line must show 17).
+The Gradle wrapper prefers `JAVA_HOME` over `PATH`, so a stale or invalid `JAVA_HOME` makes `./gradlew` fail even when `java` is 17. Point it at the JDK 17 installation (for example `export JAVA_HOME=$(/usr/libexec/java_home -v 17)` on macOS, or the Homebrew path above) and confirm the JVM the wrapper actually uses with `./gradlew --version`: the `Launcher JVM:` line must show 17, and the `Daemon JVM:` line (a version, or a path when no JDK is specified) must also point at the JDK 17 installation. If it does not, check that `org.gradle.java.home` in `gradle.properties` or `~/.gradle/gradle.properties` is not pointing at another JDK.
 
 #### Commands
 
-Run all commands in the repository root. On Windows use `gradlew.bat` instead of `./gradlew`.
+Run all commands in the repository root. On Windows use `.\gradlew.bat` instead of `./gradlew`.
 
 - `./gradlew :desktop:run`: starts the desktop version. For development only; it needs a GUI. The working directory is `core/assets`, and the macOS `-XstartOnFirstThread` flag is handled by the task.
 - `./gradlew :html:dist`: builds the browser version into `html/build/dist`. It does not work over `file://`; serve the directory and open `index.html`, for example:
