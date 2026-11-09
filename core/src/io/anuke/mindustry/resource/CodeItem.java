@@ -199,6 +199,8 @@ public final class CodeItem{
 		public String localizedName(){
 			return displayName(stage, passed, importance);
 		}
+	}
+
 	private static boolean isTransition(int passedBit, int stages){
 		for(int[] transition : TRANSITIONS){
 			if(transition[0] == passedBit && transition[1] == stages) return true;
