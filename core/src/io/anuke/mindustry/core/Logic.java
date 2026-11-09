@@ -3,6 +3,7 @@ package io.anuke.mindustry.core;
 import com.badlogic.gdx.utils.Array;
 import io.anuke.mindustry.core.GameState.State;
 import io.anuke.mindustry.entities.enemies.Enemy;
+import io.anuke.mindustry.game.Balance;
 import io.anuke.mindustry.game.EnemySpawn;
 import io.anuke.mindustry.game.EventType.GameOverEvent;
 import io.anuke.mindustry.game.EventType.PlayEvent;
@@ -57,6 +58,8 @@ public class Logic extends Module {
         state.enemies = 0;
         state.lastUpdated = -1;
         state.gameOver = false;
+        state.won = false;
+        state.score.reset(Balance.INITIAL_CREDIT);
         state.inventory.clearItems();
 
         Timers.clear();
