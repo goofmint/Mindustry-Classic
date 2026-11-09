@@ -31,7 +31,6 @@ import static io.anuke.mindustry.Vars.*;
  * This class is not created in the headless server.*/
 public class Control extends Module{
 	private UpgradeInventory upgrades = new UpgradeInventory();
-	private Tutorial tutorial = new Tutorial();
 	private boolean hiscore = false;
 	private boolean bestscore = false;
 
@@ -244,10 +243,6 @@ public class Control extends Module{
 		this.respawntime = respawntime;
 	}
 
-	public Tutorial tutorial(){
-		return tutorial;
-	}
-
 	@Override
 	public void dispose(){
 		Platform.instance.onGameExit();
@@ -330,10 +325,6 @@ public class Control extends Module{
 						Effects.sound("respawn");
 						ui.hudfrag.fadeRespawn(false);
 					}
-				}
-
-				if(tutorial.active()){
-					tutorial.update();
 				}
 			}
 		}else{

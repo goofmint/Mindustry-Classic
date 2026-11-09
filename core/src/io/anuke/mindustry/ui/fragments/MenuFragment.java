@@ -64,8 +64,6 @@ public class MenuFragment implements Fragment{
 
 					new imagebutton("icon-play-2", isize, ui.levels::show).text("$text.play").padTop(4f);
 
-					new imagebutton("icon-tutorial", isize, () -> control.playMap(world.maps().getMap("tutorial"))).text("$text.tutorial").padTop(4f);
-
 					new imagebutton("icon-load", isize, ui.load::show).text("$text.load").padTop(4f);
 
 					new imagebutton("icon-add", isize, ui.join::show).text("$text.joingame").padTop(4f);
@@ -86,7 +84,7 @@ public class MenuFragment implements Fragment{
                             new imagebutton("icon-donate", isize, Platform.instance::openDonations).text("$text.donate").padTop(4f);
                         }
 
-                    }}.colspan(4).end();
+                    }}.colspan(3).end();
 				}}.end();
 			}
 		}}.end();
@@ -135,11 +133,7 @@ public class MenuFragment implements Fragment{
 			}else{
 				ui.showInfo("$text.classic.unsupported");
 			}
-		}));
-		dialog.content().add(new MenuButton("icon-tutorial", "$text.tutorial", ()-> {
-			control.playMap(world.maps().getMap("tutorial"));
-			dialog.hide();
-		}));
+		})).width(bw).colspan(2);
 
 		dialog.content().row();
 

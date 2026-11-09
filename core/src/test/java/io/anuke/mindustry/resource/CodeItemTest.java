@@ -13,8 +13,7 @@ import org.junit.Test;
 public class CodeItemTest{
     private static final float EPS = 1e-6f;
     private static final Item[] NON_CODE = {
-        Item.credit, Item.igpu, Item.pcie,
-        Item.stone, Item.iron, Item.coal, Item.steel, Item.titanium, Item.dirium, Item.uranium, Item.sand
+        Item.credit, Item.igpu, Item.pcie
     };
 
     private static int codeItemCount(){

@@ -1,15 +1,9 @@
 package io.anuke.mindustry.entities.enemies.types;
 
-import com.badlogic.gdx.graphics.Color;
 import io.anuke.mindustry.entities.enemies.Enemy;
 import io.anuke.mindustry.entities.enemies.EnemyType;
 import io.anuke.mindustry.entities.enemies.EnemyTypes;
 import io.anuke.ucore.core.Timers;
-import io.anuke.ucore.graphics.Draw;
-import io.anuke.ucore.graphics.Lines;
-import io.anuke.ucore.util.Mathf;
-
-import static io.anuke.mindustry.Vars.control;
 
 public class TargetType extends EnemyType {
 	
@@ -39,14 +33,6 @@ public class TargetType extends EnemyType {
 	@Override
 	public void draw(Enemy enemy){
 		super.draw(enemy);
-		
-		Draw.color(Color.YELLOW);
-		
-		if(control.tutorial().showTarget()){
-			Lines.spikes(enemy.x, enemy.y, 11f + Mathf.sin(Timers.time(), 7f, 1f), 4f, 8, Timers.time());
-		}
-		
-		Draw.color();
 	}
 	
 	@Override

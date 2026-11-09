@@ -42,7 +42,7 @@ public class Drill extends Block{
 	public void update(Tile tile){
 		TileEntity entity = tile.entity;
 		
-		if((tile.floor() == resource || (resource.drops.equals(tile.floor().drops))) 
+		if((tile.floor() == resource || (resource.drops != null && resource.drops.equals(tile.floor().drops))) 
 				&& entity.timer.get(timerDrill, 60 * time) && tile.entity.getItem(result) < capacity){
 			offloadNear(tile, result);
 			Effects.effect(drillEffect, tile.worldx(), tile.worldy());
@@ -55,7 +55,7 @@ public class Drill extends Block{
 
 	@Override
 	public boolean isLayer(Tile tile){
-		return tile.floor() != resource && resource != null && !(resource.drops.equals(tile.floor().drops));
+		return tile.floor() != resource && resource != null && !(resource.drops != null && resource.drops.equals(tile.floor().drops));
 	}
 	
 	@Override

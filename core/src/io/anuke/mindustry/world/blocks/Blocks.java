@@ -77,28 +77,21 @@ public class Blocks{
 	},
 	
 	stone = new Floor("stone"){{
-		drops = new ItemStack(Item.stone, 1);
 		blends = block -> block != this && !(block instanceof Ore);
 	}},
 	
-	blackstone = new Floor("blackstone"){{
-		drops = new ItemStack(Item.stone, 1);
-	}},
+	blackstone = new Floor("blackstone"){},
 	
-	iron = new Ore("iron"){{
-		drops = new ItemStack(Item.iron, 1);
-	}},
+	iron = new Ore("iron"){},
 	
 	coal = new Ore("coal"){{
-		drops = new ItemStack(Item.coal, 1);
+		drops = new ItemStack(Item.igpu, 1);
 	}},
 	
-	titanium = new Ore("titanium"){{
-		drops = new ItemStack(Item.titanium, 1);
-	}},
+	titanium = new Ore("titanium"){},
 	
 	uranium = new Ore("uranium"){{
-		drops = new ItemStack(Item.uranium, 1);
+		drops = new ItemStack(Item.pcie, 1);
 	}},
 	
 	dirt = new Floor("dirt"){},
@@ -147,19 +140,16 @@ public class Blocks{
 	rock = new Rock("rock"){{
 		variants = 2;
 		varyShadow = true;
-		drops = new ItemStack(Item.stone, 3);
 	}},
 	
 	icerock = new Rock("icerock"){{
 		variants = 2;
 		varyShadow = true;
-		drops = new ItemStack(Item.stone, 3);
 	}},
 	
 	blackrock = new Rock("blackrock"){{
 		variants = 1;
 		varyShadow = true;
-		drops = new ItemStack(Item.stone, 3);
 	}},
 	
 	dirtblock = new StaticBlock("dirtblock"){{

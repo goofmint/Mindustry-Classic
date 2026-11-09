@@ -10,16 +10,15 @@ import io.anuke.mindustry.world.blocks.types.distribution.Conveyor;
 import io.anuke.mindustry.world.blocks.types.distribution.Router;
 import io.anuke.mindustry.world.blocks.types.production.Drill;
 import io.anuke.mindustry.world.blocks.types.production.Generator;
-import io.anuke.mindustry.world.blocks.types.production.Smelter;
 import io.anuke.ucore.util.Bundles;
 
 public enum Difficulty {
     easy(4f, 2f, 1f, new DestrutiveHeuristic(b -> b instanceof Generator)),
-    normal(2f, 1f, 1f, new DestrutiveHeuristic(b -> b instanceof Smelter || b instanceof Generator)),
-    hard(1.5f, 0.5f, 0.75f, new DestrutiveHeuristic(b -> b instanceof Turret || b instanceof Generator || b instanceof Drill || b instanceof Smelter)),
-    insane(0.5f, 0.25f, 0.5f, new DestrutiveHeuristic(b -> b instanceof Generator || b instanceof Drill || b instanceof Smelter || b instanceof Router)),
+    normal(2f, 1f, 1f, new DestrutiveHeuristic(b -> b instanceof Generator)),
+    hard(1.5f, 0.5f, 0.75f, new DestrutiveHeuristic(b -> b instanceof Turret || b instanceof Generator || b instanceof Drill)),
+    insane(0.5f, 0.25f, 0.5f, new DestrutiveHeuristic(b -> b instanceof Generator || b instanceof Drill || b instanceof Router)),
     purge(0.25f, 0.01f, 0.25f, new DestrutiveHeuristic(b -> b instanceof Generator || b instanceof Drill || b instanceof Router
-            || b instanceof Smelter || b instanceof Conveyor || b instanceof LiquidBlock || b instanceof PowerBlock));
+            || b instanceof Conveyor || b instanceof LiquidBlock || b instanceof PowerBlock));
 
     /**The scaling of how many waves it takes for one more enemy of a type to appear.
      * For example: with enemeyScaling = 2 and the default scaling being 2, it would take 4 waves for

@@ -130,7 +130,7 @@ public class GateLogicTest {
 		Item code = CodeItem.get(0, 0, 1);
 
 		assertTrue(GateLogic.accepts(s, code, false));
-		assertFalse(GateLogic.accepts(s, Item.coal, false));
+		assertFalse(GateLogic.accepts(s, Item.igpu, false));
 		assertFalse(GateLogic.accepts(s, Item.credit, false));
 		assertFalse(GateLogic.accepts(s, code, true));
 

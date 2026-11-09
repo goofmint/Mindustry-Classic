@@ -1,7 +1,6 @@
 package io.anuke.mindustry.input;
 
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import io.anuke.mindustry.net.Net;
 import io.anuke.mindustry.net.NetEvents;
@@ -10,7 +9,6 @@ import io.anuke.mindustry.resource.Recipe;
 import io.anuke.mindustry.world.Block;
 import io.anuke.mindustry.world.Placement;
 import io.anuke.mindustry.world.Tile;
-import io.anuke.mindustry.world.blocks.Blocks;
 import io.anuke.ucore.core.Graphics;
 import io.anuke.ucore.util.Mathf;
 
@@ -76,42 +74,10 @@ public abstract class InputHandler extends InputAdapter{
 	}
 	
 	public boolean validPlace(int x, int y, Block type){
-		
-		if(!type.isMultiblock() && control.tutorial().active() &&
-				control.tutorial().showBlock()){
-			
-			GridPoint2 point = control.tutorial().getPlacePoint();
-			int rotation = control.tutorial().getPlaceRotation();
-			Block block = control.tutorial().getPlaceBlock();
-			
-			if(type != block || point.x != x - world.getCore().x || point.y != y - world.getCore().y
-					|| (rotation != -1 && rotation != this.rotation)){
-				return false;
-			}
-		}else if(control.tutorial().active()){
-			return false;
-		}
-
 		return Placement.validPlace(x, y, type);
 	}
 	
 	public boolean validBreak(int x, int y){
-		if(control.tutorial().active()){
-			
-			if(control.tutorial().showBlock()){
-				GridPoint2 point = control.tutorial().getPlacePoint();
-				int rotation = control.tutorial().getPlaceRotation();
-				Block block = control.tutorial().getPlaceBlock();
-			
-				if(block != Blocks.air || point.x != x - world.getCore().x || point.y != y - world.getCore().y
-						|| (rotation != -1 && rotation != this.rotation)){
-					return false;
-				}
-			}else{
-				return false;
-			}
-		}
-		
 		return Placement.validBreak(x, y);
 	}
 	

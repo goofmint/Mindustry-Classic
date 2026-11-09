@@ -18,18 +18,8 @@ public class DefenseBlocks{
 		health = 80*wallHealthMultiplier;
 	}},
 
-	steelwall = new Wall("steelwall"){{
-		health = 110*wallHealthMultiplier;
-	}},
-
 	titaniumwall = new Wall("titaniumwall"){{
 		health = 150*wallHealthMultiplier;
-	}},
-	diriumwall = new Wall("duriumwall"){{
-		health = 190*wallHealthMultiplier;
-	}},
-	compositewall = new Wall("compositewall"){{
-		health = 270*wallHealthMultiplier;
 	}},
 	steelwalllarge = new Wall("steelwall-large"){{
 		health = 110*4*wallHealthMultiplier;
@@ -37,10 +27,6 @@ public class DefenseBlocks{
 	}},
 	titaniumwalllarge = new Wall("titaniumwall-large"){{
 		health = 150*4*wallHealthMultiplier;
-		width = height = 2;
-	}},
-	diriumwalllarge = new Wall("duriumwall-large"){{
-		health = 190*4*wallHealthMultiplier;
 		width = height = 2;
 	}},
 	titaniumshieldwall = new ShieldedWallBlock("titaniumshieldwall"){{

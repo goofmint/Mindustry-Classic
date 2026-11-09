@@ -42,7 +42,7 @@ public class NuclearReactor extends LiquidPowerGenerator{
 
 	public NuclearReactor(String name) {
 		super(name);
-		generateItem = Item.uranium;
+		generateItem = Item.pcie;
 		generateLiquid = Liquid.water;
 		itemCapacity = 30;
 		liquidCapacity = 50;
