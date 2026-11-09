@@ -44,7 +44,7 @@ When the language is `ja`:
 
 ## Caveats
 - Disposal: after the swap, the two square fonts are no longer referenced by the skin, so `Skin.dispose()` does not dispose them in `ja`. The `Core.font` misaki instance is not in the skin either; its texture belongs to `japanese`. Disposal is left as it was
-- In-world text drawn through `Draw.text` (player names `Draw.tscl(0.125)`, the respawn Fx `0.25`, block debug) uses absolute scales tuned for square. With misaki these come out about 1/3 of the square size and are probably unreadable. Fixing this needs changes in `Renderer` / `Fx`, which are outside this task
+- In-world text drawn through `Draw.text` (player names `Draw.tscl(0.125)`, the respawn Fx `0.25`, block debug) uses absolute scales tuned for square. With misaki these came out about 1/3 of the square size. Fixed in the PR review follow-up: `UI.worldTextScale()` multiplies the square scale by the ratio of the unscaled cap heights (square 20 / misaki 7), used by `Renderer.drawPlayerNames()` and the `Fx.respawn` text. The block/enemy debug text is left as is
 - Labels with an absolute font scale: fixed in the follow-up below (`UI.labelScale()`)
 - `FileChooser.updateFiles()` measures the path with `Core.font`. Once in game, `Draw.tscl(fontscale)` changes that font's scale, so the measurement can differ from the UI font. Minor
 - `setUseIntegerPositions(false)` is kept for misaki. Check whether the dots look crisp or show half-pixel blur
@@ -88,7 +88,7 @@ Settings -> Language -> 日本語 -> restart (reload the page in the browser bui
   - `HudFragment` paused label: `.scale(0.75f)` -> `.scale(UI.labelScale(0.75f))`
   - `HudFragment` respawn label: `.scale(0.75f)` -> `.scale(UI.labelScale(0.75f))`
   - `BlocksFragment.updateItems()` item count: `setFontScale(fontscale*1.5f)` -> `setFontScale(UI.labelScale(fontscale*1.5f))`
-- Not changed (remaining issue): in-world `Draw.text` (`Renderer.drawPlayerNames`, `Fx` respawn text, block/enemy debug) still uses absolute scales tuned for square
+- Changed in the PR review follow-up: `Renderer.drawPlayerNames` and the `Fx` respawn text go through `UI.worldTextScale()` (see Caveats). The block/enemy debug text still uses the square scale; not checked visually (player names need a second player, respawn needs the player to die)
 - `./gradlew :core:compileJava :desktop:compileJava` -> exit 0; `./gradlew :html:dist` -> BUILD SUCCESSFUL in 22s (output in `html/build/dist`)
 - To check: in-game wave label, item counts, pause label (single player, pause) and respawn label are readable in ja and unchanged in en
 
