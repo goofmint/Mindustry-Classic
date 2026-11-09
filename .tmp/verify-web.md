@@ -179,3 +179,7 @@ Task 5.3 で初期配置(ユニットテスト、発電機)、初期資金 200�
 ## テストとビルド(最後に実行)
 - `./gradlew :core:test`: 成功
 - `./gradlew :html:dist`: 成功
+
+## PR レビュー後の補足
+
+- `System.setOut` だけだと `Log.err(Throwable)` の `printStackTrace()`(GWT では `System.err` 行き)がブラウザのコンソールに出ないため、`System.setErr(System.out)` も足した(PR #72 のレビュー指摘)。`./gradlew :html:dist` で GWT コンパイルが通ることを確認。

@@ -5,7 +5,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Base64Coder;
 import com.badlogic.gdx.utils.IntMap;
-import io.anuke.mindustry.io.versions.Save15;
+import io.anuke.mindustry.io.versions.Save16;
 import io.anuke.ucore.core.Settings;
 
 import java.io.*;
@@ -15,7 +15,7 @@ import static io.anuke.mindustry.Vars.*;
 public class SaveIO{
 	public static final IntMap<SaveFileVersion> versions = new IntMap<>();
 	public static final Array<SaveFileVersion> versionArray = Array.with(
-		new Save15()
+		new Save16()
 	);
 
 	static{
