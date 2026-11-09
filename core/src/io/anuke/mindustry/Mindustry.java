@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.PixmapIO;
 import io.anuke.mindustry.core.*;
 import io.anuke.mindustry.io.BlockLoader;
 import io.anuke.mindustry.io.BundleLoader;
+import io.anuke.mindustry.resource.Item;
 import io.anuke.ucore.modules.ModuleCore;
 import io.anuke.ucore.util.Log;
 
@@ -17,6 +18,9 @@ public class Mindustry extends ModuleCore {
 
 	@Override
 	public void init(){
+		//Vars(Inventory の配列など)より先に、アイテム数が byte の ID に収まるかを検査する
+		Item.checkRegistrationLimit();
+
 		debug = Platform.instance.isDebug();
 
 		Log.setUseColors(false);
