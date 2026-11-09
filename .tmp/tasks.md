@@ -139,8 +139,8 @@ GitHub Issues: https://github.com/goofmint/Mindustry-Classic/issues (2026-11-08 
 
 #### Task 3.1: 単体テストの土台 (Issue #12)
 
-- [ ] `core/build.gradle` に JUnit 4 を `testImplementation` で足し、`core/src/test/java` を `sourceSets.test` にする。GWT の `source path` に入らないことを確認する
-- [ ] 空のテストを 1 つ置いて `./gradlew :core:test` が通ることを確認する。CI に組み込む
+- [x] `core/build.gradle` に JUnit 4 を `testImplementation` で足し、`core/src/test/java` を `sourceSets.test` にする。GWT の `source path` に入らないことを確認する
+- [x] 空のテストを 1 つ置いて `./gradlew :core:test` が通ることを確認する。CI に組み込む
 - **完了条件**: `./gradlew :core:test` が緑
 - **依存**: 1.6
 - **推定時間**: 1h

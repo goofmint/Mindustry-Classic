@@ -19,6 +19,9 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v6
 
+      - name: Unit tests
+        run: ./gradlew :core:test --no-daemon
+
       - name: Build
         run: ./gradlew :core:compileJava :desktop:compileJava :html:dist --no-daemon
 
