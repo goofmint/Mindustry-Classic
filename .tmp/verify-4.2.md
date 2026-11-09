@@ -6,7 +6,7 @@
 - bundle: `text.score.status` を両言語の `text.enemies.single` の直後に足した。en `Target {0} / Balance {1}`、ja `目標 {0} / 残高 {1}`。`text.credits` と `text.level.highscore` は意味が違うので使っていない。`item.credit.name` は既存(en `credits`、ja `得点`)。
 - `BlocksFragment.updateItems()`: inventory 全 ID の走査と奇偶の改行をやめ、`icon-credit` の画像と `state.score.balance()` の数量を 1 行だけ出す。残高 0 でも行を出す(`0` と表示)。無限資源モードの早期 return と `itemtable` の可視条件(レシピ選択中と無限資源モードで隠す)は変えていない。
   - アイコンは `Draw.region("icon-credit")` を直接使う。プランの「画像が無ければ blank」は採らない(フォールバック禁止。`icon-credit` は Task 3.3 から `Control` の起動時検査の対象)。
-- 数値の書式: 既存の `format(int)` を `static`(パッケージ内可視)にし、元の `amount > 99999999 ? "inf" : format(amount)` を `static String formatAmount(int)` に切り出した。中身は変えていない。資源欄と HUD の両方がこれを使う。
+- 数値の書式: 既存の `format(int)` を `static`(パッケージ内可視)にし、元の `amount > 99999999 ? "inf" : format(amount)` を `static String formatAmount(int)` に切り出した。PR #63 のレビューで「有限の値を大きさだけで inf にしている」と指摘されたため、`inf` は `state.mode.infiniteResources`(sandbox)のときだけにし、有限の値は大きさに関係なく `format()` で数値にした。HUD の目標値は常に `format()`、残高は `formatAmount()` を使う。
 - `HudFragment`: 左上の内側テーブルで、波表ラッパー(`visible(() -> shown)`)の直後、`infolabel` の前に `scorelabel` の行を足した。
   - supplier 形式で毎フレーム `Bundles.format("text.score.status", target, balance)` を組み立てる。値は `state.score.target` と `state.score.balance()` を毎回読む。
   - 文字の大きさは波表の見出しや資源欄の数量と同じ `UI.labelScale(fontscale*1.5f)`。セルは `left()`。

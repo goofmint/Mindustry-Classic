@@ -6,9 +6,18 @@ on:
   pull_request:
   workflow_dispatch:
 
+# 既定のトークン権限は読み取りだけにする。deploy ジョブは自分の permissions で pages/id-token を足す
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    # PR では新しい push が実行中の古いビルドを取り消す。main と手動実行は取り消さない。
+    # group にイベント種別を含め、手動実行と push の待ち行列を分ける
+    concurrency:
+      group: build-${{ github.event_name }}-${{ github.ref }}
+      cancel-in-progress: ${{ github.event_name == 'pull_request' }}
     steps:
       - uses: actions/checkout@v7
 
@@ -36,6 +45,8 @@ jobs:
           name: html-dist
           path: html/build/dist
           if-no-files-found: error
+          # upload-artifact は既定で隠しファイルを除外するので、.nojekyll を配布物にも入れる
+          include-hidden-files: true
 
       - uses: actions/upload-pages-artifact@v3
         with:
@@ -46,18 +57,45 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     permissions:
+      contents: read
       pages: write
       id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+    # 配置は 1 本ずつ。実行中のデプロイは止めず(GitHub の Pages ワークフローの推奨)、待ちの実行も
+    # 取り消さずに全部並べる(queue: max)。GitHub は group に入る順序を push 順に保証しないので、
+    # 既定の queue: single だと後着の古いコミットが最新の待ちを置き換え、最新版が公開されないままになりうる。
+    # 古いビルドの配置そのものは次の latest ステップで main の最新 SHA と比べて飛ばす。
+    # queue: max は cancel-in-progress(式でも)と併用できないため、PR の取り消しは build ジョブ側に置く
     concurrency:
       group: pages
-      cancel-in-progress: false
+      queue: max
     steps:
+      # 待ち行列の順序は保証されないので、この実行のコミットが main の最新でなければ配置しない
+      - id: latest
+        name: Check that this commit is still the head of main
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # 一時的な API エラーは 3 回まで再試行する。取れなければ実行 SHA で代用せず、ジョブを失敗させる
+          head=""
+          for attempt in 1 2 3; do
+            if head=$(gh api "repos/${GITHUB_REPOSITORY}/branches/main" --jq .commit.sha) && [ -n "$head" ]; then
+              break
+            fi
+            head=""
+            if [ "$attempt" -eq 3 ]; then echo "::error::could not read the head of main after 3 attempts"; exit 1; fi
+            sleep 5
+          done
+          echo "run=${GITHUB_SHA} main=${head}"
+          if [ "$head" = "$GITHUB_SHA" ]; then echo "latest=true" >> "$GITHUB_OUTPUT"; else echo "latest=false" >> "$GITHUB_OUTPUT"; echo "::notice::main has moved on; skipping this deployment"; fi
+
       # Pages 自体の有効化(Settings → Pages → Source = GitHub Actions)は手動。
       # configure-pages の enablement は GITHUB_TOKEN では権限不足で失敗するため使わない。
-      - uses: actions/configure-pages@v5
+      - if: steps.latest.outputs.latest == 'true'
+        uses: actions/configure-pages@v5
 
       - id: deployment
+        if: steps.latest.outputs.latest == 'true'
         uses: actions/deploy-pages@v4
