@@ -33,14 +33,22 @@ public class EnemySpawn{
 	}
 	
 	public int evaluate(int wave, int lane){
+		int base = baseAmount(wave, lane, state.difficulty.enemyScaling);
+		if(base == 0){
+			return 0;
+		}
+		
+		return applyMultiplier(base, state.score.qualityMultiplier, Mathf.random(1f));
+	}
+	
+	/**The amount before the quality multiplier, for a difficulty with the given enemyScaling. 0 when this spawn is not active in the wave.*/
+	int baseAmount(int wave, int lane, float enemyScaling){
 		if(wave < after || wave > before || (wave - after) % spacing != 0){
 			return 0;
 		}
-		float scaling = this.scaling * state.difficulty.enemyScaling;
+		float scaling = this.scaling * enemyScaling;
 		
-		int base = Math.min(amount-1 + Math.max((int)((wave / spacing) / scaling), 1) + (tier(wave, lane)-1) * tierscaleback, max);
-		
-		return applyMultiplier(base, state.score.qualityMultiplier, Mathf.random(1f));
+		return Math.min(amount-1 + Math.max((int)((wave / spacing) / scaling), 1) + (tier(wave, lane)-1) * tierscaleback, max);
 	}
 	
 	/**Scales a spawn count by the quality multiplier. The fractional part is rounded up when roll (0 to 1) is below it.*/

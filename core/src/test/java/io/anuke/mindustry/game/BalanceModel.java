@@ -3,14 +3,21 @@ package io.anuke.mindustry.game;
 
 import io.anuke.mindustry.resource.CodeItem;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
 /**
  * バランス調整(Task 5.3)の机上計算。コードの流れを「1 分あたりの個数」で表し、期待得点と残高の推移を出す。
  * 値は呼び出し側(BalanceModelTest)が実際のブロック定義と Balance から読んで渡す。このクラスは数値を持たない。
  * 端数の切り捨て、搬送の遅れ、敵の攻撃による電力の消費は扱わない(定常状態の期待値)。
+ * 防衛(Issue #58)は、砲台の与ダメージと、敵ごとの「倒しきらなければならない時間」の比較で見る。
  */
 final class BalanceModel{
 	/** 残高の推移を計算する刻み(秒) */
 	static final double STEP_SECONDS = 1.0;
+	/** 1 秒あたりのフレーム数。ブロックと敵の速さ、発射の間隔はフレーム単位で書かれている */
+	static final double FRAMES_PER_SECOND = 60.0;
 
 	private BalanceModel(){
 	}
@@ -55,6 +62,61 @@ final class BalanceModel{
 	/** 構成ごとに、置いたレビュー施設の数から流れを決める */
 	interface Pipeline{
 		Flow flow(int reviewers);
+	}
+
+	/**
+	 * 砲台 1 台の撃ち方(Issue #58)。reload フレームに 1 回、1 回に shots 発の damage を撃ち、1 回ごとに powerPerShot の電力を使う。
+	 * 満タン(powerCapacity)の電力を使い切るまでは全速で撃ち、使い切ったあとは発電機が 1 秒に作る powerPerSecond の範囲で撃つ
+	 */
+	static final class Turret{
+		/** 全速で撃つときの 1 秒あたりの与ダメージ */
+		final double fullDps;
+		/** 電力を使い切ったあとの 1 秒あたりの与ダメージ */
+		final double sustainedDps;
+		/** 満タンの電力を使い切るまでに与えるダメージ。発電が全速に追いつくなら正の無限大 */
+		final double burst;
+
+		Turret(double damage, int shots, double reload, double powerPerShot, double powerCapacity, double powerPerSecond){
+			double fullRate = FRAMES_PER_SECOND / reload;
+			fullDps = damage * shots * fullRate;
+			sustainedDps = damage * shots * Math.min(fullRate, powerPerSecond / powerPerShot);
+			double drain = fullRate * powerPerShot - powerPerSecond;
+			burst = drain > 0.0 ? fullDps * powerCapacity / drain : Double.POSITIVE_INFINITY;
+		}
+
+		/** 合計 amount のダメージを与えるのにかかる時間(秒) */
+		double timeToDeal(double amount){
+			if(amount <= burst) return amount / fullDps;
+			return burst / fullDps + (amount - burst) / sustainedDps;
+		}
+	}
+
+	/** 防衛の計算に使う敵 1 体。deadline は、砲台の射程に入ってから倒しきらなければならない時間(秒) */
+	static final class Target{
+		final String name;
+		final double health, deadline;
+
+		Target(String name, double health, double deadline){
+			this.name = name;
+			this.health = health;
+			this.deadline = deadline;
+		}
+	}
+
+	/**
+	 * 期限の早い敵から順に、届く砲台 turrets 台で 1 体ずつ倒したときの余裕(秒)。各砲台は倒すべき体力を等分して受け持つ。
+	 * どの敵も期限までに倒せれば 0 以上、どれかが間に合わなければ負、届く砲台が無ければ負の無限大、敵がいなければ正の無限大
+	 */
+	static double defenseMargin(List<Target> targets, Turret turret, int turrets){
+		List<Target> sorted = new ArrayList<>(targets);
+		sorted.sort(Comparator.comparingDouble(target -> target.deadline));
+		double dealt = 0.0, margin = Double.POSITIVE_INFINITY;
+		for(Target target : sorted){
+			if(turrets == 0) return Double.NEGATIVE_INFINITY;
+			dealt += target.health;
+			margin = Math.min(margin, target.deadline - turret.timeToDeal(dealt / turrets));
+		}
+		return margin;
 	}
 
 	/** 残高の推移の結果 */
