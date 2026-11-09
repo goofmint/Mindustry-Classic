@@ -1,6 +1,6 @@
 # Issue #53 検証記録: セーブ画面で既存スロットを押すと確認なしに上書きされる
 
-- ブランチ: `issue-53-saveconfirm`(`issue-54-savedate` から分岐)。再現に使ったビルドは `issue-30-publish`(f19fa50)の `html/build/dist`。`SaveDialog` / `UI.showConfirm` は #54 の変更の対象外で、どちらのビルドでも同じソース
+- ブランチ: `issue-53-saveconfirm`(`issue-54-savedate` から分岐)。再現に使ったビルドは `issue-30-publish`(当時のローカル履歴の f19fa50。リベース前の SHA で origin には無い。同じ内容のコミットは、リベース後の e2fec3e「[5.4] 公開作業の検証記録とサブパスでの確認の証跡を足し…」で、squash 後は main の 8568ccf(PR #67)に含まれる)の `html/build/dist`。`SaveDialog` / `UI.showConfirm` は #54 の変更の対象外で、どちらのビルドでも同じソース
 - 確認日時: 2026-11-09 01:00〜01:10 JST
 - ブラウザ: Playwright 1.61.1 同梱のヘッドレス Chromium(SwiftShader)、1280×800、新しいコンテキスト(セーブ無しの状態から)
 - デスクトップ版: 未確認(ディスプレイが無く `:desktop:run` が起動しない。`.tmp/verify-desktop.md` 参照)
