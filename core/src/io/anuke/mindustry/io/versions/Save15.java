@@ -1,3 +1,4 @@
+// Modified for the AI SDLC browser game fork (goofmint/Mindustry-Classic) by Atsushi Nakatsugawa, 2026. See LICENSE (GPL-3.0).
 package io.anuke.mindustry.io.versions;
 
 import com.badlogic.gdx.utils.Array;
@@ -40,7 +41,7 @@ public class Save15 extends SaveFileVersion {
     }
 
     public SaveMeta getData(DataInputStream stream) throws IOException{
-        long time = stream.readLong(); //read last saved time
+        long time = readTimestamp(stream); //read last saved time
         byte mode = stream.readByte(); //read the gamemode
         byte map = stream.readByte(); //read the map
         int wave = stream.readInt(); //read the wave
