@@ -384,6 +384,11 @@ public class BalanceModelTest{
 	}
 
 	/** Issue #58: 何もしなくても、初期配置の砲台 2 台で wave 1〜5 を守りきる。比べるために、元の砲台(リンター)とファザーの結果も出す */
+	/**
+	 * wave 1〜5 のどの敵も期限までに倒せる(余裕 >= 0)ことだけを見る。wave 4(blast × 3)の余裕は約 0.6 秒と小さいが、
+	 * それは意図して許容している(docs/BALANCE.md 7.2)。砲台・敵・倍率の丸め(idleMultiplier の切り上げ)を少し変えると
+	 * このテストが落ちるので、落ちたときは数値の変更がこの余裕を削っていないかを先に確かめる。
+	 */
 	@Test
 	public void defaultDefenseHoldsFirstWaves(){
 		Defense defense = new Defense(new Model());
