@@ -35,6 +35,11 @@ public class Save15 extends SaveFileVersion {
         super(15);
     }
 
+    /** 形式は同じで番号だけ違うバージョン(Save16)のための入口 */
+    protected Save15(int version){
+        super(version);
+    }
+
     public SaveMeta getData(DataInputStream stream) throws IOException{
         long time = readTimestamp(stream); //read last saved time
         byte mode = stream.readByte(); //read the gamemode
