@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import java.util.Locale;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
@@ -42,6 +43,29 @@ public class RecipesTest {
 		ObjectSet<Block> seen = new ObjectSet<>();
 		for(Recipe recipe : Recipes.all()){
 			assertTrue(recipe.result.name, seen.add(recipe.result));
+		}
+	}
+
+	/** 配置メニューのタブ順は Section の宣言順で決まる */
+	@Test
+	public void sectionOrderStartsWithProduction(){
+		Section[] expected = {Section.production, Section.crafting, Section.distribution,
+				Section.power, Section.weapon, Section.defense};
+		assertArrayEquals(expected, Section.values());
+	}
+
+	/** どのタブも空にしない。モバイル(desktopOnly を除く)でも同じ */
+	@Test
+	public void everySectionHasRecipe(){
+		for(Section section : Section.values()){
+			int all = 0, withoutDesktopOnly = 0;
+			for(Recipe recipe : Recipes.all()){
+				if(recipe.section != section) continue;
+				all++;
+				if(!recipe.desktopOnly) withoutDesktopOnly++;
+			}
+			assertTrue(section.name(), all > 0);
+			assertTrue(section.name(), withoutDesktopOnly > 0);
 		}
 	}
 

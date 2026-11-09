@@ -353,21 +353,19 @@ public class BlocksFragment implements Fragment{
 			return;
 		}
 
-		for(int i = 0; i < state.inventory.getItems().length; i ++){
-			int amount = state.inventory.getItems()[i];
-			if(amount == 0) continue;
-			String formatted = amount > 99999999 ? "inf" : format(amount);
-			Image image = new Image(Draw.hasRegion("icon-" + Item.getByID(i).name) ?
-					Draw.region("icon-" + Item.getByID(i).name) : Draw.region("blank"));
-			Label label = new Label(formatted);
-			label.setFontScale(UI.labelScale(fontscale*1.5f));
-			itemtable.add(image).size(8*3);
-			itemtable.add(label).expandX().left();
-			if(i % 2 == 1 && i > 0) itemtable.row();
-		}
+		Image image = new Image(Draw.region("icon-" + Item.credit.name));
+		Label label = new Label(formatAmount(state.score.balance()));
+		label.setFontScale(UI.labelScale(fontscale*1.5f));
+		itemtable.add(image).size(8*3);
+		itemtable.add(label).expandX().left();
 	}
 
-	String format(int number){
+	/** 資源欄と HUD の残高表示。無限資源モード(sandbox)では inf、それ以外は値の大きさに関係なく数値で出す */
+	static String formatAmount(int amount){
+		return state.mode.infiniteResources ? "inf" : format(amount);
+	}
+
+	static String format(int number){
 		if(number > 1000000) {
 			return Strings.toFixed(number/1000000f, 1) + "[gray]mil";
 		}else if(number > 10000){

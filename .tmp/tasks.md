@@ -263,9 +263,9 @@ GitHub Issues: https://github.com/goofmint/Mindustry-Classic/issues (2026-11-08 
 
 #### Task 4.2: HUD と配置メニューの表示 (Issue #24)
 
-- [ ] `BlocksFragment.updateItems()` を credit 1 行の表示に変える
-- [ ] `HudFragment` に「目標 / 残高」のラベルを足す
-- [ ] 配置メニューの `Section` アイコンと並び順を見直す(`crafting` に品質施設、`production` にコード生成と調達、`power` に発電と配線)
+- [x] `BlocksFragment.updateItems()` を credit 1 行の表示に変える
+- [x] `HudFragment` に「目標 / 残高」のラベルを足す
+- [x] 配置メニューの `Section` アイコンと並び順を見直す(`crafting` に品質施設、`production` にコード生成と調達、`power` に発電と配線)
 - **完了条件**: HUD で残高と目標が常に見え、配置メニューの分類が説明なしで分かる
 - **依存**: 3.11
 - **推定時間**: 2h
