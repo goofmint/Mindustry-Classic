@@ -11,12 +11,14 @@ import io.anuke.mindustry.ui.Links.LinkEntry;
 import io.anuke.ucore.core.Core;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import javax.imageio.ImageIO;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-/** Task 4.4: About のリンク、クレジットと製品名の bundle キー、Web 版の HTML シェルの確認(作業ディレクトリは core) */
+/** Task 4.4 / Issue #79: About のリンク、クレジットと製品名の bundle キー、Web 版の HTML シェル、メニューのロゴの確認(作業ディレクトリは core) */
 public class BrandingTest{
     private static final String[] KEYS = {
         "text.gamename",
@@ -90,5 +92,65 @@ public class BrandingTest{
         assertTrue(image.getColorModel().hasAlpha());
         //余白は透明
         assertEquals(0, image.getRGB(0, 0) >>> 24);
+    }
+
+    private static final String MENU_LOGO = "assets-raw/sprites/ui/logotext.png";
+    private static final String ATLAS = "assets/sprites/sprites.atlas";
+    /** tools/gen_logo.py の MENU_MAX_WIDTH / MENU_MAX_HEIGHT と同じ(旧ロゴは 89x21、6 倍表示のため) */
+    private static final int MENU_LOGO_MAX_WIDTH = 96;
+    private static final int MENU_LOGO_MAX_HEIGHT = 28;
+
+    /** Issue #79: メニューのロゴ(gen_logo.py が書き出す元画像)は透明背景で、6 倍表示に収まる大きさ */
+    @Test
+    public void menuLogoSourceIsSmallWithTransparentCorners() throws IOException{
+        BufferedImage image = ImageIO.read(new FileHandle(MENU_LOGO).file());
+        assertTrue(image.getColorModel().hasAlpha());
+        assertTrue("width " + image.getWidth(), image.getWidth() <= MENU_LOGO_MAX_WIDTH);
+        assertTrue("height " + image.getHeight(), image.getHeight() <= MENU_LOGO_MAX_HEIGHT);
+        int right = image.getWidth() - 1, bottom = image.getHeight() - 1;
+        assertEquals(0, image.getRGB(0, 0) >>> 24);
+        assertEquals(0, image.getRGB(right, 0) >>> 24);
+        assertEquals(0, image.getRGB(0, bottom) >>> 24);
+        assertEquals(0, image.getRGB(right, bottom) >>> 24);
+    }
+
+    /** Issue #79: sprites.atlas の logotext は元画像と同じ大きさで回転しておらず、ページの中身も元画像と一致する */
+    @Test
+    public void menuLogoIsPackedUnchanged() throws IOException{
+        BufferedImage source = ImageIO.read(new FileHandle(MENU_LOGO).file());
+        String[] lines = new FileHandle(ATLAS).readString("UTF-8").split("\\r?\\n");
+        assertEquals("sprites.png", lines[1]);
+        int pages = 0, entries = 0;
+        Map<String, String> region = new HashMap<>();
+        for(int i = 0; i < lines.length; i++){
+            if(lines[i].endsWith(".png")) pages++;
+            if(!lines[i].equals("logotext")) continue;
+            entries++;
+            for(i++; i < lines.length && lines[i].startsWith("  "); i++){
+                String[] kv = lines[i].trim().split(": ", 2);
+                region.put(kv[0], kv[1]);
+            }
+        }
+        assertEquals(1, pages);
+        assertEquals(1, entries);
+        assertEquals("false", region.get("rotate"));
+        assertEquals("0, 0", region.get("offset"));
+        assertEquals(source.getWidth() + ", " + source.getHeight(), region.get("size"));
+        assertEquals(region.get("size"), region.get("orig"));
+
+        String[] xy = region.get("xy").split(", ");
+        int x0 = Integer.parseInt(xy[0]), y0 = Integer.parseInt(xy[1]);
+        BufferedImage page = ImageIO.read(new FileHandle("assets/sprites/sprites.png").file());
+        for(int y = 0; y < source.getHeight(); y++){
+            for(int x = 0; x < source.getWidth(); x++){
+                int expected = source.getRGB(x, y), actual = page.getRGB(x0 + x, y0 + y);
+                String at = "pixel " + x + "," + y;
+                if(expected >>> 24 == 0){
+                    assertEquals(at, 0, actual >>> 24);
+                }else{
+                    assertEquals(at, expected, actual);
+                }
+            }
+        }
     }
 }
