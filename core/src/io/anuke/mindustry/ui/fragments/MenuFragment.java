@@ -9,6 +9,7 @@ import io.anuke.mindustry.ui.dialogs.FloatingDialog;
 import io.anuke.ucore.scene.builders.imagebutton;
 import io.anuke.ucore.scene.builders.label;
 import io.anuke.ucore.scene.builders.table;
+import io.anuke.ucore.util.Bundles;
 
 import static io.anuke.mindustry.Vars.*;
 
@@ -26,7 +27,7 @@ public class MenuFragment implements Fragment{
 
 					defaults().size(w, 70f).padTop(5).padRight(5);
 
-					add(new MenuButton("icon-play-2", "$play", MenuFragment.this::showPlaySelect)).width(bw).colspan(2);
+					add(new MenuButton("icon-play-2", "$text.play", MenuFragment.this::showPlaySelect)).width(bw).colspan(2);
 
 					row();
 
@@ -102,8 +103,15 @@ public class MenuFragment implements Fragment{
 		new table(){{
 			visible(() -> state.is(State.menu));
 			abottom().aleft();
-			new label("Mindustry " + Version.code + " / " + Version.buildName);
+			new label("Mindustry " + Version.code + " / " + buildLabel());
 		}}.end();
+	}
+
+	/**Numbered builds and the default custom build are translated; any other build name is shown as is.*/
+	private static String buildLabel(){
+		if(Version.build != -1) return Bundles.format("text.version.build", String.valueOf(Version.build));
+		if(Version.buildName.equals(Version.customBuild)) return Bundles.get("text.version.custom");
+		return Version.buildName;
 	}
 
 	private void showPlaySelect(){

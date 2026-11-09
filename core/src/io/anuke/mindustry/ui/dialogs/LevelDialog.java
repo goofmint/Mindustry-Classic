@@ -118,7 +118,7 @@ public class LevelDialog extends FloatingDialog{
 			TextButton[] delete = new TextButton[1];
 			if(map.custom){
 				image.row();
-				delete[0] = image.addButton("Delete", () -> {
+				delete[0] = image.addButton("$text.delete", () -> {
 					Timers.run(1f, () -> {
 						ui.showConfirm("$text.level.delete.title", Bundles.format("text.level.delete", Bundles.get("map."+map.name+".name", map.name)), () -> {
 							world.maps().removeMap(map);
