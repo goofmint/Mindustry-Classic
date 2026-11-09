@@ -281,9 +281,9 @@ GitHub Issues: https://github.com/goofmint/Mindustry-Classic/issues (2026-11-08 
 
 #### Task 4.4: タイトル、About、ブランディング (Issue #26)
 
-- [ ] `html/webapp/index.html` のタイトル、`logo.png`、`styles.css` の配色を差し替える
-- [ ] `AboutDialog` に本家クレジット、GPL-3.0、美咲フォントの出典(表記義務は無いが礼儀として)、CodeRabbit の説明を両言語で入れる
-- [ ] メニューから Discord、寄付、エディタ(GWT では非対応表示)のボタンを外す
+- [x] `html/webapp/index.html` のタイトル、`logo.png`、`styles.css` の配色を差し替える
+- [x] `AboutDialog` に本家クレジット、GPL-3.0、美咲フォントの出典(表記義務は無いが礼儀として)、CodeRabbit の説明を両言語で入れる
+- [x] メニューから Discord、寄付、エディタ(GWT では非対応表示)のボタンを外す
 - **完了条件**: タイトル画面に CodeRabbit 以外の外部リンクが無い
 - **依存**: 4.1
 - **推定時間**: 2h

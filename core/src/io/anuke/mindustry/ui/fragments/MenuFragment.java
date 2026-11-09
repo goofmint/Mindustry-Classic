@@ -2,7 +2,6 @@ package io.anuke.mindustry.ui.fragments;
 
 import com.badlogic.gdx.Gdx;
 import io.anuke.mindustry.core.GameState.State;
-import io.anuke.mindustry.core.Platform;
 import io.anuke.mindustry.io.Version;
 import io.anuke.mindustry.ui.MenuButton;
 import io.anuke.mindustry.ui.dialogs.FloatingDialog;
@@ -31,21 +30,9 @@ public class MenuFragment implements Fragment{
 
 					row();
 
-					add(new MenuButton("icon-editor", "$text.editor", () -> {
-						if(gwt){
-							ui.showInfo("$text.classic.unsupported");
-						}else{
-							ui.editor.show();
-						}
-					}));
-					
 					add(new MenuButton("icon-tools", "$text.settings", ui.settings::show));
 
-					row();
-
 					add(new MenuButton("icon-info", "$text.about.button", ui.about::show));
-
-					add(new MenuButton("icon-donate", "$text.donate", Platform.instance::openDonations));
 
 					row();
 					
@@ -74,34 +61,20 @@ public class MenuFragment implements Fragment{
 
                         defaults().size(size).pad(5);
 
-                        new imagebutton("icon-editor", isize, ui.editor::show).text("$text.editor").padTop(4f);
-
                         new imagebutton("icon-tools", isize, ui.settings::show).text("$text.settings").padTop(4f);
 
                         new imagebutton("icon-info", isize, ui.about::show).text("$text.about.button").padTop(4f);
-
-                        if (!ios) {
-                            new imagebutton("icon-donate", isize, Platform.instance::openDonations).text("$text.donate").padTop(4f);
-                        }
 
                     }}.colspan(3).end();
 				}}.end();
 			}
 		}}.end();
 
-		//discord icon in top right
-		if(Platform.instance.hasDiscord()) {
-			new table() {{
-				abottom().atop().aright();
-				get().addButton("", "discord", ui.discord::show);
-			}}.end().visible(() -> state.is(State.menu));
-		}
-
 		//version info
 		new table(){{
 			visible(() -> state.is(State.menu));
 			abottom().aleft();
-			new label("Mindustry " + Version.code + " / " + buildLabel());
+			new label(Bundles.get("text.gamename") + " " + Version.code + " / " + buildLabel());
 		}}.end();
 	}
 
