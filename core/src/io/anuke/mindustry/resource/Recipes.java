@@ -52,6 +52,12 @@ public class Recipes {
 			new Recipe(production, ProductionBlocks.aiAgent2, stack(Item.credit, 30)),
 			new Recipe(production, ProductionBlocks.aiAgent3, stack(Item.credit, 40)),
 
+			new Recipe(crafting, ProductionBlocks.seniorEngineer, stack(Item.credit, 80)),
+			new Recipe(crafting, ProductionBlocks.unitTest, stack(Item.credit, 30)),
+			new Recipe(crafting, ProductionBlocks.e2eTest, stack(Item.credit, 45)),
+			new Recipe(crafting, ProductionBlocks.jenkins, stack(Item.credit, 60)),
+			new Recipe(crafting, ProductionBlocks.githubActions, stack(Item.credit, 80)),
+
 			new Recipe(power, ProductionBlocks.coalgenerator, stack(Item.credit, 50)),
 			new Recipe(power, ProductionBlocks.thermalgenerator, stack(Item.credit, 60)),
 			new Recipe(power, ProductionBlocks.combustiongenerator, stack(Item.credit, 50)),

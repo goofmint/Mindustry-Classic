@@ -200,10 +200,10 @@ GitHub Issues: https://github.com/goofmint/Mindustry-Classic/issues (2026-11-08 
 
 #### Task 3.7: QualityGate(品質を上げる施設) (Issue #18)
 
-- [ ] `QualityGate extends PowerBlock` と `GateEntity`(`current`、`progress`、`write/read`)を実装する。変換部分は `GateLogic` に切り出す
-- [ ] `ProductionBlocks` に `senior-engineer`、`unit-test`、`e2e-test`、`jenkins`、`github-actions` を定義する
-- [ ] 進捗バーと、処理中アイテムの中央描画
-- [ ] ブロック画像 5 枚(仮絵)、両言語の文言
+- [x] `QualityGate extends PowerBlock` と `GateEntity`(`current`、`progress`、`write/read`)を実装する。変換部分は `GateLogic` に切り出す
+- [x] `ProductionBlocks` に `senior-engineer`、`unit-test`、`e2e-test`、`jenkins`、`github-actions` を定義する
+- [x] 進捗バーと、処理中アイテムの中央描画
+- [x] ブロック画像 5 枚(仮絵)、両言語の文言
 - **完了条件**: コードが 1 個ずつ入り、処理後に色とドットが変わって出る。同じ施設を 2 回通しても色が変わらない。電力が無いと止まる(シニア以外)
 - **依存**: 3.6
 - **推定時間**: 4h
