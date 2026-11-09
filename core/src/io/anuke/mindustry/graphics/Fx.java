@@ -3,6 +3,7 @@ package io.anuke.mindustry.graphics;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Colors;
+import io.anuke.mindustry.core.UI;
 import io.anuke.ucore.core.Effects.Effect;
 import io.anuke.ucore.graphics.Draw;
 import io.anuke.ucore.graphics.Hue;
@@ -521,7 +522,7 @@ public class Fx{
 	
 	respawn = new Effect(respawnduration, e -> {
 		Draw.tcolor(Color.SCARLET);
-		Draw.tscl(0.25f);
+		Draw.tscl(UI.worldTextScale(0.25f));
 		Draw.text("Respawning in " + (int)((e.lifetime-e.time)/60), e.x, e.y);
 		Draw.tscl(0.5f);
 		Draw.reset();

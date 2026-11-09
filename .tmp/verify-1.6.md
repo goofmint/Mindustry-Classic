@@ -12,7 +12,7 @@
 Gradle 8.14 (wrapper), libGDX 1.13.1 / gdx-ai 1.8.2 (root `build.gradle`), GWT 2.11.0 (`html/build.gradle`), the three `.tmp/spike-*.md` files exist.
 
 ## Local checks
-- Workflow YAML: `yaml.safe_load` (PyYAML) parses it. Triggers: push (master), pull_request (no filter), workflow_dispatch. Steps: checkout@v7, setup-java@v6 (temurin 17), setup-gradle@v6, build, verify, upload-artifact@v7. (PyYAML reads `on` as the key `True`; that is normal for YAML 1.1 and GitHub accepts `on`.)
+- Workflow YAML: `yaml.safe_load` (PyYAML) parses it. Triggers: push (main), pull_request (no filter), workflow_dispatch. Steps: checkout@v7, setup-java@v6 (temurin 17), setup-gradle@v6, build, verify, upload-artifact@v7. (PyYAML reads `on` as the key `True`; that is normal for YAML 1.1 and GitHub accepts `on`.)
 - `./gradlew :html:dist --no-daemon` in the working tree: BUILD SUCCESSFUL in 25s; `html/build/dist/index.html` and `html/build/dist/html/html.nocache.js` exist.
 - Cold-cache reproduction (fresh `git clone`, `git checkout issue-6-ci`, `GRADLE_USER_HOME=/tmp/gradle-fresh`):
   - Downloading the Gradle 8.14 distribution failed repeatedly: `services.gradle.org` redirects to a GitHub release URL that returned HTTP 504 for several minutes (also with curl, 6 tries). First attempt also hit the wrapper `networkTimeout=10000`. This is an external outage, not a repo problem.
