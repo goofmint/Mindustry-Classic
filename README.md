@@ -42,6 +42,9 @@ AI エージェント、CodeRabbit、テスト、CI の施設はトークン(電
 | 一時停止 | Space |
 | メニュー | Esc |
 | 画面のメニューの表示を切り替える | C |
+| ゲーム内コンソール(診断情報とログ)を開く / 閉じる | F2(ブラウザ版)、グレーブキー `` ` ``(デスクトップ版) |
+
+ブラウザ版では、libGDX の入力処理がグレーブキーを認識しないため、コンソールは F2 で開きます。macOS でメディアキーが有効な場合は Fn+F2 を押してください。キーは設定の「操作」の Console の行で変更できます。
 
 マウスとキーボードでの操作を前提にしています。タッチ操作(スマートフォン、タブレット)は動作を保証しません。
 
@@ -125,7 +128,7 @@ A browser tower-defense game about the AI software development lifecycle (AI SDL
 
 - **Play**: https://goofmint.github.io/Mindustry-Classic/ (desktop browser; mouse and keyboard)
 - **Gameplay**: place code-writing facilities on code veins, carry the code on pipelines through review, test and CI facilities to raise its quality, and deliver it to the production core. Each delivery adds quality × importance to your balance. Low-quality deliveries spawn more bugs (enemies). You win when the balance reaches the map's target; you lose if the core is destroyed or the balance drops below zero.
-- **Controls** (defaults, rebindable in Settings → Controls): WASD move, Left Shift dash, left click place/shoot, right click remove, R/E or mouse wheel rotate, Left Ctrl + wheel zoom, Space pause, Esc menu, C toggle the HUD menus.
+- **Controls** (defaults, rebindable in Settings → Controls): WASD move, Left Shift dash, left click place/shoot, right click remove, R/E or mouse wheel rotate, Left Ctrl + wheel zoom, Space pause, Esc menu, C toggle the HUD menus, F2 (browser) or the grave key (desktop) toggle the in-game console. The browser build cannot use the grave key; on macOS you may need Fn+F2.
 - **Browser limitations**: no multiplayer and no map editor. Saves are kept in the browser's local storage. Autosave is off by default.
 - **Build**: JDK 17, then `./gradlew :html:dist`; serve `html/build/dist` over HTTP (it does not work over `file://`). The `desktop` module is for development only and is not distributed. Toolchain: JDK 17 / Gradle 8.14 (wrapper) / libGDX 1.13.1 / GWT 2.11.0; see [`docs/UPGRADE.md`](docs/UPGRADE.md).
 - **CI**: `.github/workflows/build.yml` runs the tests and `:html:dist` on every push and pull request, and deploys the output to GitHub Pages on pushes to `main`.
