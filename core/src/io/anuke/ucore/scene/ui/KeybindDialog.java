@@ -22,6 +22,7 @@ import io.anuke.ucore.util.Bundles;
 import io.anuke.ucore.util.Input;
 import io.anuke.ucore.util.Input.Type;
 import io.anuke.ucore.util.Strings;
+import java.util.Locale;
 
 public class KeybindDialog extends Dialog{
 	protected KeybindDialogStyle style;
@@ -202,7 +203,7 @@ public class KeybindDialog extends Dialog{
 	/**Mouse and scroll inputs have translated names (input.*.name); key names come from Input.toString().*/
 	private static String inputName(Input input){
 		if(input.type == Input.Type.mouse || input.type == Input.Type.scroll){
-			return Bundles.get("input." + input.name().toLowerCase() + ".name");
+			return Bundles.get("input." + input.name().toLowerCase(Locale.ROOT) + ".name");
 		}
 		return input.toString();
 	}
