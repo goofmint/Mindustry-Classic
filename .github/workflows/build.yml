@@ -45,6 +45,8 @@ jobs:
           name: html-dist
           path: html/build/dist
           if-no-files-found: error
+          # upload-artifact は既定で隠しファイルを除外するので、.nojekyll を配布物にも入れる
+          include-hidden-files: true
 
       - uses: actions/upload-pages-artifact@v3
         with:
