@@ -3,6 +3,7 @@ package io.anuke.mindustry.core;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.Input.*;
 import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.utils.Array;
 import io.anuke.mindustry.core.GameState.*;
 import io.anuke.mindustry.entities.*;
 import io.anuke.mindustry.game.EventType.*;
@@ -59,8 +60,24 @@ public class Control extends Module{
 
 		Core.atlas = new Atlas("sprites.atlas");
 
+		//Atlas.findRegion() は無い領域に error 画像を返すので、init() の前に領域の有無で検査して止める
+		Array<String> missingIcons = Item.missingIcons(Core.atlas::hasRegion);
+		if(missingIcons.size > 0){
+			throw new RuntimeException("Missing item icons: " + missingIcons.toString(", "));
+		}
+
 		for(Item item : Item.getAllItems()){
 			item.init();
+		}
+
+		Array<String> nullRegions = new Array<>();
+		for(Item item : Item.getAllItems()){
+			if(item.region == null){
+				nullRegions.add("icon-" + item.name);
+			}
+		}
+		if(nullRegions.size > 0){
+			throw new RuntimeException("Missing item icons: " + nullRegions.toString(", "));
 		}
 
 		Sounds.load("shoot.mp3", "place.mp3", "explosion.mp3", "enemyshoot.mp3",
