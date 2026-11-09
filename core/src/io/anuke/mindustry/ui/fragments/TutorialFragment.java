@@ -17,16 +17,19 @@ import io.anuke.ucore.util.Bundles;
 import static io.anuke.mindustry.Vars.*;
 
 /**
- * チュートリアルの案内パネル(Issue #78)。画面上部中央に出す非モーダルのパネルで、本文の背景は touch 不可、
+ * チュートリアルの案内パネル(Issue #78)。画面右上に出す非モーダルのパネルで、本文の背景は touch 不可、
  * 「次へ」「スキップ」「閉じる」のボタンだけ touch 可能。パネルの下のタイルにもブロックを置ける。
  * 表示は毎フレーム TutorialController の状態から組み立て、セッションが無ければ隠す。
  */
 public class TutorialFragment implements Fragment{
 	/** パネルの幅(dp)。画面幅から左右の余白を引いた値を上限にする */
 	private static final float PANEL_WIDTH_DP = 460f;
+	/** 画面の右端からの余白(dp)。上部中央に置くと左上の HUD(目標と残高)に 1280 幅でも重なるので、右上に寄せる */
 	private static final float PANEL_MARGIN_DP = 8f;
-	/** 画面上端からの余白(dp)。HUD の「一時停止中」ラベル(上部中央)と重ならない位置 */
+	/** 画面上端からの余白(dp)。HUD の「一時停止中」ラベル(上部中央)の下に出す */
 	private static final float TOP_PAD_DP = 52f;
+	/** 本文の最小の高さ(dp)。手順ごとに本文の行数が違っても、ボタンの位置が動かないようにする(英語の手順 1 の 6 行より 1 行多い) */
+	private static final float BODY_MIN_HEIGHT_DP = 126f;
 	private static final float BUTTON_WIDTH = 120f;
 	private static final float BUTTON_HEIGHT = 44f;
 
@@ -40,6 +43,7 @@ public class TutorialFragment implements Fragment{
 
 		new table(){{
 			atop();
+			aright();
 			touchable(Touchable.childrenOnly);
 			visible(() -> !state.is(State.menu) && tutorial.active());
 
@@ -51,7 +55,8 @@ public class TutorialFragment implements Fragment{
 
 			pane.labelWrap(() -> title(tutorial)).width(width).left().get().setTouchable(Touchable.disabled);
 			pane.row();
-			pane.labelWrap(() -> body(tutorial)).width(width).left().padTop(4f).get().setTouchable(Touchable.disabled);
+			pane.labelWrap(() -> body(tutorial)).width(width).minHeight(Unit.dp.scl(BODY_MIN_HEIGHT_DP)).top().left().padTop(4f)
+					.get().setTouchable(Touchable.disabled);
 			pane.row();
 
 			buttons = new Table();
@@ -66,7 +71,7 @@ public class TutorialFragment implements Fragment{
 				}
 			});
 
-			add(pane).padTop(Unit.dp.scl(TOP_PAD_DP));
+			add(pane).padTop(Unit.dp.scl(TOP_PAD_DP)).padRight(Unit.dp.scl(PANEL_MARGIN_DP));
 		}}.end();
 	}
 
