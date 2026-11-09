@@ -16,7 +16,7 @@ GitHub Issues: https://github.com/goofmint/Mindustry-Classic/issues (2026-11-08 
 
 #### Task 1.1: 現状の記録と作業ブランチ (Issue #1)
 
-- [x] 作業ブランチを切る(運用変更: Issue ごとに `issue-<番号>-<短い名前>` ブランチを切り PR で `master` に戻す。単一の `modernize` ブランチは使わない。Issue #1 は `issue-1-baseline`)
+- [x] 作業ブランチを切る(運用変更: Issue ごとに `issue-<番号>-<短い名前>` ブランチを切り PR で `main` に戻す(既定ブランチは 2026-11-08 に master から main へ改名)。単一の `modernize` ブランチは使わない。Issue #1 は `issue-1-baseline`)
 - [x] JDK 17 と Gradle 8.14 の有無を確認し、無ければ導入する(`sdkman` か Homebrew)。結果: Gradle 8.14 は SDKMAN、JDK 17 は Homebrew `openjdk@17`(keg-only、`JAVA_HOME` 指定で使う)。詳細は `.tmp/verify-1.1.md`
 - [x] 本家 README の「保守終了」の記載を確認し、改造版の README 草稿に「本家からのフォーク、GPL-3.0 継承」の1段落を書く
 - [x] README 草稿に「公開物はブラウザ版のみ。`desktop` モジュールは開発時の動作確認とツール実行用で、配布しない」と明記する(2026-11-08 決定)
@@ -71,9 +71,9 @@ GitHub Issues: https://github.com/goofmint/Mindustry-Classic/issues (2026-11-08 
 
 #### Task 1.6: CI とビルド手順の固定 (Issue #6)
 
-- [ ] `.github/workflows/build.yml` を作り、JDK 17 で `./gradlew :html:dist` を回して成果物をアップロードする
-- [ ] `README.md` に JDK 17 の導入、`./gradlew :desktop:run`、`./gradlew :html:dist`、`./gradlew pack` の手順を書く
-- [ ] 1.3〜1.5 の `.tmp/spike-*.md` の内容を README か `docs/UPGRADE.md` にまとめる
+- [ ] `.github/workflows/build.yml` を作り、JDK 17 で `./gradlew :html:dist` を回して成果物をアップロードする(ファイルは作成済み。GitHub 上での実行は PR を開いた後に確認する。`.tmp/verify-1.6.md`)
+- [x] `README.md` に JDK 17 の導入、`./gradlew :desktop:run`、`./gradlew :html:dist`、`./gradlew pack` の手順を書く
+- [x] 1.3〜1.5 の `.tmp/spike-*.md` の内容を README か `docs/UPGRADE.md` にまとめる
 - **完了条件**: CI が緑。README の手順どおりに新しい環境でビルドできる
 - **依存**: 1.5
 - **推定時間**: 2h
