@@ -141,6 +141,15 @@ public class ScoreTest{
     }
 
     @Test
+    public void negativeCodeItemLowersBalance(){
+        Item worst = codeWithStage(0);
+        float itemScore = CodeItem.score(worst);
+        assertTrue(itemScore < 0);
+        score.deliver(worst, itemScore);
+        assertEquals(Balance.INITIAL_CREDIT + (int)itemScore, score.balance());
+    }
+
+    @Test
     public void historyDropsOldest(){
         Item worst = codeWithStage(0); //q = -5
         Item best = codeWithStage(CodeItem.MAX_STAGE); //q = 1
